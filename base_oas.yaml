@@ -1,0 +1,23 @@
+openapi: 3.0.0
+info:
+  title: netskope_api_v2
+  description: Netskope API Definition File
+  version: 1.0.0
+servers:
+  - url: https://{tenant}.goskope.com/api/v2
+    description: The production API server
+    variables:
+      tenant:
+        default: demo
+        description: this value is assigned by Netskope, in this example `demo.goskope.com`
+      #basePath:
+        #default: api/v2
+security:
+  - api_key: []
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Netskope-Api-Token
+paths:

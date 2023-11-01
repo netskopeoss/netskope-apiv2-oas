@@ -1,0 +1,1338 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "steering-mgmt",
+    "description": "steering mgmt service IPSec CRUD operations.",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "ipsec_pop_response_200": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "total": {
+            "type": "integer",
+            "example": 1
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipsec_pop_result_item"
+            }
+          }
+        }
+      },
+      "ipsec_tunnel_request_post": {
+        "type": "object",
+        "properties": {
+          "encryption": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string"
+          },
+          "srcidentity": {
+            "type": "string"
+          },
+          "psk": {
+            "type": "string"
+          },
+          "srcipidentity": {
+            "type": "string"
+          },
+          "pops": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "string"
+            }
+          },
+          "bandwidth": {
+            "type": "integer"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          },
+          "sourcetype": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "enable": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "rekey": {
+                "type": "boolean",
+                "example": false
+              },
+              "reauth": {
+                "type": "boolean",
+                "example": false
+              },
+              "xff": {
+                "type": "object",
+                "properties": {
+                  "enable": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "iplist": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ipsec_tunnel_request_patch": {
+        "type": "object",
+        "properties": {
+          "encryption": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string"
+          },
+          "srcidentity": {
+            "type": "string"
+          },
+          "psk": {
+            "type": "string"
+          },
+          "srcipidentity": {
+            "type": "string"
+          },
+          "pops": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "string"
+            }
+          },
+          "bandwidth": {
+            "type": "integer"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          },
+          "sourcetype": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "enable": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "rekey": {
+                "type": "boolean",
+                "example": false
+              },
+              "reauth": {
+                "type": "boolean",
+                "example": false
+              },
+              "xff": {
+                "type": "object",
+                "properties": {
+                  "enable": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "iplist": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ipsec_tunnel_response_200": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "total": {
+            "type": "integer",
+            "example": 1
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipsec_tunnel_result_item"
+            }
+          }
+        }
+      },
+      "ipsec_patch_response_200": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "result": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipsec_tunnel_result_item"
+            }
+          }
+        }
+      },
+      "ipsec_response_200": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_201": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 201
+          },
+          "result": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipsec_tunnel_result_item"
+            }
+          }
+        }
+      },
+      "ipsec_response_400": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 400
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_403": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 403
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_404": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 404
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_405": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 405
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_409": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 409
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_429": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 429
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_response_500": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 500
+          },
+          "result": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_pop_result_item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "gateway": {
+            "type": "string"
+          },
+          "probeip": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "phase1": {
+                "type": "object",
+                "properties": {
+                  "ikeversion": {
+                    "type": "string"
+                  },
+                  "encryptionalgo": {
+                    "type": "string"
+                  },
+                  "integrityalgo": {
+                    "type": "string"
+                  },
+                  "dhgroup": {
+                    "type": "string"
+                  },
+                  "salifetime": {
+                    "type": "string"
+                  },
+                  "dpd": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "phase2": {
+                "type": "object",
+                "properties": {
+                  "encryptionalgo": {
+                    "type": "string"
+                  },
+                  "integrityalgo": {
+                    "type": "string"
+                  },
+                  "dhgroup": {
+                    "type": "string"
+                  },
+                  "salifetime": {
+                    "type": "string"
+                  },
+                  "pfs": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "distance": {
+            "type": "string"
+          },
+          "acceptingtunnels": {
+            "type": "boolean"
+          },
+          "bandwidth": {
+            "type": "string"
+          }
+        }
+      },
+      "ipsec_tunnel_result_item": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "site": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "sourcetype": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          },
+          "encryption": {
+            "type": "string"
+          },
+          "srcidentity": {
+            "type": "string"
+          },
+          "srcipidentity": {
+            "type": "string"
+          },
+          "pops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ipsec_tunnel_pop_result_item"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "bandwidth": {
+            "type": "integer",
+            "example": 50
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "rekey": {
+                "type": "boolean",
+                "example": false
+              },
+              "reauth": {
+                "type": "boolean",
+                "example": false
+              },
+              "xff": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "example": false
+                  },
+                  "iplist": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "example": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "version": {
+            "type": "integer",
+            "example": 2
+          }
+        }
+      },
+      "ipsec_tunnel_pop_result_item": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "gateway": {
+            "type": "string"
+          },
+          "probeip": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "since": {
+            "type": "string"
+          },
+          "throughput": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/ipsec/pops": {
+      "x-netskope-params": {
+        "serviceConfig": "steering",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "ipsec"
+      },
+      "get": {
+        "summary": "Get IPSec points of presence(POPs) list",
+        "description": "API to get list of IPSec POPs. You can filter by parameters. Use one of these parameters at a time. Only lat and long should be used together. All parameters are allowed to use offset and limit in combination.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "description": "POP name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "description": "POP region, requires ISO-3166 region code and return POPs closest to value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "description": "POP country, requires ISO-3166 country code and return POPs closest to value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lat",
+            "in": "query",
+            "required": false,
+            "description": "POP latitude, lat requires long in combination and return POPs closest to value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "long",
+            "in": "query",
+            "required": false,
+            "description": "POP longitude, long requires lat in combination and return POPs closest to value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ip",
+            "in": "query",
+            "required": false,
+            "description": "POP ipaddress, return POPs closest to value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "capabilities",
+            "in": "query",
+            "required": false,
+            "description": "POP capabilities, return POPs capabilities",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Provide comma separated list of fields to be displayed",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Offset used to shift the output window",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Max number of POPs to retrieve",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_pop_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ipsec/pops/{id}": {
+      "x-netskope-params": {
+        "serviceConfig": "steering",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "ipsec"
+      },
+      "get": {
+        "summary": "Get IPSec point of presence(POP)",
+        "description": "API to get IPSec POP using id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "POP id",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Provide comma separated list of fields to be displayed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_pop_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_404"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ipsec/tunnels": {
+      "x-netskope-params": {
+        "serviceConfig": "steering",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "ipsec"
+      },
+      "get": {
+        "summary": "Get IPSec tunnels list",
+        "description": "API to get list of IPSec tunnels. You can filter by parameters. Use one of these parameters at a time. Only offset and limit are allowed in combination with other parameters",
+        "parameters": [
+          {
+            "name": "site",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel site",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "srcipidentity",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel source ip identity",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "srcidentity",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel source identity",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pop",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel POP name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel status",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sourcetype",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel sourcetype",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortby",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel sortby column",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortorder",
+            "in": "query",
+            "required": false,
+            "description": "IPSec tunnel sortorder asc or desc. Default is asc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Provide comma separated list of fields to be displayed",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "description": "Offset used to shift the window",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Max number of records to retrieve",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_tunnel_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create IPSec tunnel",
+        "description": "API to create new IPSec tunnel. You can pass json body with tunnel details.",
+        "requestBody": {
+          "description": "IPSec tunnel object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ipsec_tunnel_request_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_201"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_409"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ipsec/tunnels/{id}": {
+      "x-netskope-params": {
+        "serviceConfig": "steering",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "ipsec"
+      },
+      "get": {
+        "summary": "Get IPSec tunnel",
+        "description": "API to get IPSec tunnel using id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "IPSec tunnel id",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Provide comma separated list of fields to be displayed",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_tunnel_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_404"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update IPSec tunnel",
+        "description": "API to update IPSec tunnel using id. You can pass json body with fields that needs to be updated.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "IPSec tunnel id",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "IPSec tunnel object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ipsec_tunnel_request_patch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_patch_response_200"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_400"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_404"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete IPSec tunnel",
+        "description": "API to delete IPSec tunnel using id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "IPSec tunnel id",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_200"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_403"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_404"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_405"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_429"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ipsec_response_500"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,402 @@
+openapi: "3.0.0"
+info:
+    title: "npa_publisher_upgrade_profile"
+    description: "NPA publisher upgrade profile CRUD operations."
+    version: "1.0.0"
+components:
+    schemas:
+        "200":
+            type: "object"
+            properties:
+                status:
+                    x-speakeasy-terraform-ignore: true
+                    type: "integer"
+                    example: 200
+                result:
+                    type: "array"
+                    items:
+                        type: "object"
+        "400":
+            type: "object"
+            properties:
+                status:
+                    type: "integer"
+                    example: 400
+                message:
+                    type: "string"
+        tag_item:
+            type: "object"
+            properties:
+                tag_id:
+                    type: "integer"
+                    format: "int32"
+                tag_name:
+                    type: "string"
+        publisher_upgrade_profile_post_request:
+            type: "object"
+            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            properties:
+                name:
+                    type: "string"
+                frequency:
+                    type: "string"
+                timezone:
+                    type: "string"
+                docker_tag:
+                    type: "string"
+                release_type:
+                    type: "string"
+                enabled:
+                    type: "integer"
+                    format: "int32"
+        publisher_upgrade_profile_put_request:
+            type: "object"
+            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            properties:
+                name:
+                    type: "string"
+                id:
+                    type: "integer"
+                    format: "int32"
+                frequency:
+                    type: "string"
+                timezone:
+                    type: "string"
+                docker_tag:
+                    type: "string"
+                release_type:
+                    type: "string"
+                enabled:
+                    type: "integer"
+                    format: "int32"
+        publisher_upgrade_profile_response:
+            type: "object"
+            properties:
+                status:
+                    type: "string"
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: "object"
+                    x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                    properties:
+                        id:
+                            type: "integer"
+                            format: "int32"
+                        frequency:
+                            type: "string"
+                        timezone:
+                            type: "string"
+                        docker_tag:
+                            type: "string"
+                        release_type:
+                            type: "string"
+                        name:
+                            type: "string"
+                        enabled:
+                            type: "integer"
+                            format: "int32"
+        publisher_upgrade_profile_get_response:
+            type: "object"
+            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            properties:
+                status:
+                    type: "string"
+                    enum:
+                        - success
+                        - not found
+                total:
+                    type: "integer"
+                    format: "int32"
+                data:
+                    type: "object"
+                    properties:
+                        id:
+                            type: "integer"
+                            format: "int32"
+                        frequency:
+                            type: "string"
+                        timezone:
+                            type: "string"
+                        docker_tag:
+                            type: "string"
+                        release_type:
+                            type: "string"
+                        name:
+                            type: "string"
+                        enabled:
+                            type: "integer"
+                            format: "int32"
+        publisher_upgrade_profile_bulk_request:
+            type: "object"
+            properties:
+                publishers:
+                    type: "object"
+                    properties:
+                        id:
+                            type: "array"
+                            items:
+                                type: "string"
+                        apply:
+                            type: "object"
+                            properties:
+                                publisher_upgrade_profiles_id:
+                                    type: "string"
+        publisher_response:
+            type: "object"
+            properties:
+                publisher_id:
+                    type: "integer"
+                    format: "int32"
+                publisher_name:
+                    type: "string"
+                common_name:
+                    type: "string"
+                registered:
+                    type: "boolean"
+                lbrokerconnect:
+                    type: "boolean"
+                assessment:
+                    type: "object"
+                stitcher_id:
+                    type: "integer"
+                    format: "int32"
+                status:
+                    type: "string"
+                    enum:
+                        - connected
+                        - not registered
+                publisher_upgrade_profile_id:
+                    type: "integer"
+                    format: "int32"
+                tags:
+                    type: "array"
+                    items:
+                        $ref: '#/components/schemas/tag_item'
+        publisher_upgrade_profile_bulk_response:
+            type: "object"
+            properties:
+                status:
+                    type: "string"
+                    enum:
+                        - success
+                        - not found
+                data:
+                    type: "array"
+                    items:
+                        $ref: '#/components/schemas/publisher_response'
+                total:
+                    type: "integer"
+                    format: "int32"
+paths:
+    /publisherupgradeprofiles:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
+        get:
+            summary: "Get list of publisher upgrade profile objects"
+            description: "Get list of publisher upgrade profile objects"
+            x-speakeasy-name-override: list_objects
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#read
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            parameters:
+                - name: "fields"
+                  in: "query"
+                  x-speakeasy-terraform-ignore: true
+                  description: "Return values only from specified fields"
+                  schema:
+                    type: "string"
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_get_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+        post:
+            summary: "Create a publisher upgrade profile"
+            description: "Create a publisher upgrade profile"
+            x-speakeasy-name-override: create
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#create
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            parameters:
+                - name: "silent"
+                  in: "query"
+                  x-speakeasy-terraform-ignore: true
+                  description: "flag to skip output except status code"
+                  schema:
+                    type: "string"
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_upgrade_profile_post_request'
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+    /publisherupgradeprofiles/{upgrade_profile_id}:
+        x-netskope-params:
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
+        delete:
+            summary: "Delete a publisher"
+            description: "Delete a publisher upgrade profile based on profile id"
+            x-speakeasy-name-override: delete
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#delete
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            parameters:
+                - name: "upgrade_profile_id"
+                  in: "path"
+                  x-speakeasy-match: id
+                  required: true
+                  description: "publisher upgrade profile id"
+                  schema:
+                    type: "integer"
+                    format: "int32"
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                type: "object"
+                                properties:
+                                    status:
+                                        type: "string"
+                                        enum:
+                                            - success
+                                            - error
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+        put:
+            summary: "Update a publisher upgrade profile"
+            description: "update a publisher upgrade profile based on publisher upgrade profile id"
+            x-speakeasy-name-override: update
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#update
+            x-speakeasy-group: NPAPublisherUpgradeProfiles
+            parameters:
+                - name: "upgrade_profile_id"
+                  in: "path"
+                  x-speakeasy-match: id
+                  required: true
+                  description: "publisher upgrade profile id"
+                  schema:
+                    type: "integer"
+                    format: "int32"
+                - name: "silent"
+                  in: "query"
+                  description: "flag to skip output except status code"
+                  x-speakeasy-terraform-ignore: true
+                  schema:
+                    type: "string"
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_upgrade_profile_put_request'
+                required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/200'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+        get:
+            summary: "Get a publisher upgrade profile "
+            description: "get a publisher upgrade profile based on publisher upgrade profile id"
+            parameters:
+                - name: "upgrade_profile_id"
+                  in: "path"
+                  required: true
+                  description: "publisher upgrade profile id"
+                  schema:
+                    type: "integer"
+                    format: "int32"
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
+    /publisherupgradeprofiles/bulk:
+        x-netskope-params:
+            customerFacing: true
+            apiGroup: npa_upgrade_profiles
+            serviceConfig: provisioner-pycore-ws
+            version: 2
+        description: "Update the profile of multiple publishers"
+        put:
+            summary: "Update the profile of multiple publishers "
+            parameters:
+                - name: "silent"
+                  in: "query"
+                  description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
+                  schema:
+                    type: "string"
+                    enum:
+                        - "1"
+                        - "0"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/publisher_upgrade_profile_bulk_request'
+                required: true
+            responses:
+                "200":
+                    description: "successful operation"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/publisher_upgrade_profile_bulk_response'
+                "400":
+                    description: "Invalid request"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/400'
