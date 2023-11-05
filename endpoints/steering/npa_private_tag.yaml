@@ -1,0 +1,300 @@
+openapi: 3.0.0
+info:
+  title: npa_private_app_tags
+  description: NPA Private app tag operations.
+  version: 1.0.0
+components:
+  schemas:
+    tag_request:
+      x-speakeasy-entity:
+       - PrivateAppTagList
+       - PrivateAppTag
+      type: object
+      properties:
+        id:
+          type: string
+        ids:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item"
+        publisher_tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item"
+    tag_response:
+      type: object
+      x-speakeasy-entity: PrivateAppTagList
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - not found
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              tag_id:
+                type: integer
+                format: int32
+              tag_name:
+                type: string
+    tag_response_400:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        result:
+          type: string
+    tag_item:
+      type: object
+      properties:
+        tag_name:
+          type: string
+        tag_id:
+          type: integer
+          format: int32
+paths:
+  "/apps/private/tags":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_private_tag
+    post:
+      summary: create tags for private apps
+      description: Create tags for private apps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/tag_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+    patch:
+      summary: bulk update tags to associate with specified private apps
+      description: Bulk update tags to associate with specified private apps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/tag_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+    delete:
+      summary: bulk delete tags for specified private apps
+      description: Bulk delete tags for specified private apps
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/tag_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+    get:
+      summary: 'Get list of private app tags '
+      description: Get list of private app tags
+      x-speakeasy-entity-operation: PrivateAppTagList#read
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+  "/apps/private/tags/{tag_id}":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_private_tag
+    get:
+      summary: Get a private app tag based on tag id
+      description: Get a private app tag based on tag id
+      x-speakeasy-entity-operation: PrivateAppTag#read
+      parameters:
+        - name: tag_id
+          in: path
+          required: true
+          description: tag id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+    put:
+      summary: Update a private app tag based on tag id
+      description: Update a private app tag based on tag id
+      x-speakeasy-entity-operation: PrivateAppTag#create,update
+      parameters:
+        - name: tag_id
+          in: path
+          required: true
+          description: tag id
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/tag_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+    delete:
+      summary: Delete a private app tag based on tag id
+      description: Delete a private app tag based on tag id
+      x-speakeasy-entity-operation: PrivateAppTag#delete
+      parameters:
+        - name: tag_id
+          in: path
+          required: true
+          description: tag id
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/tag_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"
+  "/apps/private/tags/getpolicyinuse":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_private_tag
+    post:
+      summary: Retrieve number of policy in use for specified tags
+      description: Retrieve number of policy in use for specified tags
+      x-speakeasy-entity-operation: PrivateAppTagPolicyUseList#get
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-speakeasy-entity: PrivateAppTagPolicyUseList
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                x-speakeasy-entity: PrivateAppTagPolicyUseList
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - not found
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        token:
+                          type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/tag_response_400"

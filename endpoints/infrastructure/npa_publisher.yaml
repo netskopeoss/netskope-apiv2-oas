@@ -50,6 +50,7 @@ components:
           type: string
     publisher_put_request:
       type: object
+      x-speakeasy-entity: NPAPublisher
       properties:
         name:
           type: string
@@ -66,6 +67,7 @@ components:
       type: object
       properties:
         status:
+          x-speakeasy-ignore: true
           type: string
           enum:
             - success
@@ -131,7 +133,7 @@ components:
           items:
             $ref: '#/components/schemas/Publisher'
       required:
-      - publishers
+        - publishers
       title: Data
     Publisher:
       type: object
@@ -141,15 +143,15 @@ components:
           type: integer
         assessment:
           anyOf:
-          - $ref: '#/components/schemas/Assessment'
-          - type: object
+            - $ref: '#/components/schemas/Assessment'
+            - type: object
         common_name:
           type: string
         connected_apps:
           anyOf:
-          - type: array
-            items:
-              type: string
+            - type: array
+              items:
+                type: string
         lbrokerconnect:
           type: boolean
         publisher_id:
@@ -164,35 +166,35 @@ components:
           type: string
         stitcher_id:
           anyOf:
-          - type: integer
-          - type: object
+            - type: integer
+            - type: object
         tags:
           type: array
           items: {}
         upgrade_failed_reason:
           anyOf:
-          - $ref: '#/components/schemas/UpgradeFailedReason'
-          - type: object
+            - $ref: '#/components/schemas/UpgradeFailedReason'
+            - type: object
         upgrade_request:
           type: boolean
         upgrade_status:
           $ref: '#/components/schemas/UpgradeStatus'
       required:
-      - apps_count
-      - assessment
-      - common_name
-      - connected_apps
-      - lbrokerconnect
-      - publisher_id
-      - publisher_name
-      - publisher_upgrade_profiles_external_id
-      - registered
-      - status
-      - stitcher_id
-      - tags
-      - upgrade_failed_reason
-      - upgrade_request
-      - upgrade_status
+        - apps_count
+        - assessment
+        - common_name
+        - connected_apps
+        - lbrokerconnect
+        - publisher_id
+        - publisher_name
+        - publisher_upgrade_profiles_external_id
+        - registered
+        - status
+        - stitcher_id
+        - tags
+        - upgrade_failed_reason
+        - upgrade_request
+        - upgrade_status
       title: Publisher
     Assessment:
       type: object
@@ -211,12 +213,12 @@ components:
         version:
           type: string
       required:
-      - eee_support
-      - hdd_free
-      - hdd_total
-      - ip_address
-      - latency
-      - version
+        - eee_support
+        - hdd_free
+        - hdd_total
+        - ip_address
+        - latency
+        - version
       title: Assessment
     UpgradeFailedReason:
       type: object
@@ -232,10 +234,10 @@ components:
           type: string
           format: integer
       required:
-      - detail
-      - error_code
-      - timestamp
-      - version
+        - detail
+        - error_code
+        - timestamp
+        - version
       title: UpgradeFailedReason
     UpgradeStatus:
       type: object
@@ -244,7 +246,7 @@ components:
         upstat:
           type: string
       required:
-      - upstat
+        - upstat
       title: UpgradeStatus
     publisher_bulk_item:
       type: object
@@ -285,6 +287,7 @@ components:
             $ref: '#/components/schemas/tag_item'
     publisher_bulk_request:
       type: object
+      x-speakeasy-entity: NPAPublisherBulkUpgrade
       properties:
         publishers:
           type: object
@@ -301,6 +304,7 @@ components:
                   default: true
     publishers_bulk_response:
       type: object
+      x-speakeasy-entity: NPAPublisherBulkUpgrade
       properties:
         status:
           type: string
@@ -321,6 +325,9 @@ components:
             - not found
         data:
           type: object
+          x-speakeasy-entity:
+           - NPAPublisherAlerts
+           - NPAPublisherAlertsList
           properties:
             adminUsers:
               type: array
@@ -347,6 +354,7 @@ components:
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
+      x-speakeasy-entity: NPAPublisherAlerts
       properties:
         adminUsers:
           type: array
@@ -725,7 +733,7 @@ paths:
                       token:
                         type: string
                     required:
-                    - token
+                      - token
                   status:
                     type: string
                     x-speakeasy-terraform-ignore: true
@@ -733,8 +741,8 @@ paths:
                       - success
                       - not found
                 required:
-                - data
-                - status
+                  - data
+                  - status
         "400":
           description: Invalid request
           content:
@@ -783,10 +791,12 @@ paths:
     put:
       summary: Trigger bulk publisher update action
       description: Trigger bulk publisher update action
+      x-speakeasy-entity-operation: NPAPublisherBulkUpgrade#create
       parameters:
         - name: silent
           in: query
           required: false
+          x-speakeasy-ignore: true
           description: flag to skip output except status code
           schema:
             type: string
@@ -853,6 +863,7 @@ paths:
     get:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
+      x-speakeasy-entity-operation: NPAPublisherAlertsList#read
       responses:
         "200":
           description: successful operation
@@ -869,9 +880,11 @@ paths:
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
+      x-speakeasy-entity-operation: NPAPublisherAlerts#create
       parameters:
         - name: silent
           in: query
+          x-speakeasy-ignore: true
           required: false
           description: "flag to skip output except status code: \n * `1` - Skip response data \n * `0` - Do not skip response data"
           schema:

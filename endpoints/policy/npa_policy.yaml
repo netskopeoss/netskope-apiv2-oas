@@ -1,0 +1,451 @@
+---
+openapi: 3.0.0
+info:
+  title: npa_policy
+  description: NPA policy CRUD operations.
+  version: 1.0.0
+components:
+  schemas:
+    npa_policy_request:
+      type: object
+      x-speakeasy-entity: NPAPolicy
+      properties:
+        rule_name:
+          type: string
+          example: vantest
+        description:
+          type: string
+          example: any
+        rule_data:
+          "$ref": "#/components/schemas/npa_policy_rule_data"
+        rule_order:
+          type: object
+          properties:
+            order:
+              type: string
+              enum:
+                - top
+                - bottom
+                - before
+                - after
+            rule_name:
+              type: string
+              example: api-policy-managed
+            rule_id:
+              type: integer
+              example: 1
+            position:
+              type: integer
+              example: 5
+        group_id:
+          x-speakeasy-ignore: true # note: doesn't show up in responses
+          type: string
+          example: '1'
+        group_name:
+          type: string
+          example: My policy group
+        enabled:
+          type: string
+          example: '1'
+    npa_policy_response_item:
+      type: object
+      x-speakeasy-entity: NPAPolicy
+      properties:
+        rule_id:
+          type: integer
+          example: 1
+        rule_name:
+          type: string
+          example: van-test
+        rule_data:
+          "$ref": "#/components/schemas/npa_policy_rule_data"
+        group_id:
+          x-speakeasy-ignore: true # note: doesn't show up in responses
+          type: integer
+          example: 1
+    npa_policy_response:
+      x-speakeasy-entity: NPAPolicyList
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/npa_policy_response_item"
+    npa_policy_response_400:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        result:
+          type: string
+    npa_policy_rule_dlp:
+      type: array
+      items:
+        type: object
+        properties:
+          dlp_profile:
+            type: string
+            example: Payment Card
+          actions:
+            type: array
+            items:
+              type: string
+              enum:
+                - allow
+                - block
+                - alert
+                - quanrantine
+                - bypass
+            example:
+              - allow
+    npa_policy_rule_data:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            type: string
+          example:
+            - vphan@netskope.com
+        userGroups:
+          type: array
+          items:
+            type: string
+          example:
+            - usergroup/group1
+        organization_units:
+          type: array
+          items:
+            type: string
+          example:
+            - engineering/qa
+        userType:
+          type: string
+          enum:
+            - user
+        access_method:
+          type: string
+          enum:
+            - Client
+            - Clientless
+        policy_type:
+          type: string
+          enum:
+            - private-app
+        privateApps:
+          type: array
+          items:
+            type: string
+          example:
+            - app1
+            - app2
+        privateAppIds:
+          type: array
+          items:
+            type: string
+          example:
+            - '100'
+            - '201'
+        privateAppTags:
+          type: array
+          items:
+            type: string
+          example:
+            - tag1
+            - tag2
+        privateAppTagIds:
+          type: array
+          items:
+            type: string
+          example:
+            - '1'
+            - '2'
+        privateAppsWithActivities:
+          type: array
+          items:
+            type: object
+            properties:
+              appName:
+                type: string
+                example: "[172.31.12.135]"
+              activities:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    activity:
+                      type: string
+                      enum:
+                        - any
+                    list_of_constraints:
+                      type: array
+                      items:
+                        type: string
+                      example: []
+        match_criteria_action:
+          type: object
+          properties:
+            action_name:
+              type: string
+              enum:
+                - allow
+                - block
+        classification:
+          type: string
+        show_dlp_profile_action_table:
+          type: boolean
+        external_dlp:
+          type: boolean
+        net_location_obj:
+          type: array
+          items:
+            type: string
+          example:
+            - 190.123.150.10
+            - 190.218.0.0/16
+        b_negateNetLocation:
+          type: boolean
+        srcCountries:
+          type: array
+          items:
+            type: string
+          example:
+            - US
+            - AF
+            - CN
+        b_negateSrcCountries:
+          type: boolean
+        json_version:
+          type: integer
+          example: 3
+        version:
+          type: integer
+          example: 1
+        dlp_actions:
+          "$ref": "#/components/schemas/npa_policy_rule_dlp"
+paths:
+  "/npa/rules":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_policy
+    get:
+      summary: Get list of npa policies
+      x-speakeasy-entity-operation: NPAPolicyList#get
+      description: Get list of npa policies
+      parameters:
+        - name: fields
+          in: query
+          x-speakeasy-terraform-ignore: true
+          required: false
+          description: Return values only from specified fields
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          description: Query string based on query operaters
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Max number of policies to retrieve. Default will be all policies.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          required: false
+          description: The offset of the first policy in the list to retrieve.
+          schema:
+            type: integer
+        - name: sortby
+          in: query
+          required: false
+          description: Sort retrieved policies by specified field. Default is policy
+            id
+          schema:
+            type: string
+        - name: sortorder
+          in: query
+          required: false
+          description: Sort in either asc or desc order. The default is asc order
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_400"
+    post:
+      summary: Create a npa policy
+      description: Create a policy
+      x-speakeasy-entity-operation: NPAPolicy#create
+      parameters:
+        - name: silent
+          in: query
+          required: false
+          x-speakeasy-ignore: true
+          description: flag to skip output except status code
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/npa_policy_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_item"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_400"
+  "/npa/rules/{id}":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_policy
+    delete:
+      summary: Delete a npa policy
+      x-speakeasy-entity-operation: NPAPolicy#delete
+      description: Delete a npa policy with rule id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: npa policy id
+          x-speakeasy-match: RuleID
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    "$ref": "#/components/schemas/npa_policy_response_item"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_400"
+    patch:
+      summary: Patch a npa policy
+      description: Patch a npa policy based on rule id
+      x-speakeasy-entity-operation: NPAPolicy#update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: policy rule id
+          x-speakeasy-match: RuleID
+          schema:
+            type: integer
+        - name: silent
+          in: query
+          required: false
+          x-speakeasy-terraform-ignore: true
+          description: flag to skip output except status code
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/npa_policy_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    "$ref": "#/components/schemas/npa_policy_response_item"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_400"
+    get:
+      summary: Get a npa policy
+      description: Get a npa policy based on policy rule id
+      x-speakeasy-entity-operation: NPAPolicy#get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: npa policy id
+          x-speakeasy-match: RuleID
+          schema:
+            type: integer
+        - name: fields
+          in: query
+          x-speakeasy-terraform-ignore: true
+          required: false
+          description: Return values only from specified fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    "$ref": "#/components/schemas/npa_policy_response_item"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/npa_policy_response_400"

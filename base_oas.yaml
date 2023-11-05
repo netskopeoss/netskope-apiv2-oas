@@ -20,4 +20,3 @@ components:
       type: apiKey
       in: header
       name: Netskope-Api-Token
-paths:

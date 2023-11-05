@@ -1,0 +1,482 @@
+openapi: 3.0.0
+info:
+  title: npa_private_apps
+  description: NPA private apps CRUD operations.
+  version: 1.0.0
+components:
+  schemas:
+    private_apps_request:
+      type: object
+      x-speakeasy-entity: PrivateApp
+      properties:
+        app_name:
+          type: string
+        host:
+          type: string
+        real_host:
+          type: string
+        protocols:
+          type: array
+          items:
+            "$ref": "#/components/schemas/protocol_item"
+        publishers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/publisher_item"
+        publisher_tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item_no_id"
+        tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item_no_id"
+        use_publisher_dns:
+          type: boolean
+        clientless_access:
+          type: boolean
+        trust_self_signed_certs:
+          type: boolean
+    private_apps_put_request:
+      type: object
+      x-speakeasy-entity: PrivateApp
+      properties:
+        id:
+          type: integer
+          format: int32
+        app_name:
+          type: string
+        host:
+          type: string
+        real_host:
+          type: string
+        protocols:
+          type: array
+          items:
+            "$ref": "#/components/schemas/protocol_item"
+        publishers:
+          type: array
+          items:
+            "$ref": "#/components/schemas/publisher_item"
+        publisher_tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item_no_id"
+        tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/tag_item_no_id"
+        use_publisher_dns:
+          type: boolean
+        clientless_access:
+          type: boolean
+        trust_self_signed_certs:
+          type: boolean
+    private_apps_response:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - success
+            - not found
+        data:
+          type: object
+          x-speakeasy-entity: PrivateApp
+          properties:
+            id:
+              type: integer
+              format: int32
+            name:
+              type: string
+            use_publisher_dns:
+              type: boolean
+            clientless_access:
+              type: boolean
+            trust_self_signed_certs:
+              type: boolean
+            host:
+              type: string
+            real_host:
+              type: string
+            protocols:
+              type: array
+              items:
+                "$ref": "#/components/schemas/protocol_response_item"
+            tags:
+              type: array
+              items:
+                "$ref": "#/components/schemas/tag_item"
+            service_publisher_assignments:
+              type: array
+              items:
+                "$ref": "#/components/schemas/service_publisher_assignment_item"
+    private_apps_response_400:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        result:
+          type: string
+    private_apps_get_response:
+      type: object
+      x-speakeasy-entity: PrivateAppList
+      properties:
+        status:
+          type: string
+          x-speakeasy-terraform-ignore: true
+          enum:
+            - success
+            - not found
+        data:
+          type: array
+          items:
+            properties:
+              app_id:
+                type: integer
+                format: int32
+              app_name:
+                type: string
+              use_publisher_dns:
+                type: boolean
+              clientless_access:
+                type: boolean
+              trust_self_signed_certs:
+                type: boolean
+              host:
+                type: string
+              real_host:
+                type: string
+              protocols:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/protocol_response_item"
+              tags:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/tag_item"
+              service_publisher_assignments:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/service_publisher_assignment_item"
+        total:
+          type: integer
+          format: int32
+    protocol_item:
+      type: object
+      properties:
+        type:
+          type: string
+        port:
+          type: string
+    protocol_response_item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        port:
+          type: string
+        transport:
+          type: string
+        service_id:
+          type: integer
+          format: int32
+    publisher_item:
+      type: object
+      properties:
+        publisher_id:
+          type: string
+        publisher_name:
+          type: string
+    tag_item_no_id:
+      type: object
+      properties:
+        tag_name:
+          type: string
+    tag_item:
+      type: object
+      properties:
+        tag_id:
+          type: integer
+          format: int32
+        tag_name:
+          type: string
+    service_publisher_assignment_item:
+      type: object
+      properties:
+        publisher_id:
+          type: integer
+          format: int32
+        service_id:
+          type: integer
+          format: int32
+        primary:
+          type: boolean
+        reachability:
+          type: object
+          properties:
+            error_code:
+              type: integer
+              format: int32
+            reachable:
+              type: boolean
+            error_string:
+              type: string
+paths:
+  "/apps/private":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_apps_private
+    get:
+      summary: Get list of private applications
+      description: Get list of private applications
+      x-speakeasy-entity-operation: PrivateAppList#read
+      parameters:
+        - name: fields
+          in: query
+          required: false
+          description: Return values only from specified fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_get_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+    post:
+      summary: Create a private application
+      description: Create a private application
+      x-speakeasy-entity-operation: PrivateApp#create
+      parameters:
+        - name: silent
+          in: query
+          required: false
+          x-speakeasy-terraform-ignore: true
+          description: flag to skip output except status code
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/private_apps_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+  "/apps/private/{private_app_id}":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_apps_private
+    delete:
+      summary: Delete a private application
+      x-speakeasy-entity-operation: PrivateApp#delete
+      description: Delete a private application based on private app id
+      parameters:
+        - name: private_app_id
+          in: path
+          required: true
+          x-speakeasy-match: id
+          description: private apps id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - error
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+    put:
+      summary: Update a private application
+      x-speakeasy-entity-operation: PrivateApp#update
+      description: Update a private application based on private app id
+      parameters:
+        - name: private_app_id
+          in: path
+          required: true
+          x-speakeasy-match: id
+          description: private apps id
+          schema:
+            type: integer
+            format: int32
+        - name: silent
+          in: query
+          required: false
+          x-speakeasy-terraform-ignore: true
+          description: flag to skip output except status code
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/private_apps_put_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+    patch:
+      summary: Patch a private application
+      description: Patch a private application based on private app id
+      parameters:
+        - name: private_app_id
+          in: path
+          required: true
+          description: private apps id
+          schema:
+            type: integer
+            format: int32
+        - name: silent
+          in: query
+          required: false
+          description: flag to skip output except status code
+          schema:
+            type: string
+            enum:
+              - '1'
+              - '0'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/private_apps_put_request"
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+    get:
+      summary: Get a private application
+      description: Get a private application based on private app id
+      parameters:
+        - name: private_app_id
+          in: path
+          required: true
+          description: private apps id
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response"
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
+  "/apps/private/getpolicyinuse":
+    x-netskope-params:
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+      customerFacing: true
+      apiGroup: npa_apps_private
+    post:
+      summary: Retrieve number of policy in use for specified private apps
+      description: Retrieve number of policy in use for specified private apps
+      x-speakeasy-entity: PrivateAppPolicyUseCount#read
+      requestBody:
+        content:
+          application/json:
+            schema:
+              x-speakeasy-entity: PrivateAppPolicyUseCount
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - success
+                      - not found
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        token:
+                          type: string
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/private_apps_response_400"
