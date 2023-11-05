@@ -34,7 +34,7 @@ components:
                     type: "string"
         publisher_upgrade_profile_post_request:
             type: "object"
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfile
             properties:
                 name:
                     type: "string"
@@ -51,7 +51,7 @@ components:
                     format: "int32"
         publisher_upgrade_profile_put_request:
             type: "object"
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfile
             properties:
                 name:
                     type: "string"
@@ -74,12 +74,13 @@ components:
             properties:
                 status:
                     type: "string"
+                    x-speakeasy-ignore: true
                     enum:
                         - success
                         - not found
                 data:
                     type: "object"
-                    x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                    x-speakeasy-entity: NPAPublisherUpgradeProfile
                     properties:
                         id:
                             type: "integer"
@@ -99,7 +100,7 @@ components:
                             format: "int32"
         publisher_upgrade_profile_get_response:
             type: "object"
-            x-speakeasy-entity: NPAPublisherUpgradeProfiles
+            x-speakeasy-entity: NPAPublisherUpgradeProfileList
             properties:
                 status:
                     type: "string"
@@ -110,24 +111,26 @@ components:
                     type: "integer"
                     format: "int32"
                 data:
-                    type: "object"
-                    properties:
-                        id:
-                            type: "integer"
-                            format: "int32"
-                        frequency:
-                            type: "string"
-                        timezone:
-                            type: "string"
-                        docker_tag:
-                            type: "string"
-                        release_type:
-                            type: "string"
-                        name:
-                            type: "string"
-                        enabled:
-                            type: "integer"
-                            format: "int32"
+                    type: "array"
+                    items:
+                      type: object
+                      properties:
+                          id:
+                              type: "integer"
+                              format: "int32"
+                          frequency:
+                              type: "string"
+                          timezone:
+                              type: "string"
+                          docker_tag:
+                              type: "string"
+                          release_type:
+                              type: "string"
+                          name:
+                              type: "string"
+                          enabled:
+                              type: "integer"
+                              format: "int32"
         publisher_upgrade_profile_bulk_request:
             type: "object"
             properties:
@@ -200,7 +203,7 @@ paths:
             summary: "Get list of publisher upgrade profile objects"
             description: "Get list of publisher upgrade profile objects"
             x-speakeasy-name-override: list_objects
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#read
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfileList#read
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             parameters:
                 - name: "fields"
@@ -226,7 +229,7 @@ paths:
             summary: "Create a publisher upgrade profile"
             description: "Create a publisher upgrade profile"
             x-speakeasy-name-override: create
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#create
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#create
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             parameters:
                 - name: "silent"
@@ -266,7 +269,7 @@ paths:
             summary: "Delete a publisher"
             description: "Delete a publisher upgrade profile based on profile id"
             x-speakeasy-name-override: delete
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#delete
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#delete
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             parameters:
                 - name: "upgrade_profile_id"
@@ -300,7 +303,7 @@ paths:
             summary: "Update a publisher upgrade profile"
             description: "update a publisher upgrade profile based on publisher upgrade profile id"
             x-speakeasy-name-override: update
-            x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#update
+            x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#update
             x-speakeasy-group: NPAPublisherUpgradeProfiles
             parameters:
                 - name: "upgrade_profile_id"
