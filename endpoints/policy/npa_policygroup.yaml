@@ -66,7 +66,7 @@ components:
         result:
           type: string
 paths:
-  "/npa/policygroups":
+  "/policy/npa/policygroups":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -163,7 +163,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/npa_policygroup_response_400"
-  "/npa/policygroups/{id}":
+  "/policy/npa/policygroups/{id}":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2

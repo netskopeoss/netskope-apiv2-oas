@@ -225,7 +225,7 @@ components:
             error_string:
               type: string
 paths:
-  "/apps/private":
+  "/steering/apps/private":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -289,7 +289,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/private_apps_response_400"
-  "/apps/private/{private_app_id}":
+  "/steering/apps/private/{private_app_id}":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -432,7 +432,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/private_apps_response_400"
-  "/apps/private/getpolicyinuse":
+  "/steering/apps/private/getpolicyinuse":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2

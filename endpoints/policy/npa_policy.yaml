@@ -225,7 +225,7 @@ components:
         dlp_actions:
           "$ref": "#/components/schemas/npa_policy_rule_dlp"
 paths:
-  "/npa/rules":
+  "/policy/npa/rules":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -321,7 +321,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/npa_policy_response_400"
-  "/npa/rules/{id}":
+  "/policy/npa/rules/{id}":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2

@@ -61,7 +61,7 @@ components:
           type: integer
           format: int32
 paths:
-  "/apps/private/tags":
+  "/steering/apps/private/tags":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -150,7 +150,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/tag_response_400"
-  "/apps/private/tags/{tag_id}":
+  "/steering/apps/private/tags/{tag_id}":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2
@@ -249,7 +249,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/tag_response_400"
-  "/apps/private/tags/getpolicyinuse":
+  "/steering/apps/private/tags/getpolicyinuse":
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
       version: 2

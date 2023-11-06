@@ -343,7 +343,7 @@ components:
         throughput:
           type: string
 paths:
-  "/ipsec/pops":
+  "/steering/ipsec/pops":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -461,7 +461,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ipsec_response_500"
-  "/ipsec/pops/{id}":
+  "/steering/ipsec/pops/{id}":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -526,7 +526,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ipsec_response_500"
-  "/ipsec/tunnels":
+  "/steering/ipsec/tunnels":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -700,7 +700,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ipsec_response_500"
-  "/ipsec/tunnels/{id}":
+  "/steering/ipsec/tunnels/{id}":
     x-netskope-params:
       serviceConfig: steering
       version: 2

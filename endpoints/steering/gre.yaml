@@ -273,7 +273,7 @@ components:
         throughput:
           type: string
 paths:
-  "/gre/pops":
+  "/steering/gre/pops":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -385,7 +385,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/gre_response_500"
-  "/gre/pops/{id}":
+  "/steering/gre/pops/{id}":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -450,7 +450,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/gre_response_500"
-  "/gre/tunnels":
+  "/steering/gre/tunnels":
     x-netskope-params:
       serviceConfig: steering
       version: 2
@@ -618,7 +618,7 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/gre_response_500"
-  "/gre/tunnels/{id}":
+  "/steering/gre/tunnels/{id}":
     x-netskope-params:
       serviceConfig: steering
       version: 2
