@@ -30,6 +30,7 @@ components:
       x-speakeasy-entity: PrivateAppTagList
       properties:
         status:
+          x-speakeasy-ignore: true
           type: string
           enum:
             - success
@@ -70,6 +71,7 @@ paths:
     post:
       summary: create tags for private apps
       description: Create tags for private apps
+      x-speakeasy-entity-operation: PrivateAppTag#create
       requestBody:
         content:
           application/json:
@@ -184,7 +186,7 @@ paths:
     put:
       summary: Update a private app tag based on tag id
       description: Update a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#create,update
+      x-speakeasy-entity-operation: PrivateAppTag#update
       parameters:
         - name: tag_id
           in: path
@@ -239,6 +241,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
@@ -281,6 +284,7 @@ paths:
                 x-speakeasy-entity: PrivateAppTagPolicyUseList
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success

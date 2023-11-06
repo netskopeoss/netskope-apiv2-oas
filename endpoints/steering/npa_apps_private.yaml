@@ -76,6 +76,7 @@ components:
       type: object
       properties:
         status:
+          x-speakeasy-ignore: true
           type: string
           enum:
             - success
@@ -174,13 +175,16 @@ components:
       type: object
       properties:
         id:
+          x-speakeasy-ignore: true
           type: integer
           format: int32
         port:
           type: string
         transport:
+          x-speakeasy-ignore: true
           type: string
         service_id:
+          x-speakeasy-ignore: true
           type: integer
           format: int32
     publisher_item:
@@ -317,6 +321,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
@@ -463,6 +468,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
