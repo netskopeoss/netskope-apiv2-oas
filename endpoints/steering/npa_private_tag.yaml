@@ -13,8 +13,10 @@ components:
       properties:
         id:
           type: string
+          x-speakeasy-name-override: application_id
         ids:
           type: array
+          x-speakeasy-name-override: additional_application_ids
           items:
             type: string
         tags:
@@ -27,7 +29,9 @@ components:
             "$ref": "#/components/schemas/tag_item"
     tag_response:
       type: object
-      x-speakeasy-entity: PrivateAppTagList
+      x-speakeasy-entity:
+       - PrivateAppTagList
+       - PrivateAppTag
       properties:
         status:
           x-speakeasy-ignore: true
@@ -161,7 +165,7 @@ paths:
     get:
       summary: Get a private app tag based on tag id
       description: Get a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#read
+#      x-speakeasy-entity-operation: PrivateAppTag#read
       parameters:
         - name: tag_id
           in: path
@@ -186,7 +190,7 @@ paths:
     put:
       summary: Update a private app tag based on tag id
       description: Update a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#update
+#      x-speakeasy-entity-operation: PrivateAppTag#update
       parameters:
         - name: tag_id
           in: path
@@ -217,7 +221,7 @@ paths:
     delete:
       summary: Delete a private app tag based on tag id
       description: Delete a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#delete
+#      x-speakeasy-entity-operation: PrivateAppTag#delete
       parameters:
         - name: tag_id
           in: path
