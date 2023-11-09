@@ -49,6 +49,7 @@ components:
           example: '1'
     npa_policy_response_item:
       type: object
+      x-speakeasy-entity: NPAPolicy
       properties:
         rule_id:
           type: string #This was mis-typed as an int - speakeasy pov
@@ -67,12 +68,8 @@ components:
       type: object
       properties:
         data:
-          x-speakeasy-entity:
-          - NPAPolicyList
-          - NPAPolicy
-          type: object #This was defined as an array which isn't correct
-          items:
-            "$ref": "#/components/schemas/npa_policy_response_item"
+          #This was defined as an array which isn't correct
+          "$ref": "#/components/schemas/npa_policy_response_item"
     npa_policy_response_400:
       type: object
       properties:
@@ -237,7 +234,7 @@ paths:
       apiGroup: npa_policy
     get:
       summary: Get list of npa policies
-      x-speakeasy-entity-operation: NPAPolicyList#get
+#      x-speakeasy-entity-operation: NPAPolicyList#get
       description: Get list of npa policies
       parameters:
         - name: fields
