@@ -68,8 +68,15 @@ components:
       type: object
       properties:
         data:
-          #This was defined as an array which isn't correct
           "$ref": "#/components/schemas/npa_policy_response_item"
+    npa_policy_list_response:
+      x-speakeasy-entity: NPAPolicyList
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            "$ref": "#/components/schemas/npa_policy_response_item"
     npa_policy_response_400:
       type: object
       properties:
@@ -234,7 +241,7 @@ paths:
       apiGroup: npa_policy
     get:
       summary: Get list of npa policies
-#      x-speakeasy-entity-operation: NPAPolicyList#get
+      x-speakeasy-entity-operation: NPAPolicyList#get
       description: Get list of npa policies
       parameters:
         - name: fields
@@ -281,7 +288,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policy_response"
+                "$ref": "#/components/schemas/npa_policy_list_response"
         '400':
           description: Invalid request
           content:
