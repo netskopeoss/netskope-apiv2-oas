@@ -63,12 +63,12 @@ components:
           x-speakeasy-ignore: true # note: doesn't show up in responses
           type: integer
           example: 1
-    npa_policy_response:
+    #npa_policy_response:
       #x-speakeasy-entity: NPAPolicyList
-      type: object
-      properties:
-        data:
-          "$ref": "#/components/schemas/npa_policy_response_item"
+     # type: object
+      #properties:
+       # data:
+        #  "$ref": "#/components/schemas/npa_policy_response_item"
     npa_policy_list_response:
       x-speakeasy-entity: NPAPolicyList
       type: object
@@ -322,7 +322,8 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policy_response" #This was referencing npa_policy_response_item which is wrong
+                #"$ref": "#/components/schemas/npa_policy_response" #This was referencing npa_policy_response_item which is wrong
+                "$ref": "#/components/schemas/npa_policy_response_item"
         '400':
           description: Invalid request
           content:
@@ -450,7 +451,8 @@ paths:
                       - success
                       - error
                   data:
-                    "$ref": "#/components/schemas/npa_policy_response" #referenced the response item again which is incorrect
+                    #"$ref": "#/components/schemas/npa_policy_response" #referenced the response item again which is incorrect
+                    "$ref": "#/components/schemas/npa_policy_response_item"
         '400':
           description: Invalid request
           content:

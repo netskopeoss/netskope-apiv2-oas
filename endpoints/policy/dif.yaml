@@ -1,0 +1,26 @@
+diff --git a/endpoints/policy/npa_policy.yaml b/endpoints/policy/npa_policy.yaml
+index b5bffce..47a4852 100644
+--- a/endpoints/policy/npa_policy.yaml
++++ b/endpoints/policy/npa_policy.yaml
+@@ -63,12 +63,6 @@ components:
+           x-speakeasy-ignore: true # note: doesn't show up in responses
+           type: integer
+           example: 1
+-    npa_policy_response:
+-      #x-speakeasy-entity: NPAPolicyList
+-      type: object
+-      properties:
+-        data:
+-          "$ref": "#/components/schemas/npa_policy_response_item"
+     npa_policy_list_response:
+       x-speakeasy-entity: NPAPolicyList
+       type: object
+@@ -450,7 +444,7 @@ paths:
+                       - success
+                       - error
+                   data:
+-                    "$ref": "#/components/schemas/npa_policy_response" #referenced the response item again which is incorrect
++                    "$ref": "#/components/schemas/npa_policy_response_item"
+         '400':
+           description: Invalid request
+           content:
