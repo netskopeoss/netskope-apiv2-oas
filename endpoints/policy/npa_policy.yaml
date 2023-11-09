@@ -63,12 +63,12 @@ components:
           x-speakeasy-ignore: true # note: doesn't show up in responses
           type: integer
           example: 1
+    #Removing this as it isn't needed - Using npa_policy_response_item as that is what is needed.      
     #npa_policy_response:
-      #x-speakeasy-entity: NPAPolicyList
-     # type: object
-      #properties:
-       # data:
-        #  "$ref": "#/components/schemas/npa_policy_response_item"
+    #  x-speakeasy-entity: NPAPolicy
+    #  type: object
+    #    data:
+    #    "$ref": "#/components/schemas/npa_policy_response_item"
     npa_policy_list_response:
       x-speakeasy-entity: NPAPolicyList
       type: object
@@ -319,11 +319,25 @@ paths:
       responses:
         '200':
           description: successful operation
+          #content:
+          #  application/json:
+          #    schema:
+          #      #"$ref": "#/components/schemas/npa_policy_response" #This was referencing npa_policy_response_item which is wrong
+          #      "$ref": "#/components/schemas/npa_policy_response"
           content:
             application/json:
               schema:
-                #"$ref": "#/components/schemas/npa_policy_response" #This was referencing npa_policy_response_item which is wrong
-                "$ref": "#/components/schemas/npa_policy_response_item"
+                type: object
+                properties:
+                  status:
+                    x-speakeasy-ignore: true
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    #"$ref": "#/components/schemas/npa_policy_response" #referenced the response item again which is incorrect
+                    "$ref": "#/components/schemas/npa_policy_response_item"
         '400':
           description: Invalid request
           content:
@@ -357,6 +371,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
@@ -406,6 +421,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
@@ -446,6 +462,7 @@ paths:
                 type: object
                 properties:
                   status:
+                    x-speakeasy-ignore: true
                     type: string
                     enum:
                       - success
