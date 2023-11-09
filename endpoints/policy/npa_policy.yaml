@@ -49,6 +49,7 @@ components:
           example: '1'
     npa_policy_response_item:
       type: object
+      x-speakeasy-entity: NPAPolicy
       properties:
         rule_id:
           type: string #This was mis-typed as an int - speakeasy pov
@@ -67,10 +68,13 @@ components:
       type: object
       properties:
         data:
-          x-speakeasy-entity:
-          - NPAPolicyList
-          - NPAPolicy
-          type: object #This was defined as an array which isn't correct
+          "$ref": "#/components/schemas/npa_policy_response_item"
+    npa_policy_list_response:
+      x-speakeasy-entity: NPAPolicyList
+      type: object
+      properties:
+        data:
+          type: array
           items:
             "$ref": "#/components/schemas/npa_policy_response_item"
     npa_policy_response_400:
@@ -284,7 +288,7 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policy_response"
+                "$ref": "#/components/schemas/npa_policy_list_response"
         '400':
           description: Invalid request
           content:
