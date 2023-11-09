@@ -51,3 +51,6 @@
                 - status
 ```
 
+### NPA Policy Rules
+- RuleID is defined as int but in reality it is a string
+- Access Method is defined as a string but it is an array

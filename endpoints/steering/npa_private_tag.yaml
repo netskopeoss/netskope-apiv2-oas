@@ -38,6 +38,7 @@ components:
         data:
           type: array
           items:
+            x-speakeasy-entity: PrivateAppTag
             type: object
             properties:
               tag_id:
@@ -161,7 +162,7 @@ paths:
     get:
       summary: Get a private app tag based on tag id
       description: Get a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#read
+      #x-speakeasy-entity-operation: PrivateAppTag#read
       parameters:
         - name: tag_id
           in: path
@@ -186,7 +187,7 @@ paths:
     put:
       summary: Update a private app tag based on tag id
       description: Update a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#update
+      #x-speakeasy-entity-operation: PrivateAppTag#update
       parameters:
         - name: tag_id
           in: path
@@ -217,7 +218,7 @@ paths:
     delete:
       summary: Delete a private app tag based on tag id
       description: Delete a private app tag based on tag id
-      x-speakeasy-entity-operation: PrivateAppTag#delete
+      #x-speakeasy-entity-operation: PrivateAppTag#delete
       parameters:
         - name: tag_id
           in: path
