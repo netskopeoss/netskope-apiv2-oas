@@ -193,7 +193,7 @@ components:
                     type: "integer"
                     format: "int32"
 paths:
-    /publisherupgradeprofiles:
+    /infrastructure/publisherupgradeprofiles:
         x-netskope-params:
             serviceConfig: provisioner-pycore-ws
             version: 2
@@ -259,7 +259,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/400'
-    /publisherupgradeprofiles/{upgrade_profile_id}:
+    /infrastructure/publisherupgradeprofiles/{upgrade_profile_id}:
         x-netskope-params:
             serviceConfig: provisioner-pycore-ws
             version: 2
@@ -366,7 +366,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/400'
-    /publisherupgradeprofiles/bulk:
+    /infrastructure/publisherupgradeprofiles/bulk:
         x-netskope-params:
             customerFacing: true
             apiGroup: npa_upgrade_profiles

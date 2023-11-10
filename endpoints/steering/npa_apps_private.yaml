@@ -101,6 +101,7 @@ components:
             real_host:
               type: string
             protocols:
+              x-speakeasy-name-override: protocols_computed
               type: array
               items:
                 "$ref": "#/components/schemas/protocol_response_item"

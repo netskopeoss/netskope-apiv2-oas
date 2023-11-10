@@ -7,7 +7,7 @@ components:
   schemas:
     publisher_post_request:
       type: object
-      x-speakeasy-entity: NPAPublisher
+      x-speakeasy-entity: NPAPublishers
       properties:
         name:
           type: string
@@ -50,7 +50,7 @@ components:
           type: string
     publisher_put_request:
       type: object
-      x-speakeasy-entity: NPAPublisher
+      x-speakeasy-entity: NPAPublishers
       properties:
         name:
           type: string
@@ -74,7 +74,7 @@ components:
             - not found
         data:
           type: object
-          x-speakeasy-entity: NPAPublisher
+          x-speakeasy-entity: NPAPublishers
           properties:
             id:
               type: integer
@@ -115,7 +115,7 @@ components:
           type: string
     publishers_get_response:
       type: object
-      x-speakeasy-entity: NPAPublishers
+      x-speakeasy-entity: NPAPublishersList
       properties:
         data:
           $ref: '#/components/schemas/Data'
@@ -287,7 +287,7 @@ components:
             $ref: '#/components/schemas/tag_item'
     publisher_bulk_request:
       type: object
-      x-speakeasy-entity: NPAPublisherBulkUpgrade
+      x-speakeasy-entity: NPAPublishersBulkUpgrade
       properties:
         publishers:
           type: object
@@ -304,7 +304,7 @@ components:
                   default: true
     publishers_bulk_response:
       type: object
-      x-speakeasy-entity: NPAPublisherBulkUpgrade
+      x-speakeasy-entity: NPAPublishersBulkUpgrade
       properties:
         status:
           type: string
@@ -354,7 +354,7 @@ components:
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
-      x-speakeasy-entity: NPAPublisherAlerts
+      x-speakeasy-entity: NPAPublishersAlerts
       properties:
         adminUsers:
           type: array
@@ -392,7 +392,7 @@ components:
             - failure
     publishers_release_get_response:
       type: object
-      x-speakeasy-entity: NPAPublisherReleases
+      x-speakeasy-entity: NPAPublishersReleasesList
       properties:
         status:
           type: string
@@ -439,7 +439,7 @@ components:
               type: string
     private_apps_response:
       type: object
-      x-speakeasy-entity: NPAPublisherApps
+      x-speakeasy-entity: NPAPublishersAppsList
       properties:
         status:
           type: string
@@ -489,7 +489,7 @@ paths:
       summary: Get list of publisher objects
       description: Get list of publisher objects
       x-speakeasy-name-override: list_objects
-      x-speakeasy-entity-operation: NPAPublishers#read
+      x-speakeasy-entity-operation: NPAPublishersList#read
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: fields
@@ -515,7 +515,7 @@ paths:
       summary: Create a publisher
       description: Create a publisher
       x-speakeasy-name-override: create
-      x-speakeasy-entity-operation: NPAPublisher#create
+      x-speakeasy-entity-operation: NPAPublishers#create
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: silent
@@ -557,7 +557,7 @@ paths:
       summary: Delete a publisher
       description: Delete a publisher based on publisher id
       x-speakeasy-name-override: delete
-      x-speakeasy-entity-operation: NPAPublisher#delete
+      x-speakeasy-entity-operation: NPAPublishers#delete
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: publisher_id
@@ -591,7 +591,7 @@ paths:
       summary: Update a publisher
       description: update a publisher based on publisher id
       x-speakeasy-name-override: update
-      x-speakeasy-entity-operation: NPAPublisher#update
+      x-speakeasy-entity-operation: NPAPublishers#update
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: publisher_id
@@ -674,7 +674,7 @@ paths:
       summary: Get a publisher
       description: get a publisher based on publisher id
       x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: NPAPublisher#read
+      x-speakeasy-entity-operation: NPAPublishers#read
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: publisher_id
@@ -759,8 +759,8 @@ paths:
       summary: Get all private apps associated to a publisher
       description: Get all private apps associated to a publisher
       x-speakeasy-name-override: list_objects
-      x-speakeasy-entity-operation: NPAPublisherApps#read
-      x-speakeasy-group: NPAPublisherApps
+      x-speakeasy-entity-operation: NPAPublishersAppsList#read
+      x-speakeasy-group: NPAPublishersApps
       parameters:
         - name: publisher_id
           in: path
@@ -791,7 +791,7 @@ paths:
     put:
       summary: Trigger bulk publisher update action
       description: Trigger bulk publisher update action
-      x-speakeasy-entity-operation: NPAPublisherBulkUpgrade#create
+      x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
       parameters:
         - name: silent
           in: query
@@ -832,8 +832,8 @@ paths:
       summary: Get list of publisher release objects
       description: Get list of publisher release objects
       x-speakeasy-name-override: list_objects
-      x-speakeasy-entity-operation: NPAPublisherReleases#read
-      x-speakeasy-group: NPAPublisherReleases
+      x-speakeasy-entity-operation: NPAPublishersReleasesList#read
+      x-speakeasy-group: NPAPublishersReleases
       parameters:
         - name: fields
           in: query
@@ -863,7 +863,7 @@ paths:
     get:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
-      x-speakeasy-entity-operation: NPAPublisherAlertsList#read
+      x-speakeasy-entity-operation: NPAPublishersAlertsList#read
       responses:
         "200":
           description: successful operation
@@ -880,7 +880,7 @@ paths:
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
-      x-speakeasy-entity-operation: NPAPublisherAlerts#create
+      x-speakeasy-entity-operation: NPAPublishersAlerts#create
       parameters:
         - name: silent
           in: query

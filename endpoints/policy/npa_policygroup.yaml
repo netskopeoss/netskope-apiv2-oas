@@ -11,30 +11,46 @@ components:
       properties:
         group_name:
           type: string
+        #### This causes group order to be nested in group order which is not correct
+        #group_order:
+        #  type: object
+        #  properties:
+        #    group_order:
+        #      type: object
+        #      properties:
+        #        order:
+        #          type: string
+        #          enum:
+        #            - before
+        #            - after
+        #        group_id:
+        #          type: string
+        #          example: '1'
+        # Should Be this...
         group_order:
           type: object
           properties:
-            group_order:
-              type: object
-              properties:
-                order:
-                  type: string
-                  enum:
-                    - before
-                    - after
-                group_id:
-                  type: string
-                  example: '1'
-        modify_type:
-          type: string
-        modify_by:
-          type: string
+            order:
+              type: string
+              enum:
+                - before
+                - after
+            group_id:
+              type: string
+              example: '1'
+        ### This should be in the response        
+        #modify_type:
+        #  type: string
+        #modify_by:
+        #  type: string
     npa_policygroup_response_item:
       type: object
       x-speakeasy-entity: NPAPolicyGroup
       properties:
         group_id:
-          type: integer
+          # This is a string
+          #type: integer
+          type: string
         group_name:
           type: string
         modify_type:
@@ -42,12 +58,16 @@ components:
         modify_time:
           type: string
         can_be_edited_deleted:
-          type: integer
+          # This is a string
+          #type: integer
+          type: string
         group_type:
+          #This is a string
+          #type: integer
+          type: string
+        group_prod_id: # This doesn't appear to be returned but I bet it is a string
           type: integer
-        group_prod_id:
-          type: integer
-        group_pinned_id:
+        group_pinned_id: # This doesn't appear to be returned but I bet it is a string
           type: integer
     npa_policygroup_response:
       type: object
@@ -153,10 +173,27 @@ paths:
       responses:
         '200':
           description: successful operation
+          #### This should look like.....
+          # content:
+          #  application/json:
+          #    schema:
+          #      "$ref": "#/components/schemas/npa_policygroup_response_item"
+          #
+          # This...
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policygroup_response_item"
+                type: object
+                properties:
+                  status:
+                    x-speakeasy-ignore: true
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    type: array
+                    "$ref": "#/components/schemas/npa_policygroup_response_item"
         '400':
           description: Invalid request
           content:
@@ -180,7 +217,9 @@ paths:
           x-speakeasy-match: group_id
           description: npa policy group id
           schema:
-            type: integer
+            # This is actually a string
+            #type: integer
+            type: string
       responses:
         '200':
           description: successful operation
@@ -210,7 +249,8 @@ paths:
           x-speakeasy-match: group_id
           description: policy group rule id
           schema:
-            type: integer
+            #type: integer #Actually a string
+            type: string
         - name: silent
           in: query
           required: false
@@ -230,10 +270,27 @@ paths:
       responses:
         '200':
           description: successful operation
+          #### This should look like.....
+          # content:
+          #  application/json:
+          #    schema:
+          #      "$ref": "#/components/schemas/npa_policygroup_response_item"
+          #
+          # This...
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policygroup_response_item"
+                type: object
+                properties:
+                  status:
+                    x-speakeasy-ignore: true
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    type: array
+                    "$ref": "#/components/schemas/npa_policygroup_response_item"
         '400':
           description: Invalid request
           content:
@@ -251,14 +308,32 @@ paths:
           description: npa policy group id
           x-speakeasy-match: group_id
           schema:
-            type: integer
+            #type: integer #Actually a string
+            type: string
       responses:
         '200':
           description: successful operation
+          #### This should look like.....
+          # content:
+          #  application/json:
+          #    schema:
+          #      "$ref": "#/components/schemas/npa_policygroup_response_item"
+          #
+          # This...
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/npa_policygroup_response_item"
+                type: object
+                properties:
+                  status:
+                    x-speakeasy-ignore: true
+                    type: string
+                    enum:
+                      - success
+                      - error
+                  data:
+                    type: array
+                    "$ref": "#/components/schemas/npa_policygroup_response_item"
         '400':
           description: Invalid request
           content:
