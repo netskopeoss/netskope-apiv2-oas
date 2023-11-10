@@ -326,8 +326,8 @@ components:
         data:
           type: object
           x-speakeasy-entity:
-           - NPAPublisherAlerts
-           - NPAPublisherAlertsList
+           - NPAPublishersAlerts
+           - NPAPublishersAlertsList
           properties:
             adminUsers:
               type: array
@@ -354,7 +354,9 @@ components:
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
-      x-speakeasy-entity: NPAPublishersAlerts
+      x-speakeasy-entity: 
+        - NPAPublishersAlerts
+        - NPAPublishersAlertsList
       properties:
         adminUsers:
           type: array
