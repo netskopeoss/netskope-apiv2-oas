@@ -102,6 +102,7 @@ components:
               type: string
             protocols:
               type: array
+              x-speakeasy-name-override: "resolved_protocols"
               items:
                 "$ref": "#/components/schemas/protocol_response_item"
             tags:
