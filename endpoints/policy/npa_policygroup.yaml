@@ -8,6 +8,10 @@ components:
     npa_policygroup_request:
       type: object
       x-speakeasy-entity: NPAPolicyGroup
+      required: # Ideally required params should be specified
+        - group_name
+        - group_order
+       
       properties:
         group_name:
           type: string
@@ -29,6 +33,9 @@ components:
         # Should Be this...
         group_order:
           type: object
+          required:
+            - order
+            - group_id
           properties:
             order:
               type: string
@@ -38,6 +45,7 @@ components:
             group_id:
               type: string
               example: '1'
+
         ### This should be in the response        
         #modify_type:
         #  type: string

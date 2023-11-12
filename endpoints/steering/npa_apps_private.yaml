@@ -182,7 +182,7 @@ components:
         port:
           type: string
         transport:
-          x-speakeasy-ignore: true
+          #x-speakeasy-ignore: true
           type: string
         service_id:
           x-speakeasy-ignore: true
