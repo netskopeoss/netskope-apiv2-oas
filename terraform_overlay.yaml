@@ -3,30 +3,6 @@ info:
   title: Overlay to produce the netskope TF Provider
   version: 0.0.1
 actions:
-  - target: "$"
-    update:
-      $ref: "./endpoints/infrastructure/npa_publisher.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/infrastructure/npa_upgrade_profiles.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/policy/npa_policy.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/policy/npa_policygroup.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/steering/gre.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/steering/ipsec.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/steering/npa_apps_private.yaml"
-  - target: "$"
-    update:
-      $ref: "./endpoints/steering/npa_private_tag.yaml"
   - target: "info.title"
     update: "Netskope Terraform Provider"
   - target: "info.description"
