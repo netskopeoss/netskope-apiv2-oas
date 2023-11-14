@@ -439,7 +439,7 @@ components:
               type: boolean
             error_string:
               type: string
-    private_apps_response:
+    publisher_apps_list_response:
       type: object
       x-speakeasy-entity: NPAPublishersAppsList
       properties:
@@ -777,7 +777,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/private_apps_response'
+                $ref: '#/components/schemas/publisher_apps_list_response'
         "400":
           description: Invalid request
           content:

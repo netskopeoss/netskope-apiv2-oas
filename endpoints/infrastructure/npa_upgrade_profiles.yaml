@@ -146,7 +146,7 @@ components:
                             properties:
                                 publisher_upgrade_profiles_id:
                                     type: "string"
-        publisher_response:
+        publisher_upgrade_profile_bulk_response:
             type: "object"
             properties:
                 publisher_id:
@@ -188,7 +188,7 @@ components:
                 data:
                     type: "array"
                     items:
-                        $ref: '#/components/schemas/publisher_response'
+                        $ref: '#/components/schemas/publisher_upgrade_profile_bulk_response'
                 total:
                     type: "integer"
                     format: "int32"
