@@ -18,7 +18,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/tag_item_no_id'
+            $ref: "#/components/schemas/tag_item_no_id"
         publisher_upgrade_profiles_id:
           type: integer
           format: int32
@@ -62,7 +62,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/tag_item'
+            $ref: "#/components/schemas/tag_item"
     publisher_response:
       type: object
       properties:
@@ -104,7 +104,7 @@ components:
             tags:
               type: array
               items:
-                $ref: '#/components/schemas/tag_item'
+                $ref: "#/components/schemas/tag_item"
     publishers_response_400:
       type: object
       properties:
@@ -118,7 +118,7 @@ components:
       x-speakeasy-entity: NPAPublishersList
       properties:
         data:
-          $ref: '#/components/schemas/Data'
+          $ref: "#/components/schemas/Data"
         status:
           type: string
         total:
@@ -131,7 +131,7 @@ components:
         publishers:
           type: array
           items:
-            $ref: '#/components/schemas/Publisher'
+            $ref: "#/components/schemas/Publisher"
       required:
         - publishers
       title: Data
@@ -143,7 +143,7 @@ components:
           type: integer
         assessment:
           anyOf:
-            - $ref: '#/components/schemas/Assessment'
+            - $ref: "#/components/schemas/Assessment"
             - type: object
         common_name:
           type: string
@@ -173,12 +173,12 @@ components:
           items: {}
         upgrade_failed_reason:
           anyOf:
-            - $ref: '#/components/schemas/UpgradeFailedReason'
+            - $ref: "#/components/schemas/UpgradeFailedReason"
             - type: object
         upgrade_request:
           type: boolean
         upgrade_status:
-          $ref: '#/components/schemas/UpgradeStatus'
+          $ref: "#/components/schemas/UpgradeStatus"
       required:
         - apps_count
         - assessment
@@ -284,7 +284,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/tag_item'
+            $ref: "#/components/schemas/tag_item"
     publisher_bulk_request:
       type: object
       x-speakeasy-entity: NPAPublishersBulkUpgrade
@@ -314,7 +314,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/publisher_bulk_item'
+            $ref: "#/components/schemas/publisher_bulk_item"
     publishers_alert_get_response:
       type: object
       properties:
@@ -326,8 +326,8 @@ components:
         data:
           type: object
           x-speakeasy-entity:
-           - NPAPublishersAlerts
-           - NPAPublishersAlertsList
+            - NPAPublishersAlerts
+            - NPAPublishersAlertsList
           properties:
             adminUsers:
               type: array
@@ -354,7 +354,7 @@ components:
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
-      x-speakeasy-entity: 
+      x-speakeasy-entity:
         - NPAPublishersAlerts
         - NPAPublishersAlertsList
       properties:
@@ -404,7 +404,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/release_item'
+            $ref: "#/components/schemas/release_item"
     protocol_response_item:
       type: object
       properties:
@@ -439,7 +439,7 @@ components:
               type: boolean
             error_string:
               type: string
-    private_apps_response:
+    publisher_apps_list_response:
       type: object
       x-speakeasy-entity: NPAPublishersAppsList
       properties:
@@ -471,15 +471,15 @@ components:
               protocols:
                 type: array
                 items:
-                  $ref: '#/components/schemas/protocol_response_item'
+                  $ref: "#/components/schemas/protocol_response_item"
               tags:
                 type: array
                 items:
-                  $ref: '#/components/schemas/tag_item'
+                  $ref: "#/components/schemas/tag_item"
               service_publisher_assignments:
                 type: array
                 items:
-                  $ref: '#/components/schemas/service_publisher_assignment_item'
+                  $ref: "#/components/schemas/service_publisher_assignment_item"
 paths:
   /infrastructure/publishers:
     x-netskope-params:
@@ -506,13 +506,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_get_response'
+                $ref: "#/components/schemas/publishers_get_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
     post:
       summary: Create a publisher
       description: Create a publisher
@@ -534,7 +534,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/publisher_post_request'
+              $ref: "#/components/schemas/publisher_post_request"
         required: true
       responses:
         "200":
@@ -542,13 +542,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publisher_response'
+                $ref: "#/components/schemas/publisher_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/{publisher_id}:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -588,7 +588,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
     put:
       summary: Update a publisher
       description: update a publisher based on publisher id
@@ -618,7 +618,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/publisher_put_request'
+              $ref: "#/components/schemas/publisher_put_request"
         required: true
       responses:
         "200":
@@ -626,13 +626,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publisher_response'
+                $ref: "#/components/schemas/publisher_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
     patch:
       summary: Patch a publisher
       description: patch a publisher based on publisher id
@@ -657,7 +657,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/publisher_put_request'
+              $ref: "#/components/schemas/publisher_put_request"
         required: true
       responses:
         "200":
@@ -665,13 +665,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publisher_response'
+                $ref: "#/components/schemas/publisher_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
     get:
       summary: Get a publisher
       description: get a publisher based on publisher id
@@ -693,13 +693,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publisher_response'
+                $ref: "#/components/schemas/publisher_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/{publisher_id}/registration_token:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -750,7 +750,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/{publisher_id}/apps:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -777,13 +777,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/private_apps_response'
+                $ref: "#/components/schemas/publisher_apps_list_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/bulk:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -809,7 +809,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/publisher_bulk_request'
+              $ref: "#/components/schemas/publisher_bulk_request"
         required: true
       responses:
         "200":
@@ -817,13 +817,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_bulk_response'
+                $ref: "#/components/schemas/publishers_bulk_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/releases:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -849,13 +849,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_release_get_response'
+                $ref: "#/components/schemas/publishers_release_get_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
   /infrastructure/publishers/alertsconfiguration:
     x-netskope-params:
       serviceConfig: provisioner-pycore-ws
@@ -872,13 +872,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_alert_get_response'
+                $ref: "#/components/schemas/publishers_alert_get_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
@@ -898,7 +898,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/publishers_alert_put_request'
+              $ref: "#/components/schemas/publishers_alert_put_request"
         required: true
       responses:
         "200":
@@ -906,10 +906,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_alert_put_response'
+                $ref: "#/components/schemas/publishers_alert_put_response"
         "400":
           description: Invalid request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/publishers_response_400'
+                $ref: "#/components/schemas/publishers_response_400"
