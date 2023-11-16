@@ -118,33 +118,54 @@ components:
       properties:
         status:
           type: "string"
+          x-speakeasy-terraform-ignore: true
           enum:
             - success
             - not found
         total:
           type: "integer"
           format: "int32"
+        #data: # Data was defined as an array which was wrong. it should look like this.
         data:
-          type: "array"
-          items:
-            type: object
-            properties:
-              id:
-                type: "integer"
-                format: "int32"
-              frequency:
-                type: "string"
-              timezone:
-                type: "string"
-              docker_tag:
-                type: "string"
-              release_type:
-                type: "string"
-              name:
-                type: "string"
-              enabled:
-                type: "integer"
-                format: "int32"
+          type: object
+          properties:
+            upgrade_profiles:
+              type: array
+              items:
+                type: object
+                properties:
+                  created_at:
+                    type: string
+                  docker_tag:
+                    type: string
+                  enabled:
+                    type: boolean
+                  external_id:
+                    type: integer
+                    format: int32
+                  frequency:
+                    type: string
+                  id:
+                    type: integer
+                    format: int32
+                  name:
+                    type: string
+                  next_update_time:
+                    type: integer
+                    format: int32
+                  num_associated_publisher:
+                    type: integer
+                  release_type:
+                    type: string
+                  timezone:
+                    type: string
+                  updated_at:
+                    type: string
+                  upgrading_stage:
+                    type: integer
+                    format: int32
+                  will_start:
+                    type: boolean
     publisher_upgrade_profile_bulk_request:
       type: "object"
       properties:
