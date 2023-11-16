@@ -319,6 +319,7 @@ components:
       type: object
       properties:
         status:
+          x-speakeasy-ignore: true
           type: string
           enum:
             - success
@@ -326,8 +327,7 @@ components:
         data:
           type: object
           x-speakeasy-entity:
-            - NPAPublishersAlerts
-            - NPAPublishersAlertsList
+            - NPAPublishersAlertsConfiguration
           properties:
             adminUsers:
               type: array
@@ -350,13 +350,12 @@ components:
                 - CONNECTION_FAILED
                 - UPGRADE_STARTED
             selectedUsers:
-              type: string
+              type: string # Should be an array of strings,
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
       x-speakeasy-entity:
-        - NPAPublishersAlerts
-        - NPAPublishersAlertsList
+        NPAPublishersAlertsConfiguration
       properties:
         adminUsers:
           type: array
@@ -865,7 +864,7 @@ paths:
     get:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
-      x-speakeasy-entity-operation: NPAPublishersAlertsList#read
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
       responses:
         "200":
           description: successful operation
@@ -882,7 +881,7 @@ paths:
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
-      x-speakeasy-entity-operation: NPAPublishersAlerts#create
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
       parameters:
         - name: silent
           in: query
@@ -906,7 +905,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/publishers_alert_put_response"
+                $ref: "#/components/schemas/publishers_alert_put_request" # This was labelled as response in the original swagger
         "400":
           description: Invalid request
           content:

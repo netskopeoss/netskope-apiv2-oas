@@ -381,9 +381,13 @@ paths:
     get:
       summary: "Get a publisher upgrade profile "
       description: "get a publisher upgrade profile based on publisher upgrade profile id"
+      x-speakeasy-name-override: read
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#read
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
       parameters:
         - name: "upgrade_profile_id"
           in: "path"
+          x-speakeasy-match: id
           required: true
           description: "publisher upgrade profile id"
           schema:
