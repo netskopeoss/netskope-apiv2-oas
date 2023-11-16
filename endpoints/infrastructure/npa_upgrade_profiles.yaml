@@ -47,8 +47,18 @@ components:
         release_type:
           type: "string"
         enabled:
-          type: "integer"
-          format: "int32"
+          # type is actually boolean
+          # type: "integer"
+          # format: "int32"
+          type: "boolean"
+        # All of the parameters are required
+        required:
+          - name
+          - frequency
+          - timezone
+          - docker_tag
+          - release_type
+          - enabled
     publisher_upgrade_profile_put_request:
       type: "object"
       x-speakeasy-entity: NPAPublisherUpgradeProfile
@@ -67,8 +77,10 @@ components:
         release_type:
           type: "string"
         enabled:
-          type: "integer"
-          format: "int32"
+          # type is actually boolean
+          # type: "integer"
+          # format: "int32"
+          type: "boolean"
     publisher_upgrade_profile_response:
       type: "object"
       properties:
@@ -96,8 +108,10 @@ components:
             name:
               type: "string"
             enabled:
-              type: "integer"
-              format: "int32"
+              # type is actually boolean
+              # type: "integer"
+              # format: "int32"
+              type: "boolean"
     publisher_upgrade_profile_get_response:
       type: "object"
       x-speakeasy-entity: NPAPublisherUpgradeProfileList
@@ -335,7 +349,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
+                #$ref: "#/components/schemas/200" # This should be the same as the post response
+                $ref: "#/components/schemas/publisher_upgrade_profile_response"
         "400":
           description: "Invalid request"
           content:
