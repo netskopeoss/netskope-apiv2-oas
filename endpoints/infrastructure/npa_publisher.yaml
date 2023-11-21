@@ -326,8 +326,8 @@ components:
             - not found
         data:
           type: object
-          #x-speakeasy-entity:
-            #- NPAPublishersAlertsConfiguration
+          x-speakeasy-entity:
+            - NPAPublishersAlertsConfiguration
           properties:
             adminUsers:
               type: array
@@ -354,8 +354,8 @@ components:
               example: abc@xyz.com,def@xyz.com
     publishers_alert_put_request:
       type: object
-      #x-speakeasy-entity:
-        #NPAPublishersAlertsConfiguration
+      x-speakeasy-entity:
+        NPAPublishersAlertsConfiguration
       properties:
         adminUsers:
           type: array
@@ -864,7 +864,7 @@ paths:
     get:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
-      #x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
       responses:
         "200":
           description: successful operation
@@ -881,7 +881,7 @@ paths:
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
-      #x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
       parameters:
         - name: silent
           in: query
@@ -905,7 +905,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/publishers_alert_put_request" # This was labelled as response in the original swagger
+                $ref: "#/components/schemas/publishers_alert_get_response"
         "400":
           description: Invalid request
           content:

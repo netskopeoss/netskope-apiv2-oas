@@ -132,36 +132,75 @@ components:
             - success
             - not found
         data:
-          type: array
-          items:
-            properties:
-              app_id:
-                type: integer
-                format: int32
-              app_name:
-                type: string
-              use_publisher_dns:
-                type: boolean
-              clientless_access:
-                type: boolean
-              trust_self_signed_certs:
-                type: boolean
-              host:
-                type: string
-              real_host:
-                type: string
-              protocols:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/protocol_response_item"
-              tags:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/tag_item"
-              service_publisher_assignments:
-                type: array
-                items:
-                  "$ref": "#/components/schemas/service_publisher_assignment_item"
+          type: object # Another mis type...This should be object not array which changes the response
+          properties:
+            private_apps:
+              type: array
+              items:
+                app_id:
+                 type: integer
+                 format: int32
+                app_name:
+                  type: string
+                clientless_access: {}
+                host:
+                  type: string
+                modified_by:
+                  type: string
+                modify_time:
+                  type: string
+                policies:
+                  type: array
+                  items: {}
+                private_app_protocol: {}
+                protocols:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                    created_at:
+                      type: string
+                    id:
+                      type: integer
+                      format: int32
+                    port:
+                      type: string
+                    service_id:
+                      type: integer
+                      format: int32
+                    transport:
+                      type: string
+                    updated_at:
+                      type: string
+          #items:
+          #  properties:
+          #    app_id:
+          #      type: integer
+          #      format: int32
+          #    app_name:
+          #      type: string
+          #    use_publisher_dns:
+          #      type: boolean
+          #    clientless_access:
+          #      type: boolean
+          #    trust_self_signed_certs:
+          #      type: boolean
+          #    host:
+          #      type: string
+          #    real_host:
+          #      type: string
+          #    protocols:
+          #      type: array
+          #      items:
+          #        "$ref": "#/components/schemas/protocol_response_item"
+          #    tags:
+          #      type: array
+          #      items:
+          #        "$ref": "#/components/schemas/tag_item"
+          #    service_publisher_assignments:
+          #      type: array
+          #      items:
+          #        "$ref": "#/components/schemas/service_publisher_assignment_item"
         total:
           type: integer
           format: int32
