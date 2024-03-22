@@ -237,6 +237,7 @@ paths:
     get:
       summary: "Get list of publisher upgrade profile objects"
       description: "Get list of publisher upgrade profile objects"
+      operationId: getPublisherUpgradeProfiles
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublisherUpgradeProfileList#read
       x-speakeasy-group: NPAPublisherUpgradeProfiles
@@ -263,6 +264,7 @@ paths:
     post:
       summary: "Create a publisher upgrade profile"
       description: "Create a publisher upgrade profile"
+      operationId: createNPAPublisherUpradeProfiles
       x-speakeasy-name-override: create
       x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#create
       x-speakeasy-group: NPAPublisherUpgradeProfiles
@@ -303,6 +305,7 @@ paths:
     delete:
       summary: "Delete a publisher"
       description: "Delete a publisher upgrade profile based on profile id"
+      operationId: deleteNPAPubliserUpgradeProfiles
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#delete
       x-speakeasy-group: NPAPublisherUpgradeProfiles
@@ -337,6 +340,7 @@ paths:
     put:
       summary: "Update a publisher upgrade profile"
       description: "update a publisher upgrade profile based on publisher upgrade profile id"
+      operationId: replaceNPAPublisherUpgradeProfiles
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#update
       x-speakeasy-group: NPAPublisherUpgradeProfiles
@@ -381,6 +385,7 @@ paths:
     get:
       summary: "Get a publisher upgrade profile "
       description: "get a publisher upgrade profile based on publisher upgrade profile id"
+      operationId: getNPAPublisherUpgradeProfiles
       x-speakeasy-name-override: read
       x-speakeasy-entity-operation: NPAPublisherUpgradeProfile#read
       x-speakeasy-group: NPAPublisherUpgradeProfiles
@@ -415,6 +420,7 @@ paths:
     description: "Update the profile of multiple publishers"
     put:
       summary: "Update the profile of multiple publishers "
+      operationId: updateNPAPublisherProfilesBulk
       parameters:
         - name: "silent"
           in: "query"

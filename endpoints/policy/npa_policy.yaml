@@ -242,6 +242,7 @@ paths:
     get:
       summary: Get list of npa policies
       x-speakeasy-entity-operation: NPAPolicyList#get
+      operationId: getNPAPolicyRules
       description: Get list of npa policies
       parameters:
         - name: fields
@@ -299,6 +300,7 @@ paths:
       summary: Create a npa policy
       description: Create a policy
       x-speakeasy-entity-operation: NPAPolicy#create
+      operationId: createNPAPolicyRules
       parameters:
         - name: silent
           in: query
@@ -353,6 +355,7 @@ paths:
     delete:
       summary: Delete a npa policy
       x-speakeasy-entity-operation: NPAPolicy#delete
+      operationId: deleteNPAPolicyRules
       description: Delete a npa policy with rule id
       parameters:
         - name: id
@@ -388,6 +391,7 @@ paths:
       summary: Patch a npa policy
       description: Patch a npa policy based on rule id
       x-speakeasy-entity-operation: NPAPolicy#update
+      operationId: patchNPAPolicyRulesById
       parameters:
         - name: id
           in: path
@@ -438,6 +442,7 @@ paths:
       summary: Get a npa policy
       description: Get a npa policy based on policy rule id
       x-speakeasy-entity-operation: NPAPolicy#get
+      operationId: getNPAPolicyRulesById
       parameters:
         - name: id
           in: path

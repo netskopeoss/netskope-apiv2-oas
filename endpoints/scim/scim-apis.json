@@ -1,0 +1,2080 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Netskope SCIM Server endpoints",
+    "description": "<details><summary>API to provision users and groups to the tenant.</summary>\n# Introduction\nAPI to provision users and groups to the tenant.\n\nSCIM specification is defined in [RFC-7644](https://www.rfc-editor.org/rfc/rfc7644.html).\n\nNetskope SCIM Server supports subset of the APIs listed bellow.\n# Supported Resources\n## User\nSchema is mention in the [RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)\n\nFollowing attrbute is supported.\n| Attribute | Schema | Description |\n|-          |-      |-            |\n|*`emails`   | [RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:User` | Multivalued attribute. How ever **Scim server only supports primary email, and ignores the other values**.<br>**Request will be rejected if primary email is not specified.**|\n|*`userName`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:User`|unique userName of the user.**Request will be rejected if primary email is not specified.**|\n| `externalId`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:User`|This is a common attribute of type string.|\n| `active`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:User`|Boolean value to enable disable the user.|\n| `name`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:User`|Supports only `givenName` and `familyName`|\n-------------------------------\n\n\n**Endpoints** \n  \n* `/Users` : Create or retrive the users in the tenant.\n\n  <b> Supported methods.</b>\n  | Method Type   | CRUD      | Description   |\n  |-              |-          |-              |\n  | `GET`           | Read      | Retrieve user (eg: get all the users of tenant.)   |\n  | `POST`          | Create    | Create a new record (eg: adding new user to the tenant.)   |\n  --------------------------------\n\n\n* `/Users/{id}` : Mofify, delete or retrive a user.\n\n  <b> Supported methods.</b>\n  | Method Type   | CRUD      | Description   |\n  |-              |-          |-              |\n  | `GET`           | Read      | Retrieve user (eg: retrive the users of {id}.)   |\n  | `PUT`           | Replace   | Replacing an existing record (eg: replace the user of {id}) |\n  | `PATCH`         | Update    | Updating an existing record (eg: updating the record of {id})<br>`emails`,`active`, `name`, `userName`, `externalId` attributes can be edited   |\n  | `DELETE`        | Delete    | DELETE requests can be used to delete a record (like deleting a MSP from the Master MSP) |\n  --------------------------------\n  \n\n\n## Group\nSchema is mention in the [RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)\n\nFollowing attrbute is supported.\n| Attribute | Schema | Description |\n|-          |-      |-            |\n|*`displayName`   | [RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:Group` | String attribute represent the group.<br>**Request will be rejected if primary email is not specified.**|\n|`members`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:Group`|Multivalued attribute, list of members.|\n| `externalId`|[RFC-7643](https://datatracker.ietf.org/doc/rfc7643/)#`core:2.0:Group`|This is a common attribute of type string.|\n\n**Supported Endpoints**\n\n  \n* `/Groups` : Create or retrive the users in the tenant.\n\n  <b> Supported methods.</b>\n  | Method Type   | CRUD      | Description   |\n  |-              |-          |-              |\n  | `GET`           | Read      | Retrieve groups (eg: get all the groups of tenant.)   |\n  | `POST`          | Create    | Create a new record (eg: adding new group to the tenant.)   |\n  --------------------------------\n\n\n* `/Groups/{id}` : Mofify, delete or retrive a user.\n\n  <b> Supported methods.</b>\n  | Method Type   | CRUD      | Description   |\n  |-              |-          |-              |\n  | `GET`           | Read      | Retrieve the group (eg: get the group of {id}.)   |\n  | `PUT`           | Replace   | Replacing an existing record (eg: Replacing the group    |\n  | `PATCH`         | Update    | Updating an existing record (eg: adding a member to the group of {id})<br>`members`,`displayName`, `externalId` attributes can be edited |\n  | `DELETE`        | Delete    | Delete a record (like deleting a group of {id}) |\n  --------------------------------\n# Configuration``WIP``\n\n\n**Supported Endpoints**\n# Authentication``WIP``\n</details>",
+    "version": "2.0.0",
+    "contact": {
+      "name": "Provisioner",
+      "email": "eng-provisioner-dev-blr@netskope.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "scim_users",
+      "description": "CRUD for SCIM Users Infrormation."
+    },
+    {
+      "name": "scim_groups",
+      "description": "CRUD for SCIM Groups Infrormation"
+    }
+  ],
+  "paths": {
+    "/Users": {
+      "x-netskope-params": {
+        "serviceConfig": "nsscimserver",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "scim-apis"
+      },
+      "post": {
+        "tags": ["scim_users"],
+        "summary": "Creation of a SCIM User",
+        "description": "Creation of a SCIM User.",
+        "requestBody": {
+          "description": "user to add",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "user request body",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                    },
+                    "example": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                  },
+                  "userName": {
+                    "type": "string",
+                    "description": "UPN name of the SCIM User",
+                    "example": "upn1"
+                  },
+                  "name": {
+                    "type": "object",
+                    "description": "Family_name and given_name for the User",
+                    "properties": {
+                      "familyName": {
+                        "type": "string",
+                        "description": "last_name of the SCIM User.",
+                        "example": "last_name"
+                      },
+                      "givenName": {
+                        "type": "string",
+                        "description": "first_name of the SCIM User.",
+                        "example": "first_name"
+                      }
+                    }
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "example": "true"
+                  },
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "Email ID of the SCIM user",
+                          "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                          "example": "email1@netskope.local"
+                        },
+                        "primary": {
+                          "type": "boolean",
+                          "example": "true"
+                        }
+                      }
+                    }
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "Optional - Scim External ID",
+                    "example": "User-Ext_id"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "description": "meta information",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "description": "resource type User/Group.",
+                        "example": "User"
+                      }
+                    },
+                    "example": {
+                      "resourceType": "User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully added the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM User ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "description": "UPN name of the SCIM User",
+                      "example": "upn1"
+                    },
+                    "name": {
+                      "type": "object",
+                      "description": "Family_name and given_name for the User",
+                      "properties": {
+                        "familyName": {
+                          "type": "string",
+                          "description": "last_name of the SCIM User.",
+                          "example": "last_name"
+                        },
+                        "givenName": {
+                          "type": "string",
+                          "description": "first_name of the SCIM User.",
+                          "example": "first_name"
+                        }
+                      }
+                    },
+                    "active": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "emails": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "description": "Email ID of the SCIM user",
+                            "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                            "example": "email1@netskope.local"
+                          },
+                          "primary": {
+                            "type": "boolean",
+                            "example": "true"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "User-Ext_id"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [201, 200],
+                      "example": 201
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["scim_users"],
+        "summary": "Get Scim Users",
+        "description": "Query for all the SCIM Users or filtered users.",
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "key eq value pair like userName(Nothing but UPN), externalId(scim_externalid) and pass the value to be searched for the key passed.  Example: userName eq \"upn1\" OR externalId eq \"User-Ext_id\" ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startIndex",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "description": "StartIndex & count should be passed together",
+              "type": "integer"
+            }
+          },
+          {
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "description": "StartIndex & count should be passed together",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully added/overwritten the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                      ]
+                    },
+                    "totalResults": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "startIndex": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "itemsPerPage": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "Resources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "SCIM User ID",
+                            "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                          },
+                          "userName": {
+                            "type": "string",
+                            "description": "UPN name of the SCIM User",
+                            "example": "upn1"
+                          },
+                          "name": {
+                            "type": "object",
+                            "description": "Family_name and given_name for the User",
+                            "properties": {
+                              "familyName": {
+                                "type": "string",
+                                "description": "last_name of the SCIM User.",
+                                "example": "last_name"
+                              },
+                              "givenName": {
+                                "type": "string",
+                                "description": "first_name of the SCIM User.",
+                                "example": "first_name"
+                              }
+                            }
+                          },
+                          "active": {
+                            "type": "boolean",
+                            "example": "true"
+                          },
+                          "emails": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string",
+                                  "description": "Email ID of the SCIM user",
+                                  "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                                  "example": "email1@netskope.local"
+                                },
+                                "primary": {
+                                  "type": "boolean",
+                                  "example": "true"
+                                }
+                              }
+                            }
+                          },
+                          "externalId": {
+                            "type": "string",
+                            "description": "Optional - Scim External ID",
+                            "example": "User-Ext_id"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Users/{id}": {
+      "x-netskope-params": {
+        "serviceConfig": "nsscimserver",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "scim-apis"
+      },
+      "put": {
+        "tags": ["scim_users"],
+        "summary": "Replace existing SCIM record for {id}",
+        "description": "Replace existing SCIM record for {id}",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Used ID should be specified",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "user to update",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "User object",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                    },
+                    "example": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                  },
+                  "userName": {
+                    "type": "string",
+                    "description": "UPN name of the SCIM User",
+                    "example": "upn1"
+                  },
+                  "name": {
+                    "type": "object",
+                    "description": "Family_name and given_name for the User",
+                    "properties": {
+                      "familyName": {
+                        "type": "string",
+                        "description": "last_name of the SCIM User.",
+                        "example": "last_name"
+                      },
+                      "givenName": {
+                        "type": "string",
+                        "description": "first_name of the SCIM User.",
+                        "example": "first_name"
+                      }
+                    }
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "example": "true"
+                  },
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "description": "Email ID of the SCIM user",
+                          "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                          "example": "email1@netskope.local"
+                        },
+                        "primary": {
+                          "type": "boolean",
+                          "example": "true"
+                        }
+                      }
+                    }
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "Optional - Scim External ID",
+                    "example": "User-Ext_id"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "description": "meta information",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "description": "resource type User/Group.",
+                        "example": "User"
+                      }
+                    },
+                    "example": {
+                      "resourceType": "User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM User ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "description": "UPN name of the SCIM User",
+                      "example": "upn1"
+                    },
+                    "name": {
+                      "type": "object",
+                      "description": "Family_name and given_name for the User",
+                      "properties": {
+                        "familyName": {
+                          "type": "string",
+                          "description": "last_name of the SCIM User.",
+                          "example": "last_name"
+                        },
+                        "givenName": {
+                          "type": "string",
+                          "description": "first_name of the SCIM User.",
+                          "example": "first_name"
+                        }
+                      }
+                    },
+                    "active": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "emails": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "description": "Email ID of the SCIM user",
+                            "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                            "example": "email1@netskope.local"
+                          },
+                          "primary": {
+                            "type": "boolean",
+                            "example": "true"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "User-Ext_id"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [200],
+                      "example": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["scim_users"],
+        "summary": "Get the Scim User",
+        "description": "Getting the user with specific id..",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Used ID should be specified",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string",
+                        "enum": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:User"]
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM User ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "userName": {
+                      "type": "string",
+                      "description": "UPN name of the SCIM User",
+                      "example": "upn1"
+                    },
+                    "name": {
+                      "type": "object",
+                      "description": "Family_name and given_name for the User",
+                      "properties": {
+                        "familyName": {
+                          "type": "string",
+                          "description": "last_name of the SCIM User.",
+                          "example": "last_name"
+                        },
+                        "givenName": {
+                          "type": "string",
+                          "description": "first_name of the SCIM User.",
+                          "example": "first_name"
+                        }
+                      }
+                    },
+                    "active": {
+                      "type": "boolean",
+                      "example": "true"
+                    },
+                    "emails": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "description": "Email ID of the SCIM user",
+                            "pattern": "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",
+                            "example": "email1@netskope.local"
+                          },
+                          "primary": {
+                            "type": "boolean",
+                            "example": "true"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "User-Ext_id"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "meta information",
+                      "properties": {
+                        "resourceType": {
+                          "type": "string",
+                          "description": "resource type User/Group.",
+                          "example": "User"
+                        }
+                      },
+                      "example": {
+                        "resourceType": "User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["scim_users"],
+        "summary": "Update existing SCIM User record by {id}",
+        "description": "Update existing SCIM User record by {id}",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Used ID should be specified",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "attributes to be modified.",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "attribute to be modified.",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
+                    },
+                    "example": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
+                  },
+                  "Operations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "example": "userName",
+                          "enum": [
+                            "userName",
+                            "name.givenname",
+                            "name.familyname",
+                            "externalid",
+                            "emails[type eq \"work\"].value"
+                          ]
+                        },
+                        "op": {
+                          "type": "string",
+                          "example": "add",
+                          "enum": ["add", "remove", "replace"]
+                        },
+                        "value": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object"
+                            }
+                          ],
+                          "description": "value either string or object",
+                          "example": {
+                            "value": "new_upn"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Empty response."
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["scim_users"],
+        "summary": "Delete SCIM User record by {id}",
+        "description": "Delete SCIM User record by {id}.",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM User ID required",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Empty response, Successfully deleted the User."
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Groups": {
+      "x-netskope-params": {
+        "serviceConfig": "nsscimserver",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "scim-apis"
+      },
+      "post": {
+        "tags": ["scim_groups"],
+        "summary": "Create new SCIM Group",
+        "description": "Create new SCIM Group",
+        "requestBody": {
+          "description": "group to add",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "Group object",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                    },
+                    "example": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "Display name for group.",
+                    "example": "sample_group1"
+                  },
+                  "members": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        }
+                      }
+                    }
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "Optional - Scim External ID",
+                    "example": "Group-Ext_id"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "description": "meta information",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "description": "resource type User/Group.",
+                        "example": "Group"
+                      }
+                    },
+                    "example": {
+                      "resourceType": "Group"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully added the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM Group ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string",
+                        "enum": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "Display name for group.",
+                      "example": "sample_group1"
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "Group-Ext_id"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "meta information",
+                      "properties": {
+                        "resourceType": {
+                          "type": "string",
+                          "description": "resource type Group.",
+                          "example": "Group"
+                        }
+                      },
+                      "example": {
+                        "resourceType": "Group"
+                      }
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [201, 200],
+                      "example": 201
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request, Mandatory fields are missing"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal server error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["scim_groups"],
+        "summary": "Get SCIM Groups",
+        "description": "Query for all the SCIM groups or filtered groups.",
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "description": "key eq value pair like - displayName/externalId and pass the value to be searched for the key passed.  Example: displayName eq \"sample_Group1\"  ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startIndex",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "description": "StartIndex & count should be passed together",
+              "type": "integer"
+            }
+          },
+          {
+            "name": "count",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "description": "StartIndex & count should be passed together",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                      ]
+                    },
+                    "totalResults": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "startIndex": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "itemsPerPage": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "Resources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "SCIM Group ID",
+                            "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                          },
+                          "displayName": {
+                            "type": "string",
+                            "description": "Display name for group.",
+                            "example": "sample_group1"
+                          },
+                          "externalId": {
+                            "type": "string",
+                            "description": "Optional - Scim External ID",
+                            "example": "Group-Ext_id"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Groups/{id}": {
+      "x-netskope-params": {
+        "serviceConfig": "nsscimserver",
+        "version": 2,
+        "customerFacing": true,
+        "apiGroup": "scim-apis"
+      },
+      "put": {
+        "tags": ["scim_groups"],
+        "summary": "Replace existing SCIM Group for {id}",
+        "description": "Replace existing SCIM Group for {id}",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Used ID should be specified",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "group to update",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "User object",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                    },
+                    "example": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "description": "Display name for group.",
+                    "example": "sample_group1"
+                  },
+                  "members": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string",
+                          "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                        }
+                      }
+                    }
+                  },
+                  "externalId": {
+                    "type": "string",
+                    "description": "Optional - Scim External ID",
+                    "example": "Group-Ext_id"
+                  },
+                  "meta": {
+                    "type": "object",
+                    "description": "meta information",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "description": "resource type Group.",
+                        "example": "Group"
+                      }
+                    },
+                    "example": {
+                      "resourceType": "Group"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully updated the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM Group ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string",
+                        "enum": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "Display name for group.",
+                      "example": "sample_group1"
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "Group-Ext_id"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "meta information",
+                      "properties": {
+                        "resourceType": {
+                          "type": "string",
+                          "description": "resource type User/Group.",
+                          "example": "Group"
+                        }
+                      },
+                      "example": {
+                        "resourceType": "Group"
+                      }
+                    },
+                    "status": {
+                      "type": "integer",
+                      "enum": [201, 200],
+                      "example": 201
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request."
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["scim_groups"],
+        "summary": "Get SCIM Group by {id}",
+        "description": "Get SCIM Group by {id}",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Group ID required.",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the User.",
+            "content": {
+              "application/scim+json;charset=utf-8": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "SCIM Group ID",
+                      "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string",
+                        "enum": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                      },
+                      "example": ["urn:ietf:params:scim:schemas:core:2.0:Group"]
+                    },
+                    "displayName": {
+                      "type": "string",
+                      "description": "Display name for group.",
+                      "example": "sample_group1"
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string",
+                            "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                          }
+                        }
+                      }
+                    },
+                    "externalId": {
+                      "type": "string",
+                      "description": "Optional - Scim External ID",
+                      "example": "Group-Ext_id"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "description": "meta information",
+                      "properties": {
+                        "resourceType": {
+                          "type": "string",
+                          "description": "resource type User/Group.",
+                          "example": "Group"
+                        }
+                      },
+                      "example": {
+                        "resourceType": "Group"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["scim_groups"],
+        "summary": "Update existing SCIM Group record by {id}.",
+        "description": "Updating attribute in existing group with the id.",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Used ID should be specified",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "attributed to be added.",
+          "content": {
+            "application/scim+json;charset=utf-8": {
+              "schema": {
+                "type": "object",
+                "description": "group request body",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "description": "schema of the resource",
+                    "items": {
+                      "type": "string",
+                      "enum": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
+                    },
+                    "example": ["urn:ietf:params:scim:api:messages:2.0:PatchOp"]
+                  },
+                  "Operations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "example": "members",
+                          "enum": ["members", "externalid", "displayname"]
+                        },
+                        "op": {
+                          "type": "string",
+                          "example": "add",
+                          "enum": ["add", "remove", "replace"]
+                        },
+                        "value": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object"
+                            }
+                          ],
+                          "description": "value either string or object",
+                          "example": {
+                            "value": {
+                              "value": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Empty response."
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["scim_groups"],
+        "summary": "Delete SCIM Group record by {id}",
+        "description": "Delete SCIM Group record by {id}",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "SCIM Group ID required",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "example": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Empty response, Successfully deleted Group"
+          },
+          "400": {
+            "description": "Failed ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["400", "failed"],
+                      "example": "400"
+                    },
+                    "description": {
+                      "type": "string",
+                      "example": "Invalid request"
+                    },
+                    "schemas": {
+                      "type": "array",
+                      "description": "schema of the resource",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["urn:ietf:params:scim:api:messages:2.0:Error"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not authorized to execte the specific API.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You cannot consume this service."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Internal error Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["failed", "501"],
+                      "example": "501/failed"
+                    },
+                    "schemas": {
+                      "type": "string",
+                      "example": "[\"urn:ietf:params:scim:api:messages:2.0:Error\"]"
+                    },
+                    "detail": {
+                      "type": "string",
+                      "example": "Internal error."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

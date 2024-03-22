@@ -9,3 +9,7 @@ actions:
     update: "Combined specification to produce netskope terraform provider via speakeasy"
   - target: "$.paths.*[?(@.x-netskope-params.customerFacing == false)]"
     remove: true
+  - target: "$.paths.*[?(@.x-netskope-params.nsPartner == true)]"
+    remove: true
+  - target: "$.paths.*[?(@.x-netskope-params.nsBeta == true)]"
+    remove: true

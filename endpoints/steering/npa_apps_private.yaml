@@ -278,6 +278,7 @@ paths:
     get:
       summary: Get list of private applications
       description: Get list of private applications
+      operationId: getNPAApps
       x-speakeasy-entity-operation: PrivateAppList#read
       parameters:
         - name: fields
@@ -302,6 +303,7 @@ paths:
     post:
       summary: Create a private application
       description: Create a private application
+      operationId: createNPAApps
       x-speakeasy-entity-operation: PrivateApp#create
       parameters:
         - name: silent
@@ -343,6 +345,7 @@ paths:
       summary: Delete a private application
       x-speakeasy-entity-operation: PrivateApp#delete
       description: Delete a private application based on private app id
+      operationId: deleteNPAApps
       parameters:
         - name: private_app_id
           in: path
@@ -376,6 +379,7 @@ paths:
       summary: Update a private application
       x-speakeasy-entity-operation: PrivateApp#update
       description: Update a private application based on private app id
+      operationId: replaceNPAAppsById
       parameters:
         - name: private_app_id
           in: path
@@ -417,6 +421,7 @@ paths:
     patch:
       summary: Patch a private application
       description: Patch a private application based on private app id
+      operationId: patchNPAAppsById
       parameters:
         - name: private_app_id
           in: path
@@ -456,6 +461,7 @@ paths:
     get:
       summary: Get a private application
       description: Get a private application based on private app id
+      operationId: getNPAAppsById
       parameters:
         - name: private_app_id
           in: path
@@ -486,6 +492,7 @@ paths:
     post:
       summary: Retrieve number of policy in use for specified private apps
       description: Retrieve number of policy in use for specified private apps
+      operationId: queryNPAPolicyInUse
       x-speakeasy-entity: PrivateAppPolicyUseCount#read
       requestBody:
         content:

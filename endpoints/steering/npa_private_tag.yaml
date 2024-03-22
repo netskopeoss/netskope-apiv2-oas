@@ -72,6 +72,7 @@ paths:
     post:
       summary: create tags for private apps
       description: Create tags for private apps
+      operationId: createNPATags
       x-speakeasy-entity-operation: PrivateAppTag#create
       requestBody:
         content:
@@ -95,6 +96,7 @@ paths:
     patch:
       summary: bulk update tags to associate with specified private apps
       description: Bulk update tags to associate with specified private apps
+      operationId: patchNPATags
       requestBody:
         content:
           application/json:
@@ -117,6 +119,7 @@ paths:
     delete:
       summary: bulk delete tags for specified private apps
       description: Bulk delete tags for specified private apps
+      operationId: deleteNPATags
       requestBody:
         content:
           application/json:
@@ -139,6 +142,7 @@ paths:
     get:
       summary: 'Get list of private app tags '
       description: Get list of private app tags
+      operationId: getNPATags
       x-speakeasy-entity-operation: PrivateAppTagList#read
       responses:
         '200':
@@ -162,6 +166,7 @@ paths:
     get:
       summary: Get a private app tag based on tag id
       description: Get a private app tag based on tag id
+      operationId: getNPATagsById
       #x-speakeasy-entity-operation: PrivateAppTag#read
       parameters:
         - name: tag_id
@@ -187,6 +192,7 @@ paths:
     put:
       summary: Update a private app tag based on tag id
       description: Update a private app tag based on tag id
+      operationId: replaceNPATagsById
       #x-speakeasy-entity-operation: PrivateAppTag#update
       parameters:
         - name: tag_id
@@ -218,6 +224,7 @@ paths:
     delete:
       summary: Delete a private app tag based on tag id
       description: Delete a private app tag based on tag id
+      operationId: deleteNPATagsById
       #x-speakeasy-entity-operation: PrivateAppTag#delete
       parameters:
         - name: tag_id
@@ -262,6 +269,7 @@ paths:
     post:
       summary: Retrieve number of policy in use for specified tags
       description: Retrieve number of policy in use for specified tags
+      operationId: retrieveNPAPoliciesInUse
       x-speakeasy-entity-operation: PrivateAppTagPolicyUseList#get
       requestBody:
         content:

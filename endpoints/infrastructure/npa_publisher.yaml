@@ -165,9 +165,7 @@ components:
         status:
           type: string
         stitcher_id:
-          anyOf:
-            - type: integer
-            - type: object
+          type: integer
         tags:
           type: array
           items: {}
@@ -489,6 +487,7 @@ paths:
     get:
       summary: Get list of publisher objects
       description: Get list of publisher objects
+      operationId: getNPAPublishers
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersList#read
       x-speakeasy-group: NPAPublishers
@@ -515,6 +514,7 @@ paths:
     post:
       summary: Create a publisher
       description: Create a publisher
+      operationId: createNPApublishers
       x-speakeasy-name-override: create
       x-speakeasy-entity-operation: NPAPublishers#create
       x-speakeasy-group: NPAPublishers
@@ -557,6 +557,7 @@ paths:
     delete:
       summary: Delete a publisher
       description: Delete a publisher based on publisher id
+      operationId: deleteNPAPublishers
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: NPAPublishers#delete
       x-speakeasy-group: NPAPublishers
@@ -591,6 +592,7 @@ paths:
     put:
       summary: Update a publisher
       description: update a publisher based on publisher id
+      operationId: replaceNPAPublisherById
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation: NPAPublishers#update
       x-speakeasy-group: NPAPublishers
@@ -635,6 +637,7 @@ paths:
     patch:
       summary: Patch a publisher
       description: patch a publisher based on publisher id
+      operationId: updateNPAPublisherById
       parameters:
         - name: publisher_id
           in: path
@@ -674,6 +677,7 @@ paths:
     get:
       summary: Get a publisher
       description: get a publisher based on publisher id
+      operationId: getNPAPublisherById
       x-speakeasy-name-override: read
       x-speakeasy-entity-operation: NPAPublishers#read
       x-speakeasy-group: NPAPublishers
@@ -708,6 +712,7 @@ paths:
     post:
       summary: Generate and retrieve a token for publisher registration
       description: Generate and retrieve a token for publisher registration
+      operationId: generateNPAPublisherToken
       x-speakeasy-name-override: create
       x-speakeasy-entity-operation: PublisherToken#create
       x-speakeasy-group: PublisherToken
@@ -759,6 +764,7 @@ paths:
     get:
       summary: Get all private apps associated to a publisher
       description: Get all private apps associated to a publisher
+      operationId: getNPAPublisherApps
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersAppsList#read
       x-speakeasy-group: NPAPublishersApps
@@ -792,6 +798,7 @@ paths:
     put:
       summary: Trigger bulk publisher update action
       description: Trigger bulk publisher update action
+      operationId: triggerNPAPublisherUpdate
       x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
       parameters:
         - name: silent
@@ -832,6 +839,7 @@ paths:
     get:
       summary: Get list of publisher release objects
       description: Get list of publisher release objects
+      operationId: getNPAPublisherObjects
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersReleasesList#read
       x-speakeasy-group: NPAPublishersReleases
@@ -864,6 +872,7 @@ paths:
     get:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
+      operationId: getNPAPublisherAlerts
       x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
       responses:
         "200":
@@ -881,6 +890,7 @@ paths:
     put:
       summary: Configure publisher alerts
       description: Configure publisher alerts
+      operationId: configureNPAPublisherAlerts
       x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
       parameters:
         - name: silent

@@ -354,6 +354,7 @@ paths:
       description: API to get list of IPSec POPs. You can filter by parameters. Use
         one of these parameters at a time. Only lat and long should be used together.
         All parameters are allowed to use offset and limit in combination.
+      operationId: getIpsecPops
       parameters:
         - name: name
           in: query
@@ -470,6 +471,7 @@ paths:
     get:
       summary: Get IPSec point of presence(POP)
       description: API to get IPSec POP using id.
+      operationId: getIpsecPopsById
       parameters:
         - name: id
           in: path
@@ -537,6 +539,7 @@ paths:
       description: API to get list of IPSec tunnels. You can filter by parameters.
         Use one of these parameters at a time. Only offset and limit are allowed in
         combination with other parameters
+      operationId: getIpsecTunnels
       parameters:
         - name: site
           in: query
@@ -650,6 +653,7 @@ paths:
       summary: Create IPSec tunnel
       description: API to create new IPSec tunnel. You can pass json body with tunnel
         details.
+      operationId: createIpsecTunnels
       requestBody:
         description: IPSec tunnel object
         required: true
@@ -709,6 +713,7 @@ paths:
     get:
       summary: Get IPSec tunnel
       description: API to get IPSec tunnel using id.
+      operationId: getIpsecTunnelsById
       parameters:
         - name: id
           in: path
@@ -769,6 +774,7 @@ paths:
       summary: Update IPSec tunnel
       description: API to update IPSec tunnel using id. You can pass json body with
         fields that needs to be updated.
+      operationId: patchIpsecTunnelsById
       parameters:
         - name: id
           in: path
@@ -829,6 +835,7 @@ paths:
     delete:
       summary: Delete IPSec tunnel
       description: API to delete IPSec tunnel using id
+      operationId: deleteIpsecTunnels
       parameters:
         - name: id
           in: path

@@ -104,6 +104,7 @@ paths:
       summary: Get list of npa policy groups
       description: Get list of npa policy groups
       x-speakeasy-entity-operation: PolicyGroupList#read
+      operationId: getNPAPolicyGroups
       parameters:
         - name: fields
           in: query
@@ -161,6 +162,7 @@ paths:
       summary: Create a npa policy group
       description: Create a npa policy group
       x-speakeasy-entity-operation: NPAPolicyGroup#create
+      operationId: createNPAPolicyGroups
       parameters:
         - name: silent
           in: query
@@ -218,6 +220,7 @@ paths:
       summary: Delete a npa policy group
       description: Delete a npa policy group with group id
       x-speakeasy-entity-operation: NPAPolicyGroup#delete
+      operationId: deleteNPAPolicyGroups
       parameters:
         - name: id
           in: path
@@ -250,6 +253,7 @@ paths:
     patch:
       summary: Patch a npa policy group
       description: Patch a npa policy group based on group id
+      operationId: patchNPAPolicyGroupsById
       parameters:
         - name: id
           in: path
@@ -309,6 +313,7 @@ paths:
       summary: Get a npa policy group
       description: Get a npa policy group based on group id
       x-speakeasy-entity-operation: NPAPolicyGroup#read
+      operationId: getNPAPolicyGroupsById
       parameters:
         - name: id
           in: path
