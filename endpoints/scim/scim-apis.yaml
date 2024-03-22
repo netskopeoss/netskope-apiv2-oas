@@ -28,9 +28,10 @@ paths:
       requestBody:
         description: user to add
         content:
-          application/scim+json;charset=utf-8:
+          #application/scim+json;charset=utf-8:
             schema:
               type: object
+              speakeasy-entity: SCIMUsers
               description: user request body
               properties:
                 schemas:
@@ -92,7 +93,7 @@ paths:
         "201":
           description: Successfully added the User.
           content:
-            application/scim+json;charset=utf-8:
+            application/scim+json:
               schema:
                 type: object
                 properties:
@@ -206,7 +207,7 @@ paths:
         - scim_users
       summary: Get Scim Users
       description: Query for all the SCIM Users or filtered users.
-      x-speakeasy-entity-operations: SCIMUsers#get
+      x-speakeasy-entity-operations: SCIMUsers#read
       operationId: getSCIMUsers
       parameters:
         - name: filter
@@ -231,11 +232,12 @@ paths:
         "200":
           description: Successfully added/overwritten the User.
           content:
-            application/scim+json;charset=utf-8:
+            application/scim+json:
               schema:
                 type: object
                 properties:
                   schemas:
+                    speakeasy-entity: SCIMUsers
                     type: array
                     description: schema of the resource
                     items:
@@ -359,7 +361,7 @@ paths:
         - scim_users
       summary: Replace existing SCIM record for {id}
       description: Replace existing SCIM record for {id}
-      x-speakeasy-entity-operation: SCIMUsers#update
+      x-speakeasy-ignore: true
       operationId: putSCIMUsersById
       parameters:
         - name: id
@@ -372,12 +374,13 @@ paths:
       requestBody:
         description: user to update
         content:
-          application/scim+json;charset=utf-8:
+          # application/scim+json;charset=utf-8:
             schema:
               type: object
               description: User object
               properties:
                 schemas:
+                  speakeasy-entity: SCIMUsers
                   type: array
                   description: schema of the resource
                   items:
@@ -436,7 +439,7 @@ paths:
         "200":
           description: Successfully updated the User.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
                 type: object
                 properties:
@@ -563,11 +566,12 @@ paths:
         "200":
           description: Successfully deleted the User.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
                 type: object
                 properties:
                   schemas:
+                    speakeasy-entity: SCIMUsers
                     type: array
                     description: schema of the resource
                     items:
@@ -673,8 +677,9 @@ paths:
       requestBody:
         description: attributes to be modified.
         content:
-          application/scim+json;charset=utf-8:
+          # application/scim+json;charset=utf-8:
             schema:
+              speakeasy-entity: SCIMUsers
               type: object
               description: attribute to be modified.
               properties:
@@ -700,7 +705,7 @@ paths:
                           - name.givenname
                           - name.familyname
                           - externalid
-                          - emails[type eq "work"].value
+                          - emails[type eq work].value
                       op:
                         type: string
                         example: add
@@ -856,8 +861,9 @@ paths:
       requestBody:
         description: group to add
         content:
-          application/scim+json;charset=utf-8:
+          # application/scim+json;charset=utf-8:
             schema:
+              speakeasy-entity: SCIMGroups
               type: object
               description: Group object
               properties:
@@ -900,7 +906,7 @@ paths:
         "201":
           description: Successfully added the User.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
                 type: object
                 properties:
@@ -1031,11 +1037,12 @@ paths:
         "200":
           description: Successfull.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
                 type: object
                 properties:
                   schemas:
+                    speakeasy-entity: SCIMGroups
                     type: array
                     description: schema of the resource
                     items:
@@ -1131,7 +1138,7 @@ paths:
         - scim_groups
       summary: Replace existing SCIM Group for {id}
       description: Replace existing SCIM Group for {id}
-      x-speakeasy-entity-operation: SCIMGroups#update
+      x-speakeasy-ignore: true
       operationId: putSCIMGroupsById
       parameters:
         - name: id
@@ -1144,7 +1151,7 @@ paths:
       requestBody:
         description: group to update
         content:
-          application/scim+json;charset=utf-8:
+          # application/scim+json;charset=utf-8:
             schema:
               type: object
               description: User object
@@ -1188,7 +1195,7 @@ paths:
         "200":
           description: Successfully updated the User.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
                 type: object
                 properties:
@@ -1294,7 +1301,7 @@ paths:
         - scim_groups
       summary: Get SCIM Group by {id}
       description: Get SCIM Group by {id}
-      x-speakeasy-entity-operation: SCIMGroups#get
+      x-speakeasy-entity-operation: SCIMGroupsById#get
       operationId: getSCIMGroupsById
       parameters:
         - name: id
@@ -1308,8 +1315,9 @@ paths:
         "200":
           description: Successfully deleted the User.
           content:
-            application/scim+json;charset=utf-8:
+            # application/scim+json;charset=utf-8:
               schema:
+                speakeasy-entity: SCIMGroups
                 type: object
                 properties:
                   id:
@@ -1398,8 +1406,9 @@ paths:
       requestBody:
         description: attributed to be added.
         content:
-          application/scim+json;charset=utf-8:
+          # application/scim+json;charset=utf-8:
             schema:
+              speakeasy-entity: SCIMGroups
               type: object
               description: group request body
               properties:
