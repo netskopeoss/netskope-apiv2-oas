@@ -362,8 +362,8 @@ paths:
         - scim_users
       summary: Replace existing SCIM record for {id}
       description: Replace existing SCIM record for {id}
-      x-speakeasy-ignore: true
       operationId: putSCIMUsersById
+      x-speakeasy-entity-operation: SCIMUser#update
       parameters:
         - name: id
           description: SCIM Used ID should be specified
@@ -378,6 +378,7 @@ paths:
           application/json:
             schema:
               type: object
+              x-speakeasy-entity: SCIMUser
               description: User object
               properties:
                 schemas:
@@ -442,6 +443,7 @@ paths:
             application/json:
               schema:
                 type: object
+                x-speakeasy-entity: SCIMUser
                 properties:
                   schemas:
                     type: array
@@ -664,7 +666,6 @@ paths:
         - scim_users
       summary: Update existing SCIM User record by {id}
       description: Update existing SCIM User record by {id}
-      x-speakeasy-entity-operation: SCIMUser#update
       operationId: updateSCIMUsersById
       parameters:
         - name: id
@@ -679,7 +680,6 @@ paths:
         content:
           application/json:
             schema:
-              x-speakeasy-entity: SCIMUser
               type: object
               description: attribute to be modified.
               properties:
