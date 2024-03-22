@@ -22,7 +22,7 @@ paths:
       tags:
         - scim_users
       summary: Creation of a SCIM User
-      x-speakeasy-entity-operation: SCIMUsers#create
+      x-speakeasy-entity-operation: SCIMUser#create
       description: Creation of a SCIM User.
       operationId: createSCIMUsers
       requestBody:
@@ -31,7 +31,7 @@ paths:
           application/json:
             schema:
               type: object
-              x-speakeasy-entity: SCIMUsers
+              x-speakeasy-entity: SCIMUser
               description: user request body
               properties:
                 schemas:
@@ -96,6 +96,7 @@ paths:
             application/json:
               schema:
                 type: object
+                x-speakeasy-entity: SCIMUser
                 properties:
                   schemas:
                     type: array
@@ -207,7 +208,7 @@ paths:
         - scim_users
       summary: Get Scim Users
       description: Query for all the SCIM Users or filtered users.
-      x-speakeasy-entity-operations: SCIMUsers#read
+      x-speakeasy-entity-operations: SCIMUsersList#read
       operationId: getSCIMUsers
       parameters:
         - name: filter
@@ -235,7 +236,7 @@ paths:
             application/json:
               schema:
                 type: object
-                x-speakeasy-entity: SCIMUsers
+                x-speakeasy-entity: SCIMUsersList
                 properties:
                   schemas:
                     type: array
@@ -380,7 +381,6 @@ paths:
               description: User object
               properties:
                 schemas:
-                  x-speakeasy-entity: SCIMUsers
                   type: array
                   description: schema of the resource
                   items:
@@ -553,7 +553,7 @@ paths:
       summary: Get the Scim User
       description: Getting the user with specific id..
       operationId: getSCIMUsersById
-      x-speakeasy-entity-operation: SCIMUsers#get
+      x-speakeasy-entity-operation: SCIMUser#get
       parameters:
         - name: id
           description: SCIM Used ID should be specified
@@ -569,9 +569,9 @@ paths:
             application/json:
               schema:
                 type: object
+                x-speakeasy-entity: SCIMUser
                 properties:
                   schemas:
-                    x-speakeasy-entity: SCIMUsers
                     type: array
                     description: schema of the resource
                     items:
@@ -664,7 +664,7 @@ paths:
         - scim_users
       summary: Update existing SCIM User record by {id}
       description: Update existing SCIM User record by {id}
-      x-speakeasy-entity-operation: SCIMUsers#update
+      x-speakeasy-entity-operation: SCIMUser#update
       operationId: updateSCIMUsersById
       parameters:
         - name: id
@@ -679,7 +679,7 @@ paths:
         content:
           application/json:
             schema:
-              x-speakeasy-entity: SCIMUsers
+              x-speakeasy-entity: SCIMUser
               type: object
               description: attribute to be modified.
               properties:
@@ -780,7 +780,7 @@ paths:
         - scim_users
       summary: Delete SCIM User record by {id}
       description: Delete SCIM User record by {id}.
-      x-speakeasy-entity-operation: SCIMUsers#delete
+      x-speakeasy-entity-operation: SCIMUser#delete
       operationId: deleteSCIMUsers
       parameters:
         - name: id
