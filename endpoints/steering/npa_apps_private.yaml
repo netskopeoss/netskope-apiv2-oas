@@ -236,6 +236,7 @@ components:
       properties:
         tag_name:
           type: string
+          default: tag_name
     tag_item:
       type: object
       properties:
