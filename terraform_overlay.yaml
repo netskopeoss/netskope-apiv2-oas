@@ -3,6 +3,11 @@ info:
   title: Overlay to produce the netskope TF Provider
   version: 0.0.1
 actions:
+  - target: "info.title"
+    update: "Netskope Terraform Provider"
+  - target: "info.description"
+    update: "Combined specification to produce netskope terraform provider via speakeasy"
+  - target: "$.paths.*[?(@.x-netskope-params.customerFacing == false)]"
   - target: $["paths"]
     update:
       /scim/Users:
