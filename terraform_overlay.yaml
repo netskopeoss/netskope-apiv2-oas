@@ -3,13 +3,1580 @@ info:
   title: Overlay to produce the netskope TF Provider
   version: 0.0.1
 actions:
-  - target: "info.title"
-    update: "Netskope Terraform Provider"
-  - target: "info.description"
-    update: "Combined specification to produce netskope terraform provider via speakeasy"
-  - target: "$.paths.*[?(@.x-netskope-params.customerFacing == false)]"
+  - target: $["paths"]
+    update:
+      /scim/Users:
+        x-netskope-params:
+          serviceConfig: nsscimserver
+          version: 2
+          customerFacing: true
+          apiGroup: scim-apis
+        post:
+          tags:
+            - scim_users
+          summary: Creation of a SCIM User
+          x-speakeasy-entity-operation: SCIMUser#create
+          description: Creation of a SCIM User.
+          operationId: createSCIMUsers
+          requestBody:
+            description: user to add
+            content:
+              application/json:
+                schema:
+                  type: object
+                  x-speakeasy-entity: SCIMUser
+                  description: user request body
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:schemas:core:2.0:User
+                      example:
+                        - urn:ietf:params:scim:schemas:core:2.0:User
+                    userName:
+                      type: string
+                      description: UPN name of the SCIM User
+                      example: upn1
+                    name:
+                      type: object
+                      description: Family_name and given_name for the User
+                      properties:
+                        familyName:
+                          type: string
+                          description: last_name of the SCIM User.
+                          example: last_name
+                        givenName:
+                          type: string
+                          description: first_name of the SCIM User.
+                          example: first_name
+                    active:
+                      type: boolean
+                      example: "true"
+                    emails:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                            description: Email ID of the SCIM user
+                            pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                            example: email1@netskope.local
+                          primary:
+                            type: boolean
+                            example: "true"
+                    externalId:
+                      type: string
+                      description: Optional - Scim External ID
+                      example: User-Ext_id
+                    meta:
+                      type: object
+                      description: meta information
+                      properties:
+                        resourceType:
+                          type: string
+                          description: resource type User/Group.
+                          example: User
+                      example:
+                        resourceType: User
+          responses:
+            "201":
+              description: Successfully added the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    x-speakeasy-entity: SCIMUser
+                    properties:
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:User
+                      id:
+                        type: string
+                        description: SCIM User ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      userName:
+                        type: string
+                        description: UPN name of the SCIM User
+                        example: upn1
+                      name:
+                        type: object
+                        description: Family_name and given_name for the User
+                        properties:
+                          familyName:
+                            type: string
+                            description: last_name of the SCIM User.
+                            example: last_name
+                          givenName:
+                            type: string
+                            description: first_name of the SCIM User.
+                            example: first_name
+                      active:
+                        type: boolean
+                        example: "true"
+                      emails:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              description: Email ID of the SCIM user
+                              pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                              example: email1@netskope.local
+                            primary:
+                              type: boolean
+                              example: "true"
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: User-Ext_id
+                      status:
+                        type: integer
+                        enum:
+                          - 201
+                          - 200
+                        example: 201
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal server error.
+        get:
+          tags:
+            - scim_users
+          summary: Get Scim Users
+          description: Query for all the SCIM Users or filtered users.
+          x-speakeasy-entity-operations: SCIMUsersList#read
+          operationId: getSCIMUsers
+          parameters:
+            - name: filter
+              required: false
+              in: query
+              description: 'key eq value pair like userName(Nothing but UPN), externalId(scim_externalid) and pass the value to be searched for the key passed.  Example: userName eq "upn1" OR externalId eq "User-Ext_id" '
+              schema:
+                type: string
+            - name: startIndex
+              required: false
+              in: query
+              schema:
+                description: StartIndex & count should be passed together
+                type: integer
+            - name: count
+              required: false
+              in: query
+              schema:
+                description: StartIndex & count should be passed together
+                type: integer
+          responses:
+            "200":
+              description: Successfully added/overwritten the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    x-speakeasy-entity: SCIMUsersList
+                    properties:
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:ListResponse
+                      totalResults:
+                        type: integer
+                        example: 1
+                      startIndex:
+                        type: integer
+                        example: 1
+                      itemsPerPage:
+                        type: integer
+                        example: 1
+                      Resources:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: SCIM User ID
+                              example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                            userName:
+                              type: string
+                              description: UPN name of the SCIM User
+                              example: upn1
+                            name:
+                              type: object
+                              description: Family_name and given_name for the User
+                              properties:
+                                familyName:
+                                  type: string
+                                  description: last_name of the SCIM User.
+                                  example: last_name
+                                givenName:
+                                  type: string
+                                  description: first_name of the SCIM User.
+                                  example: first_name
+                            active:
+                              type: boolean
+                              example: "true"
+                            emails:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  value:
+                                    type: string
+                                    description: Email ID of the SCIM user
+                                    pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                                    example: email1@netskope.local
+                                  primary:
+                                    type: boolean
+                                    example: "true"
+                            externalId:
+                              type: string
+                              description: Optional - Scim External ID
+                              example: User-Ext_id
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+  - target: $["paths"]
+    update:
+      /scim/Users/{id}:
+        x-netskope-params:
+          serviceConfig: nsscimserver
+          version: 2
+          customerFacing: true
+          apiGroup: scim-apis
+        put:
+          tags:
+            - scim_users
+          summary: Replace existing SCIM record for {id}
+          description: Replace existing SCIM record for {id}
+          operationId: putSCIMUsersById
+          x-speakeasy-entity-operation: SCIMUser#update
+          parameters:
+            - name: id
+              description: SCIM Used ID should be specified
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          requestBody:
+            description: user to update
+            content:
+              application/json:
+                schema:
+                  type: object
+                  x-speakeasy-entity: SCIMUser
+                  description: User object
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:schemas:core:2.0:User
+                      example:
+                        - urn:ietf:params:scim:schemas:core:2.0:User
+                    userName:
+                      type: string
+                      description: UPN name of the SCIM User
+                      example: upn1
+                    name:
+                      type: object
+                      description: Family_name and given_name for the User
+                      properties:
+                        familyName:
+                          type: string
+                          description: last_name of the SCIM User.
+                          example: last_name
+                        givenName:
+                          type: string
+                          description: first_name of the SCIM User.
+                          example: first_name
+                    active:
+                      type: boolean
+                      example: "true"
+                    emails:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                            description: Email ID of the SCIM user
+                            pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                            example: email1@netskope.local
+                          primary:
+                            type: boolean
+                            example: "true"
+                    externalId:
+                      type: string
+                      description: Optional - Scim External ID
+                      example: User-Ext_id
+                    meta:
+                      type: object
+                      description: meta information
+                      properties:
+                        resourceType:
+                          type: string
+                          description: resource type User/Group.
+                          example: User
+                      example:
+                        resourceType: User
+          responses:
+            "200":
+              description: Successfully updated the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    x-speakeasy-entity: SCIMUser
+                    properties:
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:User
+                      id:
+                        type: string
+                        description: SCIM User ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      userName:
+                        type: string
+                        description: UPN name of the SCIM User
+                        example: upn1
+                      name:
+                        type: object
+                        description: Family_name and given_name for the User
+                        properties:
+                          familyName:
+                            type: string
+                            description: last_name of the SCIM User.
+                            example: last_name
+                          givenName:
+                            type: string
+                            description: first_name of the SCIM User.
+                            example: first_name
+                      active:
+                        type: boolean
+                        example: "true"
+                      emails:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              description: Email ID of the SCIM user
+                              pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                              example: email1@netskope.local
+                            primary:
+                              type: boolean
+                              example: "true"
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: User-Ext_id
+                      status:
+                        type: integer
+                        enum:
+                          - 200
+                        example: 200
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+        get:
+          tags:
+            - scim_users
+          summary: Get the Scim User
+          description: Getting the user with specific id..
+          operationId: getSCIMUsersById
+          x-speakeasy-entity-operation: SCIMUser#get
+          parameters:
+            - name: id
+              description: SCIM Used ID should be specified
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          responses:
+            "200":
+              description: Successfully deleted the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    x-speakeasy-entity: SCIMUser
+                    properties:
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                          enum:
+                            - urn:ietf:params:scim:schemas:core:2.0:User
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:User
+                      id:
+                        type: string
+                        description: SCIM User ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      userName:
+                        type: string
+                        description: UPN name of the SCIM User
+                        example: upn1
+                      name:
+                        type: object
+                        description: Family_name and given_name for the User
+                        properties:
+                          familyName:
+                            type: string
+                            description: last_name of the SCIM User.
+                            example: last_name
+                          givenName:
+                            type: string
+                            description: first_name of the SCIM User.
+                            example: first_name
+                      active:
+                        type: boolean
+                        example: "true"
+                      emails:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              description: Email ID of the SCIM user
+                              pattern: ^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$
+                              example: email1@netskope.local
+                            primary:
+                              type: boolean
+                              example: "true"
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: User-Ext_id
+                      meta:
+                        type: object
+                        description: meta information
+                        properties:
+                          resourceType:
+                            type: string
+                            description: resource type User/Group.
+                            example: User
+                        example:
+                          resourceType: User
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+        patch:
+          tags:
+            - scim_users
+          summary: Update existing SCIM User record by {id}
+          description: Update existing SCIM User record by {id}
+          operationId: updateSCIMUsersById
+          parameters:
+            - name: id
+              description: SCIM Used ID should be specified
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          requestBody:
+            description: attributes to be modified.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  description: attribute to be modified.
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:api:messages:2.0:PatchOp
+                      example:
+                        - urn:ietf:params:scim:api:messages:2.0:PatchOp
+                    Operations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          path:
+                            type: string
+                            example: userName
+                            enum:
+                              - userName
+                              - name.givenname
+                              - name.familyname
+                              - externalid
+                              - emails[type eq work].value
+                          op:
+                            type: string
+                            example: add
+                            enum:
+                              - add
+                              - remove
+                              - replace
+                          value:
+                            oneOf:
+                              - type: string
+                              - type: object
+                            description: value either string or object
+                            example:
+                              value: new_upn
+          responses:
+            "204":
+              description: Empty response.
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error
+        delete:
+          tags:
+            - scim_users
+          summary: Delete SCIM User record by {id}
+          description: Delete SCIM User record by {id}.
+          x-speakeasy-entity-operation: SCIMUser#delete
+          operationId: deleteSCIMUsers
+          parameters:
+            - name: id
+              description: SCIM User ID required
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          responses:
+            "204":
+              description: Empty response, Successfully deleted the User.
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error
+  - target: $["paths"]
+    update:
+      /scim/Groups:
+        x-netskope-params:
+          serviceConfig: nsscimserver
+          version: 2
+          customerFacing: true
+          apiGroup: scim-apis
+        post:
+          tags:
+            - scim_groups
+          summary: Create new SCIM Group
+          description: Create new SCIM Group
+          x-speakeasy-entity-operation: SCIMGroups#create
+          operationId: createSCIMGroups
+          requestBody:
+            description: group to add
+            content:
+              application/json:
+                schema:
+                  x-speakeasy-entity: SCIMGroups
+                  type: object
+                  description: Group object
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:schemas:core:2.0:Group
+                      example:
+                        - urn:ietf:params:scim:schemas:core:2.0:Group
+                    displayName:
+                      type: string
+                      description: Display name for group.
+                      example: sample_group1
+                    members:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                            example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                    externalId:
+                      type: string
+                      description: Optional - Scim External ID
+                      example: Group-Ext_id
+                    meta:
+                      type: object
+                      description: meta information
+                      properties:
+                        resourceType:
+                          type: string
+                          description: resource type User/Group.
+                          example: Group
+                      example:
+                        resourceType: Group
+          responses:
+            "201":
+              description: Successfully added the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: SCIM Group ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                          enum:
+                            - urn:ietf:params:scim:schemas:core:2.0:Group
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:Group
+                      displayName:
+                        type: string
+                        description: Display name for group.
+                        example: sample_group1
+                      members:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: Group-Ext_id
+                      meta:
+                        type: object
+                        description: meta information
+                        properties:
+                          resourceType:
+                            type: string
+                            description: resource type Group.
+                            example: Group
+                        example:
+                          resourceType: Group
+                      status:
+                        type: integer
+                        enum:
+                          - 201
+                          - 200
+                        example: 201
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request, Mandatory fields are missing
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal server error.
+        get:
+          tags:
+            - scim_groups
+          summary: Get SCIM Groups
+          description: Query for all the SCIM groups or filtered groups.
+          x-speakeasy-entity-operation: SCIMGroups#get
+          operationId: getSCIMGroups
+          parameters:
+            - name: filter
+              required: false
+              in: query
+              description: 'key eq value pair like - displayName/externalId and pass the value to be searched for the key passed.  Example: displayName eq "sample_Group1"  '
+              schema:
+                type: string
+            - name: startIndex
+              required: false
+              in: query
+              schema:
+                description: StartIndex & count should be passed together
+                type: integer
+            - name: count
+              required: false
+              in: query
+              schema:
+                description: StartIndex & count should be passed together
+                type: integer
+          responses:
+            "200":
+              description: Successfull.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    x-speakeasy-entity: SCIMGroups
+                    properties:
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:ListResponse
+                      totalResults:
+                        type: integer
+                        example: 1
+                      startIndex:
+                        type: integer
+                        example: 1
+                      itemsPerPage:
+                        type: integer
+                        example: 1
+                      Resources:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: SCIM Group ID
+                              example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                            displayName:
+                              type: string
+                              description: Display name for group.
+                              example: sample_group1
+                            externalId:
+                              type: string
+                              description: Optional - Scim External ID
+                              example: Group-Ext_id
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+  - target: $["paths"]
+    update:
+      /scim/Groups/{id}:
+        x-netskope-params:
+          serviceConfig: nsscimserver
+          version: 2
+          customerFacing: true
+          apiGroup: scim-apis
+        put:
+          tags:
+            - scim_groups
+          summary: Replace existing SCIM Group for {id}
+          description: Replace existing SCIM Group for {id}
+          x-speakeasy-ignore: true
+          operationId: putSCIMGroupsById
+          parameters:
+            - name: id
+              description: SCIM Used ID should be specified
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          requestBody:
+            description: group to update
+            content:
+              application/json:
+                schema:
+                  type: object
+                  description: User object
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:schemas:core:2.0:Group
+                      example:
+                        - urn:ietf:params:scim:schemas:core:2.0:Group
+                    displayName:
+                      type: string
+                      description: Display name for group.
+                      example: sample_group1
+                    members:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          value:
+                            type: string
+                            example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                    externalId:
+                      type: string
+                      description: Optional - Scim External ID
+                      example: Group-Ext_id
+                    meta:
+                      type: object
+                      description: meta information
+                      properties:
+                        resourceType:
+                          type: string
+                          description: resource type Group.
+                          example: Group
+                      example:
+                        resourceType: Group
+          responses:
+            "200":
+              description: Successfully updated the User.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: SCIM Group ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                          enum:
+                            - urn:ietf:params:scim:schemas:core:2.0:Group
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:Group
+                      displayName:
+                        type: string
+                        description: Display name for group.
+                        example: sample_group1
+                      members:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: Group-Ext_id
+                      meta:
+                        type: object
+                        description: meta information
+                        properties:
+                          resourceType:
+                            type: string
+                            description: resource type User/Group.
+                            example: Group
+                        example:
+                          resourceType: Group
+                      status:
+                        type: integer
+                        enum:
+                          - 201
+                          - 200
+                        example: 201
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request.
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+        get:
+          tags:
+            - scim_groups
+          summary: Get SCIM Group by {id}
+          description: Get SCIM Group by {id}
+          x-speakeasy-entity-operation: SCIMGroupsById#get
+          operationId: getSCIMGroupsById
+          parameters:
+            - name: id
+              description: SCIM Group ID required.
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          responses:
+            "200":
+              description: Successfully deleted the User.
+              content:
+                application/json:
+                  schema:
+                    x-speakeasy-entity: SCIMGroups
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: SCIM Group ID
+                        example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                          enum:
+                            - urn:ietf:params:scim:schemas:core:2.0:Group
+                        example:
+                          - urn:ietf:params:scim:schemas:core:2.0:Group
+                      displayName:
+                        type: string
+                        description: Display name for group.
+                        example: sample_group1
+                      members:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            value:
+                              type: string
+                              example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+                      externalId:
+                        type: string
+                        description: Optional - Scim External ID
+                        example: Group-Ext_id
+                      meta:
+                        type: object
+                        description: meta information
+                        properties:
+                          resourceType:
+                            type: string
+                            description: resource type User/Group.
+                            example: Group
+                        example:
+                          resourceType: Group
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+        patch:
+          tags:
+            - scim_groups
+          summary: Update existing SCIM Group record by {id}.
+          description: Updating attribute in existing group with the id.
+          x-speakeasy-entity-operation: SCIMGroups#update
+          operationId: patchSCIMUsersById
+          parameters:
+            - name: id
+              description: SCIM Used ID should be specified
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          requestBody:
+            description: attributed to be added.
+            content:
+              application/json:
+                schema:
+                  x-speakeasy-entity: SCIMGroups
+                  type: object
+                  description: group request body
+                  properties:
+                    schemas:
+                      type: array
+                      description: schema of the resource
+                      items:
+                        type: string
+                        enum:
+                          - urn:ietf:params:scim:api:messages:2.0:PatchOp
+                      example:
+                        - urn:ietf:params:scim:api:messages:2.0:PatchOp
+                    Operations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          path:
+                            type: string
+                            example: members
+                            enum:
+                              - members
+                              - externalid
+                              - displayname
+                          op:
+                            type: string
+                            example: add
+                            enum:
+                              - add
+                              - remove
+                              - replace
+                          value:
+                            oneOf:
+                              - type: string
+                              - type: object
+                            description: value either string or object
+                            example:
+                              value:
+                                value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          responses:
+            "204":
+              description: Empty response.
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request / Primary Email not provided / UserName not provided / Not a valid json format / Mandatory fields are missing
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+        delete:
+          tags:
+            - scim_groups
+          summary: Delete SCIM Group record by {id}
+          description: Delete SCIM Group record by {id}
+          x-speakeasy-entity-operation: SCIMGroups#delete
+          operationId: deleteSCIMUsersById
+          parameters:
+            - name: id
+              description: SCIM Group ID required
+              required: true
+              in: path
+              schema:
+                type: string
+                example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+          responses:
+            "204":
+              description: Empty response, Successfully deleted Group
+            "400":
+              description: 'Failed '
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - "400"
+                          - failed
+                        example: "400"
+                      description:
+                        type: string
+                        example: Invalid request
+                      schemas:
+                        type: array
+                        description: schema of the resource
+                        items:
+                          type: string
+                        example:
+                          - urn:ietf:params:scim:api:messages:2.0:Error
+            "403":
+              description: Not authorized to execte the specific API.
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: You cannot consume this service.
+            "501":
+              description: Internal error Failed
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - failed
+                          - "501"
+                        example: 501/failed
+                      schemas:
+                        type: string
+                        example: '["urn:ietf:params:scim:api:messages:2.0:Error"]'
+                      detail:
+                        type: string
+                        example: Internal error.
+  - target: $["paths"]["/Users"]
     remove: true
-  - target: "$.paths.*[?(@.x-netskope-params.nsPartner == true)]"
+  - target: $["paths"]["/Users/{id}"]
     remove: true
-  - target: "$.paths.*[?(@.x-netskope-params.nsBeta == true)]"
+  - target: $["paths"]["/Groups"]
+    remove: true
+  - target: $["paths"]["/Groups/{id}"]
     remove: true
