@@ -23,10 +23,10 @@ components:
           type: array
           items:
             "$ref": "#/components/schemas/publisher_item"
-        publisher_tags:
-          type: array
-          items:
-            "$ref": "#/components/schemas/tag_item_no_id"
+#        publisher_tags: ## publisher tags not currently supported via API
+#          type: array
+#          items:
+#            "$ref": "#/components/schemas/tag_item_no_id"
         tags:
           type: array
           items:

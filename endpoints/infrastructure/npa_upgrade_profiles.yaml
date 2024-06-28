@@ -76,6 +76,10 @@ components:
           type: "string"
         release_type:
           type: "string"
+        external_id:
+          # added for terraform support 
+          type: "integer"
+          format: "int32"
         enabled:
           # type is actually boolean
           # type: "integer"
@@ -107,6 +111,10 @@ components:
               type: "string"
             name:
               type: "string"
+            external_id: 
+              # added as required to capture for terraform - external_id is the record id
+              type: "integer"
+              format: "int32"
             enabled:
               # type is actually boolean
               # type: "integer"
@@ -312,7 +320,7 @@ paths:
       parameters:
         - name: "upgrade_profile_id"
           in: "path"
-          x-speakeasy-match: id
+          x-speakeasy-match: external_id
           required: true
           description: "publisher upgrade profile id"
           schema:
@@ -347,7 +355,7 @@ paths:
       parameters:
         - name: "upgrade_profile_id"
           in: "path"
-          x-speakeasy-match: id
+          x-speakeasy-match: external_id
           required: true
           description: "publisher upgrade profile id"
           schema:

@@ -6,25 +6,161 @@ info:
 components:
   schemas:
     tag_request:
-      x-speakeasy-entity:
-       - PrivateAppTagList
-       - PrivateAppTag
+      x-speakeasy-entity: PrivateAppTagList
       type: object
       properties:
-        id:
-          type: string
         ids:
           type: array
           items:
             type: string
         tags:
           type: array
+          required:
+            - tag_name
           items:
-            "$ref": "#/components/schemas/tag_item"
-        publisher_tags:
+            type: object
+            properties:
+              tag_name:
+                type: string
+              tag_id:
+                x-speakeasy-ignore: true
+                type: integer
+                format: int32
+#            "$ref": "#/components/schemas/tag_item"
+#        publisher_tags:
+#          x-speakeasy-ignore: true
+#          type: array
+#          items:
+#            "$ref": "#/components/schemas/tag_item"
+    tag_patch_response: # -- added new patch response as it does not match the other responses
+      x-speakeasy-entity: PrivateAppTag
+      type: object
+      properties:
+        data:
           type: array
           items:
-            "$ref": "#/components/schemas/tag_item"
+            type: object
+            properties:
+              allow_unauthenticated_cors:
+                x-speakeasy-ignore: true
+                type: boolean
+              app_option:
+                x-speakeasy-ignore: true
+                type: object
+              clientless_access:
+                x-speakeasy-ignore: true
+                type: boolean
+              external_id:
+                x-speakeasy-ignore: true
+                type: number
+              host:
+                x-speakeasy-ignore: true
+                type: string
+              id:
+                x-speakeasy-ignore: true
+                type: number
+              is_user_portal_app:
+                x-speakeasy-ignore: true
+                type: boolean
+              name:
+                x-speakeasy-ignore: true
+                type: string
+              private_app_protocol:
+                x-speakeasy-ignore: true
+                type: string
+              protocols:
+                x-speakeasy-ignore: true
+                type: array
+                items:
+                  type: object
+                  properties:
+                    created_at:
+                      x-speakeasy-ignore: true
+                      type: string
+                    id:
+                      x-speakeasy-ignore: true
+                      type: number
+                    port:
+                      x-speakeasy-ignore: true
+                      type: string
+                    service_id:
+                      x-speakeasy-ignore: true
+                      type: number
+                    transport:
+                      x-speakeasy-ignore: true
+                      type: string
+                    updated_at:
+                      x-speakeasy-ignore: true
+                      type: string
+              public_host:
+                x-speakeasy-ignore: true
+                type: string
+              reachability:
+                x-speakeasy-ignore: true
+                type: object
+                properties:
+                  reachable:
+                    x-speakeasy-ignore: true
+                    type: boolean
+              real_host:
+                x-speakeasy-ignore: true
+                type: string
+              service_publisher_assignments:
+                x-speakeasy-ignore: true
+                type: array
+                items:
+                  type: object
+                  properties:
+                    primary:
+                      x-speakeasy-ignore: true
+                      type: object
+                    publisher_external_id:
+                      x-speakeasy-ignore: true
+                      type: number
+                    publisher_name:
+                      x-speakeasy-ignore: true
+                      type: string
+                    reachability:
+                      x-speakeasy-ignore: true
+                      type: object
+                    service_external_id:
+                      x-speakeasy-ignore: true
+                      type: number
+              supplement_dns_for_osx:
+                x-speakeasy-ignore: true
+                type: boolean
+              tags:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    created_at:
+                      x-speakeasy-ignore: true
+                      type: string
+                    external_id:
+                      x-speakeasy-override: tag_id
+                      type: number
+                    id:
+                      x-speakeasy-ignore: true
+                      type: number
+                    name:
+                      x-speakeasy-name-override: tag_name
+                      type: string
+                    tag_type:
+                      x-speakeasy-ignore: true
+                      type: string
+                    updated_at:
+                      x-speakeasy-ignore: true
+                      type: string
+              trust_self_signed_certs:
+                x-speakeasy-ignore: true
+                type: boolean
+              use_publisher_dns:
+                x-speakeasy-ignore: true
+                type: boolean
+        status:
+          x-speakeasy-ignore: true
+          type: string
     tag_response:
       type: object
       x-speakeasy-entity: PrivateAppTagList
@@ -35,17 +171,21 @@ components:
           enum:
             - success
             - not found
-        data:
-          type: array
-          items:
-            x-speakeasy-entity: PrivateAppTag
-            type: object
-            properties:
-              tag_id:
-                type: integer
-                format: int32
-              tag_name:
-                type: string
+        data: # fixing oas for return of data
+          type: object
+          properties:
+            tags: 
+              type: array
+              items:
+                x-speakeasy-entity: PrivateAppTag
+                type: object
+                properties:
+                  tag_name:
+                    type: string
+                  tag_id:
+                    type: integer
+                    format: int32
+
     tag_response_400:
       type: object
       properties:
@@ -54,14 +194,15 @@ components:
           example: 400
         result:
           type: string
-    tag_item:
-      type: object
-      properties:
-        tag_name:
-          type: string
-        tag_id:
-          type: integer
-          format: int32
+#    tag_item:
+#      type: object
+#      properties:
+#        tag_name:
+#          type: string
+#        tag_id:
+#          x-speakeasy-ignore: true
+#          type: integer
+#          format: int32
 paths:
   "/steering/apps/private/tags":
     x-netskope-params:
@@ -70,10 +211,10 @@ paths:
       customerFacing: true
       apiGroup: npa_private_tag
     post:
+      x-speakeasy-ignore: true
       summary: create tags for private apps
       description: Create tags for private apps
       operationId: createNPATags
-      x-speakeasy-entity-operation: PrivateAppTag#create
       requestBody:
         content:
           application/json:
@@ -97,6 +238,7 @@ paths:
       summary: bulk update tags to associate with specified private apps
       description: Bulk update tags to associate with specified private apps
       operationId: patchNPATags
+      x-speakeasy-entity-operation: PrivateAppTag#create
       requestBody:
         content:
           application/json:
@@ -109,36 +251,37 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/tag_response"
+                "$ref": "#/components/schemas/tag_patch_response"
         '400':
           description: Invalid request
           content:
             application/json:
               schema:
                 "$ref": "#/components/schemas/tag_response_400"
-    delete:
-      summary: bulk delete tags for specified private apps
-      description: Bulk delete tags for specified private apps
-      operationId: deleteNPATags
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/tag_request"
-        required: true
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/tag_response"
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                "$ref": "#/components/schemas/tag_response_400"
+#    delete:
+#      x-speakeasy-ignore: true
+#      summary: bulk delete tags for specified private apps
+#      description: Bulk delete tags for specified private apps
+#      operationId: deleteNPATags
+#      requestBody:   # NOT OAS Compliant, DELETE must not have a body object
+#        content:
+#          application/json:
+#            schema:
+#              "$ref": "#/components/schemas/tag_request"
+#        required: true
+#      responses:
+#        '200':
+#          description: successful operation
+#          content:
+#            application/json:
+#              schema:
+#                "$ref": "#/components/schemas/tag_response"
+#        '400':
+#          description: Invalid request
+#          content:
+#            application/json:
+#              schema:
+#               "$ref": "#/components/schemas/tag_response_400"
     get:
       summary: 'Get list of private app tags '
       description: Get list of private app tags
@@ -164,10 +307,10 @@ paths:
       customerFacing: true
       apiGroup: npa_private_tag
     get:
+      x-speakeasy-ignore: true 
       summary: Get a private app tag based on tag id
       description: Get a private app tag based on tag id
       operationId: getNPATagsById
-      #x-speakeasy-entity-operation: PrivateAppTag#read
       parameters:
         - name: tag_id
           in: path
@@ -190,10 +333,10 @@ paths:
               schema:
                 "$ref": "#/components/schemas/tag_response_400"
     put:
+      x-speakeasy-ignore: true
       summary: Update a private app tag based on tag id
       description: Update a private app tag based on tag id
       operationId: replaceNPATagsById
-      #x-speakeasy-entity-operation: PrivateAppTag#update
       parameters:
         - name: tag_id
           in: path
@@ -222,10 +365,10 @@ paths:
               schema:
                 "$ref": "#/components/schemas/tag_response_400"
     delete:
+      x-speakeasy-entity-operation: PrivateAppTag#delete
       summary: Delete a private app tag based on tag id
       description: Delete a private app tag based on tag id
       operationId: deleteNPATagsById
-      #x-speakeasy-entity-operation: PrivateAppTag#delete
       parameters:
         - name: tag_id
           in: path
@@ -234,12 +377,13 @@ paths:
           schema:
             type: integer
             format: int32
-      requestBody:
-        content:
-          application/json:
-            schema:
-              "$ref": "#/components/schemas/tag_request"
-        required: true
+#      requestBody: ### Delete does not support BODY per OAS Rest Standards
+#        x-speakeasy-ignore: true
+#        content:
+#          application/json:
+#            schema:
+#              "$ref": "#/components/schemas/tag_request"
+#        required: true
       responses:
         '200':
           description: successful operation
@@ -267,6 +411,7 @@ paths:
       customerFacing: true
       apiGroup: npa_private_tag
     post:
+      x-speakeasy-ignore: true
       summary: Retrieve number of policy in use for specified tags
       description: Retrieve number of policy in use for specified tags
       operationId: retrieveNPAPoliciesInUse

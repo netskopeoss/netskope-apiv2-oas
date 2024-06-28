@@ -325,7 +325,7 @@ components:
         data:
           type: object
           x-speakeasy-entity:
-            - NPAPublishersAlertsConfiguration
+            - NPAPublishersAlertsConfigurationList
           properties:
             adminUsers:
               type: array
@@ -353,7 +353,7 @@ components:
     publishers_alert_put_request:
       type: object
       x-speakeasy-entity:
-        NPAPublishersAlertsConfiguration
+        - NPAPublishersAlertsConfigurationUpdate
       properties:
         adminUsers:
           type: array
@@ -873,7 +873,7 @@ paths:
       summary: Get list of publisher alerts
       description: Get list of publisher alerts
       operationId: getNPAPublisherAlerts
-      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationList#get
       responses:
         "200":
           description: successful operation
@@ -891,7 +891,7 @@ paths:
       summary: Configure publisher alerts
       description: Configure publisher alerts
       operationId: configureNPAPublisherAlerts
-      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationUpdate#create,update
       parameters:
         - name: silent
           in: query
