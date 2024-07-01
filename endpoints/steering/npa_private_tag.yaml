@@ -33,7 +33,6 @@ components:
 #          items:
 #            "$ref": "#/components/schemas/tag_item"
     tag_patch_response: # -- added new patch response as it does not match the other responses
-      x-speakeasy-entity: PrivateAppTag
       type: object
       properties:
         data:
@@ -132,14 +131,16 @@ components:
               tags:
                 type: array
                 items:
+                  x-speakeasy-entity: PrivateAppTag
                   type: object
                   properties:
                     created_at:
                       x-speakeasy-ignore: true
                       type: string
                     external_id:
-                      x-speakeasy-override: tag_id
-                      type: number
+                      x-speakeasy-name-override: tag_id
+                      type: integer
+                      format: int32
                     id:
                       x-speakeasy-ignore: true
                       type: number
