@@ -47,36 +47,64 @@ components:
               example: '1'
 
         ### This should be in the response        
-        #modify_type:
+        # modify_type:
         #  type: string
-        #modify_by:
+        # modify_by:
         #  type: string
+    npa_policygroup_patch_request:
+      type: object
+      x-speakeasy-entity: NPAPolicyGroup   
+      properties:
+        group_name:
+          type: string
+        group_order:
+          type: object
+          properties:
+            order:
+              type: string
+              enum:
+                - before
+                - after
+            group_id:
+              type: string
+              example: '1'
+              
     npa_policygroup_response_item:
       type: object
       x-speakeasy-entity: NPAPolicyGroup
       properties:
         group_id:
+          x-speakeasy-name-override: id
           # This is a string
           #type: integer
           type: string
         group_name:
           type: string
         modify_type:
+          x-speakeasy-ignore: true 
           type: string
         modify_time:
+          x-speakeasy-ignore: true
           type: string
         can_be_edited_deleted:
+          x-speaskeasy-ignore: true
           # This is a string
           #type: integer
           type: string
         group_type:
+          x-speakeasy-ignore: true
           #This is a string
           #type: integer
           type: string
-        group_prod_id: # This doesn't appear to be returned but I bet it is a string
-          type: integer
-        group_pinned_id: # This doesn't appear to be returned but I bet it is a string
-          type: integer
+#### group_prod_id does not exist in the output of a post
+#       group_prod_id: # This doesn't appear to be returned but I bet it is a string
+#         x-speakeasy-ignore: true 
+#         type: integer
+### group_pinned_id does not exist in the output of a post
+#        group_pinned_id: # This doesn't appear to be returned but I bet it is a string
+#          x-speakeasy-ignore: true
+#          type: integer
+
     npa_policygroup_response:
       type: object
       x-speakeasy-entity: PolicyGroupList
@@ -225,7 +253,6 @@ paths:
         - name: id
           in: path
           required: true
-          x-speakeasy-match: group_id
           description: npa policy group id
           schema:
             # This is actually a string
@@ -254,11 +281,11 @@ paths:
       summary: Patch a npa policy group
       description: Patch a npa policy group based on group id
       operationId: patchNPAPolicyGroupsById
+      x-speakeasy-entity-operation: NPAPolicyGroup#update
       parameters:
         - name: id
           in: path
           required: true
-          x-speakeasy-match: group_id
           description: policy group rule id
           schema:
             #type: integer #Actually a string
@@ -277,7 +304,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/npa_policygroup_request"
+              "$ref": "#/components/schemas/npa_policygroup_patch_request"
         required: true
       responses:
         '200':
@@ -319,7 +346,6 @@ paths:
           in: path
           required: true
           description: npa policy group id
-          x-speakeasy-match: group_id
           schema:
             #type: integer #Actually a string
             type: string
