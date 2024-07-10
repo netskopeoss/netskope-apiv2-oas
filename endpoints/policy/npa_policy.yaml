@@ -11,17 +11,20 @@ components:
       x-speakeasy-entity: NPAPolicy
       properties:
         rule_name:
+          required: true
           type: string
           example: vantest
-        description:
-          type: string
-          example: any
+#        description:
+#          type: string
+#          example: any
         rule_data:
+          required: true
           "$ref": "#/components/schemas/npa_policy_rule_data"
         rule_order:
-          type: object
+          required: true
           properties:
             order:
+              required: true
               type: string
               enum:
                 - top
@@ -90,24 +93,22 @@ components:
       items:
         type: object
         properties:
-          dlp_profile:
-            type: string
-            example: Payment Card
           actions:
             type: array
             items:
-              type: string
-              enum:
-                - allow
-                - block
-                - alert
-                - quanrantine
-                - bypass
-            example:
-              - allow
+              type: object
+              properties:
+                action_name:
+                  type: string
+          dlp_profile:
+            type: string
+            example: Payment Card
+
     npa_policy_rule_data:
       type: object
       properties:
+        description:
+          type: string
         users:
           type: array
           items:
@@ -199,8 +200,19 @@ components:
               enum:
                 - allow
                 - block
+            template:
+              type: string
+        os:
+          type: array
+          items:
+            type: string
         classification:
-          type: string
+          type: array
+          items:
+            type: string
+            enum:
+              - managed
+              - unmanaged
         show_dlp_profile_action_table:
           type: boolean
         external_dlp:
@@ -231,7 +243,24 @@ components:
           type: integer
           example: 1
         dlp_actions:
-          "$ref": "#/components/schemas/npa_policy_rule_dlp"
+          type: array
+          items:
+            type: object
+            properties:
+              actions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    action_name:
+                      type: string
+              dlp_profile:
+                type: string
+                example: Payment Card
+        dlp_profile:
+          type: array
+          items: 
+            type: string
 paths:
   "/policy/npa/rules":
     x-netskope-params:

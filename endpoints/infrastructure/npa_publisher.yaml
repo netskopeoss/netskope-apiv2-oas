@@ -7,38 +7,52 @@ components:
   schemas:
     publisher_post_request:
       type: object
+      required:
+        - name
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
       x-speakeasy-entity: NPAPublishers
+      x-speakeasy-entity-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
       properties:
         name:
           type: string
-          default: publisher_name
+          example: npa_publisher_1
         lbrokerconnect:
           type: boolean
           default: false
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/tag_item_no_id"
+## removing tags as they are not supported with publishers
+#        tags:
+#          x-speakeasy-ignore: true
+#          type: array
+#          items:
+#            $ref: "#/components/schemas/tag_item_no_id"
         publisher_upgrade_profiles_id:
           type: integer
           format: int32
           default: 1
-      required:
-        - name
-    tag_item_no_id:
-      type: object
-      properties:
-        tag_name:
-          type: string
-          default: tag_name
-    tag_item:
-      type: object
-      properties:
-        tag_id:
-          type: integer
-          format: int32
-        tag_name:
-          type: string
+          example: 1
+## removing tags as they are not supported with publishers.        
+#    tag_item_no_id:
+#      type: object
+#      properties:
+#        tag_name:
+#          type: string
+#          default: tag_name
+#    tag_item:
+#      type: object
+#      properties:
+#        tag_id:
+#          type: integer
+#          format: int32
+#        tag_name:
+#          type: string
     release_item:
       type: object
       properties:
@@ -59,10 +73,11 @@ components:
           format: int32
         lbrokerconnect:
           type: boolean
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/tag_item"
+## removing tags as they are not supported by publishers
+#        tags:
+#          type: array
+#          items:
+#            $ref: "#/components/schemas/tag_item"
     publisher_response:
       type: object
       properties:
@@ -77,6 +92,7 @@ components:
           x-speakeasy-entity: NPAPublishers
           properties:
             id:
+              x-speakeasy-name-override: publisher_id
               type: integer
               format: int32
             name:
@@ -101,10 +117,11 @@ components:
             publisher_upgrade_profile_id:
               type: integer
               format: int32
-            tags:
-              type: array
-              items:
-                $ref: "#/components/schemas/tag_item"
+## removing tags as they are not currently supported by publishers
+#            tags:
+#              type: array
+#              items:
+#                $ref: "#/components/schemas/tag_item"
     publishers_response_400:
       type: object
       properties:
@@ -166,9 +183,10 @@ components:
           type: string
         stitcher_id:
           type: integer
-        tags:
-          type: array
-          items: {}
+## removing tags as they are not supported by publishers today
+#        tags:
+#          type: array
+#          items: {}
         upgrade_failed_reason:
           anyOf:
             - $ref: "#/components/schemas/UpgradeFailedReason"
@@ -189,7 +207,8 @@ components:
         - registered
         - status
         - stitcher_id
-        - tags
+## removing tags as they are not supported with publishers
+#        - tags
         - upgrade_failed_reason
         - upgrade_request
         - upgrade_status
@@ -279,10 +298,11 @@ components:
         publisher_upgrade_profile_id:
           type: integer
           format: int32
-        tags:
-          type: array
-          items:
-            $ref: "#/components/schemas/tag_item"
+## removing tags as they are not supported by publishers today
+#        tags:
+#          type: array
+#          items:
+#            $ref: "#/components/schemas/tag_item"
     publisher_bulk_request:
       type: object
       x-speakeasy-entity: NPAPublishersBulkUpgrade
@@ -469,10 +489,11 @@ components:
                 type: array
                 items:
                   $ref: "#/components/schemas/protocol_response_item"
-              tags:
-                type: array
-                items:
-                  $ref: "#/components/schemas/tag_item"
+## removing tags as they are not supported by publishers today
+#              tags:
+#                type: array
+#                items:
+#                  $ref: "#/components/schemas/tag_item"
               service_publisher_assignments:
                 type: array
                 items:
@@ -534,6 +555,15 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/publisher_post_request"
+            examples:
+              minimum:
+                value:
+                  name: npa_publisher_1
+              full:
+                value:
+                  name: npa_publisher_3
+                  lbrokerconnect: false
+                  publisher_upgrade_profiles_id: 1
         required: true
       responses:
         "200":
@@ -564,7 +594,6 @@ paths:
       parameters:
         - name: publisher_id
           in: path
-          x-speakeasy-match: id
           required: true
           description: publisher id
           schema:
@@ -599,7 +628,6 @@ paths:
       parameters:
         - name: publisher_id
           in: path
-          x-speakeasy-match: id
           required: true
           description: publisher id
           schema:
@@ -684,7 +712,6 @@ paths:
       parameters:
         - name: publisher_id
           in: path
-          x-speakeasy-match: id
           required: true
           description: publisher id
           schema:

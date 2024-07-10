@@ -337,9 +337,9 @@ paths:
               schema:
                 "$ref": "#/components/schemas/npa_policygroup_response_400"
     get:
+      x-speakeasy-ignore: true
       summary: Get a npa policy group
       description: Get a npa policy group based on group id
-      x-speakeasy-entity-operation: NPAPolicyGroup#read
       operationId: getNPAPolicyGroupsById
       parameters:
         - name: id

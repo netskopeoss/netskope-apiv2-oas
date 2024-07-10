@@ -15,6 +15,8 @@ components:
           type: string
         real_host:
           type: string
+        private_app_protocol:
+          type: string
         protocols:
           type: array
           items:
