@@ -9,22 +9,23 @@ components:
       type: object
       required:
         - name
-      description: |
-        The NPA Publisher is a software package that enables private application
-        connectivity between your data center and the Netskope cloud. It is a crucial 
-        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
-        network access (ZTNA) to private applications and data in hybrid IT environments.
       x-speakeasy-entity: NPAPublishers
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
         network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource supports the creation of the Publisher objects.
+
+        Features may require additional licensing, please work with account team to enable.
       properties:
         name:
+          description: The name of the Publisher as seen in the UI
           type: string
           example: npa_publisher_1
         lbrokerconnect:
+          description: Allow this publisher to be stitched to Local Broker
           type: boolean
           default: false
 ## removing tags as they are not supported with publishers
@@ -34,6 +35,7 @@ components:
 #          items:
 #            $ref: "#/components/schemas/tag_item_no_id"
         publisher_upgrade_profiles_id:
+          description: The ID of the upgrade profile to manage this publisher
           type: integer
           format: int32
           default: 1
@@ -64,6 +66,19 @@ components:
           type: string
     publisher_put_request:
       type: object
+      x-speakeasy-entity: NPAPublishers
+      properties:
+        name:
+          type: string
+        id:
+          type: integer
+          format: int32
+        lbrokerconnect:
+          type: boolean
+    publisher_patch_request:
+      type: object
+      required:
+        - name
       x-speakeasy-entity: NPAPublishers
       properties:
         name:
@@ -133,6 +148,15 @@ components:
     publishers_get_response:
       type: object
       x-speakeasy-entity: NPAPublishersList
+      x-speakeasy-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This data source supports the list of all Publisher objects.
+
+        Features may require additional licensing, please work with account team to enable.
       properties:
         data:
           $ref: "#/components/schemas/Data"
@@ -514,6 +538,7 @@ paths:
       x-speakeasy-group: NPAPublishers
       parameters:
         - name: fields
+          x-speakeasy-terraform-ignore: true
           in: query
           required: false
           description: Return values only from specified fields
@@ -561,7 +586,7 @@ paths:
                   name: npa_publisher_1
               full:
                 value:
-                  name: npa_publisher_3
+                  name: npa_publisher_1
                   lbrokerconnect: false
                   publisher_upgrade_profiles_id: 1
         required: true
@@ -619,12 +644,10 @@ paths:
               schema:
                 $ref: "#/components/schemas/publishers_response_400"
     put:
+      x-speakeasy-terraform-ignore: true
       summary: Update a publisher
       description: update a publisher based on publisher id
       operationId: replaceNPAPublisherById
-      x-speakeasy-name-override: update
-      x-speakeasy-entity-operation: NPAPublishers#update
-      x-speakeasy-group: NPAPublishers
       parameters:
         - name: publisher_id
           in: path
@@ -666,6 +689,9 @@ paths:
       summary: Patch a publisher
       description: patch a publisher based on publisher id
       operationId: updateNPAPublisherById
+      x-speakeasy-name-override: update
+      x-speakeasy-entity-operation: NPAPublishers#update
+      x-speakeasy-group: NPAPublishers
       parameters:
         - name: publisher_id
           in: path
