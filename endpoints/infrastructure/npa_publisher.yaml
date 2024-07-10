@@ -66,7 +66,8 @@ components:
           type: string
     publisher_put_request:
       type: object
-      x-speakeasy-entity: NPAPublishers
+      required:
+        - id
       properties:
         name:
           type: string
@@ -75,6 +76,9 @@ components:
           format: int32
         lbrokerconnect:
           type: boolean
+        publisher_upgrade_profiles_id:
+          type: integer
+          format: int32
     publisher_patch_request:
       type: object
       required:
@@ -88,6 +92,9 @@ components:
           format: int32
         lbrokerconnect:
           type: boolean
+        publisher_upgrade_profiles_id:
+          type: integer
+          format: int32
 ## removing tags as they are not supported by publishers
 #        tags:
 #          type: array
@@ -353,10 +360,63 @@ components:
           enum:
             - success
             - not found
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/publisher_bulk_item"
+          data:
+            type: object
+            properties:
+              publishers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    apps_count:
+                      type: integer
+                      format: int32
+                    assessment:
+                      type: object
+                      properties:
+                    capabilities:
+                      type: object
+                      properties:
+                    common_name:
+                      type: string
+                    connected_apps:
+                      type: array
+                      items:
+                        type: string
+                    id:
+                      type: int
+                      format: int32
+                    lbrokerconnect:
+                      type: boolean
+                    name:
+                      type: string
+                    publisher_upgrade_profiles_id:
+                      type: int
+                      format: int32
+                    registered:
+                      type: boolean
+                    status:
+                      type: string
+                    stitcher_id:
+                      type: object
+                      properties:
+                    stitcher_pop:
+                      type: object
+                      properties:
+                    tags:
+                      type: array
+                      items:
+                        type: object
+                    upgrade_failed_reason:
+                      type: object
+                      properties:
+                    upgrade_request:
+                      type: boolean
+                    upgrade_status:
+                      type: object
+                      properties:
+                        upstat:
+                          type: string
     publishers_alert_get_response:
       type: object
       properties:
@@ -449,37 +509,35 @@ components:
     protocol_response_item:
       type: object
       properties:
+        created_at:
+          type: string
         id:
           type: integer
           format: int32
         port:
           type: string
-        transport:
-          type: string
         service_id:
           type: integer
           format: int32
+        transport:
+          type: string
+        updated_at:
+          type: string
     service_publisher_assignment_item:
       type: object
       properties:
-        publisher_id:
-          type: integer
-          format: int32
-        service_id:
-          type: integer
-          format: int32
         primary:
-          type: boolean
+          type: string
+        publisher_external_id:
+          type: integer
+          format: int32
+        publisher_name:
+          type: string
         reachability:
-          type: object
-          properties:
-            error_code:
-              type: integer
-              format: int32
-            reachable:
-              type: boolean
-            error_string:
-              type: string
+          type: string
+        service_exernal_id:
+          type: integer
+          format: int32
     publisher_apps_list_response:
       type: object
       x-speakeasy-entity: NPAPublishersAppsList
@@ -494,34 +552,78 @@ components:
           items:
             type: object
             properties:
-              id:
-                type: integer
-                format: int32
-              name:
-                type: string
-              use_publisher_dns:
+              allow_unauthenticated_cors:
                 type: boolean
+              app_option:
+                type: object
               clientless_access:
                 type: boolean
-              trust_self_signed_certs:
-                type: boolean
+              external_id:
+                type: integer
+                format: int32
               host:
                 type: string
-              real_host:
+              id:
+                type: number
+              is_user_portal_app:
+                type: boolean
+              name:
+                type: string
+              private_app_protocol:
                 type: string
               protocols:
                 type: array
                 items:
-                  $ref: "#/components/schemas/protocol_response_item"
-## removing tags as they are not supported by publishers today
-#              tags:
-#                type: array
-#                items:
-#                  $ref: "#/components/schemas/tag_item"
+### explicity defined schema versus reference to permit terraform to work.
+#                  $ref: "#/components/schemas/protocol_response_item"
+                  type: object
+                  properties:
+                    created_at:
+                      type: string
+                    id: 
+                      type: integer
+                      format: int32
+                    port:
+                      type: string
+                    service_id: 
+                      type: integer
+                      format: int32
+                    transport:
+                      type: string
+                    updated_at:
+                      type: string
+              public_host:
+                type: string
+              reachability:
+                type: object
+                properties:
+                  reachable:
+                    type: boolean
+              real_host:
+                type: string
               service_publisher_assignments:
                 type: array
                 items:
-                  $ref: "#/components/schemas/service_publisher_assignment_item"
+## explicity defined schema for terraform to compile
+#                  $ref: "#/components/schemas/service_publisher_assignment_item"
+                  type: object
+                  properties:
+                    primary:
+                      type: boolean
+                    publisher_external_id:
+                      type: number
+                    publisher_name:
+                      type: string
+                    reachability:
+                      type: boolean
+                    service_external_id:
+                      type: number
+              supplement_dns_for_osx:
+                type: boolean
+              trust_self_signed_certs:
+                type: boolean
+              use_publisher_dns:
+                type: boolean
 paths:
   /infrastructure/publishers:
     x-netskope-params:
@@ -744,6 +846,7 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 1
       responses:
         "200":
           description: successful operation
@@ -778,6 +881,7 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 1
       responses:
         "200":
           description: successful operation
@@ -830,6 +934,7 @@ paths:
           schema:
             type: integer
             format: int32
+            example: 1
       responses:
         "200":
           description: successful operation
