@@ -701,6 +701,7 @@ paths:
             type: integer
             format: int32
         - name: silent
+          x-speakeasy-terraform-ignore: true
           in: query
           required: false
           description: flag to skip output except status code
@@ -713,7 +714,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/publisher_put_request"
+              $ref: "#/components/schemas/publisher_patch_request"
         required: true
       responses:
         "200":
