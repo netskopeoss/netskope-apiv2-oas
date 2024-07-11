@@ -112,6 +112,13 @@ components:
         data:
           type: object
           x-speakeasy-entity: NPAPublishers
+          x-speakeasy-entity-description: |
+            The NPA Publisher is a software package that enables private application
+            connectivity between your data center and the Netskope cloud. It is a crucial 
+            component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+            network access (ZTNA) to private applications and data in hybrid IT environments.
+
+            This data source supports query of a specific Publisher object. 
           properties:
             id:
               x-speakeasy-name-override: publisher_id
@@ -338,6 +345,13 @@ components:
     publisher_bulk_request:
       type: object
       x-speakeasy-entity: NPAPublishersBulkUpgrade
+      x-speakeasy-entity-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource supports the triggering of upgrades on publishers.
       properties:
         publishers:
           type: object
@@ -346,6 +360,7 @@ components:
               type: array
               items:
                 type: string
+                example: "1"
             apply:
               type: object
               properties:
@@ -483,9 +498,6 @@ components:
               type: array
               items:
                 type: string
-                example:
-                  - admin1@abc.com
-                  - admin2@abc.com
             eventTypes:
               type: array
               items:
@@ -496,12 +508,8 @@ components:
                   - UPGRADE_SUCCEEDED
                   - UPGRADE_FAILED
                   - CONNECTION_FAILED
-              example:
-                - CONNECTION_FAILED
-                - UPGRADE_STARTED
             selectedUsers:
-              type: string # Should be an array of strings,
-              example: abc@xyz.com,def@xyz.com
+              type: string
     publishers_alert_put_request:
       type: object
       x-speakeasy-entity:
@@ -518,10 +526,12 @@ components:
           type: array
           items:
             type: string
+            example: "admin1@abc.com"
         eventTypes:
           type: array
           items:
             type: string
+            example: "UPGRADE_FAILED"
             enum:
               - UPGRADE_WILL_START
               - UPGRADE_STARTED
@@ -532,6 +542,7 @@ components:
           maxItems: 5
         selectedUsers:
           type: string
+          example: "admin1@abc.com"
 ## merged into response above for compile problems.
 #    publishers_alert_put_response:
 #      type: object
@@ -969,7 +980,7 @@ paths:
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
         network access (ZTNA) to private applications and data in hybrid IT environments.
 
-        This endpoint supports query of a specificPublisher object. 
+        This endpoint supports query of a specific Publisher object. 
         Supply `publisher_id` in the path of the request.
       operationId: getNPAPublisherById
       x-speakeasy-name-override: read
