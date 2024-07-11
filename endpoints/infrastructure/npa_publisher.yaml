@@ -155,7 +155,7 @@ components:
     publishers_get_response:
       type: object
       x-speakeasy-entity: NPAPublishersList
-      x-speakeasy-description: |
+      x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
@@ -370,14 +370,49 @@ components:
                 type: object
                 properties:
                   apps_count:
-                    type: integer
-                    format: int32
+                    type: number
                   assessment:
                     type: object
-                    additionalProperties: false
+                    properties:
+                      ca_certs_status:
+                        type: object
+                        properties:
+                          hashes:
+                            type: array
+                            items:
+                              type: string
+                          last_modified:
+                            type: number
+                      eee_support:
+                        type: boolean
+                      hdd_free:
+                        type: string
+                      hdd_total:
+                        type: string
+                      ip_address:
+                        type: string
+                      latency:
+                        type: number
+                      version:
+                        type: string
                   capabilities:
                     type: object
-                    additionalProperties: false                    
+                    properties:
+                      DTLS:
+                        type: boolean
+                      EEE:
+                        type: boolean
+                      auto_upgrade:
+                        type: boolean
+                      nwa_ba:
+                        type: boolean
+                      pull_nsconfig:
+                        type: object
+                        properties:
+                          orgkey_exist:
+                            type: boolean
+                          orguri_exist:
+                            type: boolean
                   common_name:
                     type: string
                   connected_apps:
@@ -385,31 +420,37 @@ components:
                     items:
                       type: string
                   id:
-                    type: integer
-                    format: int32
+                    type: number
                   lbrokerconnect:
                     type: boolean
                   name:
                     type: string
                   publisher_upgrade_profiles_id:
-                    type: integer
-                    format: int32
+                    type: number
                   registered:
                     type: boolean
                   status:
                     type: string
                   stitcher_id:
-                    type: integer
-                    format: int32
+                    type: number
                   stitcher_pop:
                     type: string
-#                  tags:
-#                    type: array
-#                    items:
-#                      type: object
+                  tags:
+                    x-speakeasy-terraform-ignore: true
+                    type: array
+                    items:
+                      type: object
                   upgrade_failed_reason:
                     type: object
-                    additionalProperties: false                     
+                    properties:
+                      detail:
+                        type: string
+                      error_code:
+                        type: number
+                      timestamp:
+                        type: number
+                      version:
+                        type: string
                   upgrade_request:
                     type: boolean
                   upgrade_status:
@@ -430,6 +471,13 @@ components:
           type: object
           x-speakeasy-entity:
             - NPAPublishersAlertsConfigurationList
+          x-speakeasy-entity-description: |
+            The NPA Publisher is a software package that enables private application
+            connectivity between your data center and the Netskope cloud. It is a crucial 
+            component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+            network access (ZTNA) to private applications and data in hybrid IT environments.
+
+            This resource supports the ability to retrieve publisher alert configurations.
           properties:
             adminUsers:
               type: array
@@ -458,14 +506,18 @@ components:
       type: object
       x-speakeasy-entity:
         - NPAPublishersAlertsConfigurationUpdate
+      x-speakeasy-entity-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource supports the ability to create publisher alert configurations.
       properties:
         adminUsers:
           type: array
           items:
             type: string
-            example:
-              - admin1@abc.com
-              - admin2@abc.com
         eventTypes:
           type: array
           items:
@@ -478,12 +530,8 @@ components:
               - CONNECTION_FAILED
           minItems: 1
           maxItems: 5
-          example:
-            - CONNECTION_FAILED
-            - UPGRADE_STARTED
         selectedUsers:
           type: string
-          example: abc@xyz.com,def@xyz.com
 ## merged into response above for compile problems.
 #    publishers_alert_put_response:
 #      type: object
@@ -497,8 +545,16 @@ components:
     publishers_release_get_response:
       type: object
       x-speakeasy-entity: NPAPublishersReleasesList
+      x-speakeasy-entity-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This data source supports retrieval of the current publisher versions.
       properties:
         status:
+          x-speakeasy-terraform-ignore: true
           type: string
           enum:
             - success
@@ -543,6 +599,13 @@ components:
     publisher_apps_list_response:
       type: object
       x-speakeasy-entity: NPAPublishersAppsList
+      x-speakeasy-entity-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This data source supports the list of applications associated with a publisher.
       properties:
         status:
           type: string
@@ -681,7 +744,7 @@ paths:
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
         network access (ZTNA) to private applications and data in hybrid IT environments.
 
-        This resource supports the creation of the Publisher objects.
+        This endpoint supports the creation of Publisher objects.
         Please review the samples provided for minimum, and full schemas. 
 
         Features may require additional licensing, please work with account team to enable.
@@ -736,7 +799,13 @@ paths:
       apiGroup: npa_publishers
     delete:
       summary: Delete a publisher
-      description: Delete a publisher based on publisher id
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports deletion of Publishers by supplying the `publisher_id` attribute.
       operationId: deleteNPAPublishers
       x-speakeasy-name-override: delete
       x-speakeasy-entity-operation: NPAPublishers#delete
@@ -771,7 +840,17 @@ paths:
     put:
       x-speakeasy-terraform-ignore: true
       summary: Update a publisher
-      description: update a publisher based on publisher id
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports updating the Publisher object. 
+        Supply `publisher_id` in the path of the request with appropriate body message.
+        *Note:* `id` attribute is required in the body of the Patch request, 
+        this id is the same as the publisher_id in the path.
+        See examples:
       operationId: replaceNPAPublisherById
       parameters:
         - name: publisher_id
@@ -796,6 +875,17 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/publisher_put_request"
+            examples:
+              minimum:
+                value:
+                  id: 12
+                  name: updated_name_attribute
+              full:
+                value:
+                  id: 12
+                  name: updated_name_attribute
+                  lbrokerconnect: false 
+                  publisher_upgrade_profiles_id: 2
         required: true
       responses:
         "200":
@@ -812,7 +902,16 @@ paths:
                 $ref: "#/components/schemas/publishers_response_400"
     patch:
       summary: Patch a publisher
-      description: patch a publisher based on publisher id
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports updating the Publisher object. 
+        Supply `publisher_id` in the path of the request and attributes that are to be updated.
+        *Note:* `name` attribute is required in the body of the Patch request.
+        See examples:
       operationId: updateNPAPublisherById
       x-speakeasy-name-override: update
       x-speakeasy-entity-operation: NPAPublishers#update
@@ -840,6 +939,14 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/publisher_patch_request"
+            examples:
+              name_change: 
+                value:
+                  name: updated_name
+              upgrade_profile:
+                value:
+                  name: publisher_1
+                  publisher_upgrade_profiles_id: 2
         required: true
       responses:
         "200":
@@ -856,7 +963,14 @@ paths:
                 $ref: "#/components/schemas/publishers_response_400"
     get:
       summary: Get a publisher
-      description: get a publisher based on publisher id
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports query of a specificPublisher object. 
+        Supply `publisher_id` in the path of the request.
       operationId: getNPAPublisherById
       x-speakeasy-name-override: read
       x-speakeasy-entity-operation: NPAPublishers#read
@@ -891,7 +1005,14 @@ paths:
       apiGroup: npa_publishers
     post:
       summary: Generate and retrieve a token for publisher registration
-      description: Generate and retrieve a token for publisher registration
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the creation and retrival of a registration token.
+        Please supply the `publisher_id` in the path to generate the token.
       operationId: generateNPAPublisherToken
       x-speakeasy-name-override: create
       x-speakeasy-entity-operation: PublisherToken#create
@@ -915,6 +1036,13 @@ paths:
                 properties:
                   data:
                     x-speakeasy-entity: PublisherToken
+                    x-speakeasy-entity-description: |
+                      The NPA Publisher is a software package that enables private application
+                      connectivity between your data center and the Netskope cloud. It is a crucial 
+                      component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+                      network access (ZTNA) to private applications and data in hybrid IT environments.
+
+                      This resource supports the creation and retrival of a registration token.
                     type: object
                     properties:
                       token:
@@ -944,7 +1072,17 @@ paths:
       apiGroup: npa_publishers
     get:
       summary: Get all private apps associated to a publisher
-      description: Get all private apps associated to a publisher
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the ability to list all private applications associated with 
+        one or many publishers.
+
+        Please supply the `publisher_id` in the path to retrieve the private applications 
+        associated with the publisher.
       operationId: getNPAPublisherApps
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersAppsList#read
@@ -979,8 +1117,15 @@ paths:
       apiGroup: npa_publishers
     put:
       summary: Trigger bulk publisher update action
-      description: Trigger bulk publisher update action
-      operationId: triggerNPAPublisherUpdate
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the ability to trigger bulk update actions.
+
+        Please see examples for how to use this endpoint.
       x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
       parameters:
         - name: silent
@@ -998,6 +1143,23 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/publisher_bulk_request"
+            examples:
+              single_publisher:
+                value:
+                  publishers:
+                    apply:
+                      publisher_upgrade_profiles_id: 3
+                    id: [
+                      "12"
+                    ]              
+              multiple_publishers:
+                value:
+                  publishers:
+                    apply:
+                      publisher_upgrade_profiles_id: 3
+                    id: [
+                      "12","15","30"
+                    ]
         required: true
       responses:
         "200":
@@ -1020,18 +1182,25 @@ paths:
       apiGroup: npa_publishers
     get:
       summary: Get list of publisher release objects
-      description: Get list of publisher release objects
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the ability to list all availble publisher releases.
       operationId: getNPAPublisherObjects
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersReleasesList#read
       x-speakeasy-group: NPAPublishersReleases
-      parameters:
-        - name: fields
-          in: query
-          required: false
-          description: Return values only from specified fields
-          schema:
-            type: string
+### removing fields, does not work as written
+#      parameters:
+#        - name: fields
+#          in: query
+#          required: false
+#          description: Return values only from specified fields
+#          schema:
+#            type: string
       responses:
         "200":
           description: successful operation
@@ -1052,8 +1221,14 @@ paths:
       customerFacing: true
       apiGroup: npa_publishers
     get:
-      summary: Get list of publisher alerts
-      description: Get list of publisher alerts
+      summary: Get list of publisher alerts configurations
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the ability to retrieve publisher alert configurations.
       operationId: getNPAPublisherAlerts
       x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationList#get
       responses:
@@ -1071,7 +1246,15 @@ paths:
                 $ref: "#/components/schemas/publishers_response_400"
     put:
       summary: Configure publisher alerts
-      description: Configure publisher alerts
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial 
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint supports the ability to configure publisher alert configurations.
+
+        Please see the examples for how to configure.
       operationId: configureNPAPublisherAlerts
       x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationUpdate#create,update
       parameters:
@@ -1090,6 +1273,18 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/publishers_alert_put_request"
+            examples:
+              example:
+                value:
+                  adminUsers: [
+                    "admin1@abc.com",
+                    "admin2@abc.com"
+                  ]
+                  eventTypes: [
+                    "CONNECTION_FAILED",
+                    "UPGRADE_STARTED"
+                  ]
+                  selectedUsers: "admin1@abc.com, admin2@abc.com"
         required: true
       responses:
         "200":
