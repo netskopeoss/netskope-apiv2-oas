@@ -971,7 +971,7 @@ paths:
       x-speakeasy-name-override: list_objects
       x-speakeasy-entity-operation: NPAPublishersReleasesList#read
       x-speakeasy-group: NPAPublishersReleases
-      parameters:
+#      parameters:
 ### Removed fields parameter as it is not used by API      
 #        - description: Return values only from specified fields
 #          in: query
