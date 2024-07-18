@@ -708,15 +708,13 @@ paths:
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
         network access (ZTNA) to private applications and data in hybrid IT environments.
 
-        This endpoint queries all publishers objects.
-
-        By using the fields parameter, you are able to reduce the attributes in the return.
-        
-        `?fields = publisher_id,publisher_name`
+        This endpoint queries and returns all publisher objects.
 
         Features may require additional licensing, please work with account team to enable.
       parameters:
-        - description: Return values only from specified fields
+        - description: | 
+            Fields you wish to return as part of the API response.
+            *Example:* `publisher_id,publisher_name`
           in: query
           name: fields
           x-speakeasy-ignore: true
@@ -749,12 +747,15 @@ paths:
         component of Netskope’s Private Access (NPA) solution, which provides zero-trust 
         network access (ZTNA) to private applications and data in hybrid IT environments.
 
-        This endpoint supports the creation of Publisher objects.
+        This endpoint supports the creation of Publisher objects.  
         Please review the samples provided for minimum, and full schemas. 
 
         Features may require additional licensing, please work with account team to enable.
       parameters:
-        - description: flag to skip output except status code
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           in: query
           name: silent
           x-speakeasy-terraform-ignore: true
@@ -894,7 +895,10 @@ paths:
         Please see examples for how to use this endpoint.
       x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
       parameters:
-        - description: flag to skip output except status code
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           in: query
           name: silent
           required: false
@@ -967,13 +971,13 @@ paths:
       x-speakeasy-entity-operation: NPAPublishersReleasesList#read
       x-speakeasy-group: NPAPublishersReleases
       parameters:
-        - description: Return values only from specified fields
-          in: query
-          x-speakeasy-ignore: true
-          name: fields
-          required: false
-          schema:
-            type: string
+### Removed fields parameter as it is not used by API      
+#        - description: Return values only from specified fields
+#          in: query
+#          name: fields
+#          required: false
+#          schema:
+#            type: string
       responses:
         "200":
           content:
@@ -1014,6 +1018,7 @@ paths:
           schema:
             format: int32
             type: integer
+            example: 1
       responses:
         "200":
           content:
@@ -1094,7 +1099,10 @@ paths:
             format: int32
             type: integer
             example: 1
-        - description: flag to skip output except status code
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           x-speakeasy-ignore: true
           in: query
           name: silent
@@ -1154,7 +1162,11 @@ paths:
           schema:
             format: int32
             type: integer
-        - description: flag to skip output except status code
+            example: 1
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           in: query
           name: silent
           required: false
