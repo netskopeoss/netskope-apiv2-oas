@@ -843,8 +843,9 @@ paths:
       x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationUpdate#create,update
       parameters:
         - description: |
-            "flag to skip output except status code: \n * `1` - Skip response\
-            \ data \n * `0` - Do not skip response data"
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           x-speakeasy-ignore: true
           in: query
           name: silent
