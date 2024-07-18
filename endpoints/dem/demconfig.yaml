@@ -1,0 +1,3081 @@
+components:
+  examples:
+    move_probe_after_position_0:
+      value:
+        operation: after
+        position: 0
+    move_probe_at_bottom:
+      value:
+        operation: bottom
+    move_probe_at_top:
+      value:
+        operation: top
+    move_probe_before_position_0:
+      value:
+        operation: before
+        position: 0
+  schemas:
+    EditProbeStatusReqBody:
+      properties:
+        status:
+          type: integer
+      required:
+        - status
+      type: object
+    EditProbeStatusResp:
+      properties:
+        id:
+          type: integer
+        status:
+          type: integer
+      type: object
+    ErrorResponse:
+      properties:
+        message:
+          description: error message
+          example: error
+          type: string
+      type: object
+    GlobalSettingDEMServiceResp:
+      properties:
+        modifiedBy:
+          example: admin@netskope.com
+          type: string
+        modifiedTime:
+          description: rfc3339 timestamp format
+          example: "2023-01-01T00:00:00.000Z"
+          type: string
+        setting:
+          properties:
+            disabledEntity:
+              properties:
+                group:
+                  items:
+                    type: string
+                  type: array
+                ou:
+                  items:
+                    type: string
+                  type: array
+                user:
+                  items:
+                    type: string
+                  type: array
+              type: object
+            enabled:
+              type: boolean
+          type: object
+      required:
+        - enabled
+      type: object
+    GlobalSettingMonitoredAppsResp:
+      properties:
+        modifiedBy:
+          example: admin@netskope.com
+          type: string
+        modifiedTime:
+          description: rfc3339 timestamp format
+          example: "2023-01-01T00:00:00.000Z"
+          type: string
+        settings:
+          properties:
+            apps:
+              items:
+                type: string
+              type: array
+          type: object
+      required:
+        - apps
+    MoveProbeReqBody:
+      properties:
+        operation:
+          enum:
+            - top
+            - bottom
+            - after
+            - before
+          type: string
+        position:
+          description: 0-index position, required if operation is 'after' or 'before'
+          type: integer
+      required:
+        - operation
+      type: object
+    MoveProbeResp:
+      properties:
+        id:
+          type: integer
+        priority:
+          type: integer
+      type: object
+info:
+  description:
+    DEM Config API service used for App, Probe and Global Setting configuration
+    operations on Web UI
+  title: dem-config
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /dem/appprobes:
+    get:
+      parameters:
+        - description: filter app probe by name
+          in: query
+          name: name
+          schema:
+            type: string
+        - description: filter app probe by app name
+          in: query
+          name: appname
+          schema:
+            type: string
+        - description: The (zero-based) offset of the first item in the list to retrieve
+          in: query
+          name: offset
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: max item to retrieve
+          in: query
+          name: limit
+          schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+        - description: Whether to prune result and leave only id and name
+          in: query
+          name: prune
+          schema:
+            default: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                full result:
+                  value:
+                    data:
+                      - appDomains:
+                          - domain.com
+                        appID: 1
+                        appName: app 1
+                        appType: custom
+                        deviceClassification:
+                          - managed
+                          - unmanaged
+                        entity:
+                          group:
+                            - group1
+                          ou:
+                            - ou1
+                          user:
+                            - user1
+                        frequency: 10
+                        id: 1
+                        name: app probe 1
+                        os:
+                          - windows
+                          - mac
+                        priority: 1
+                        status: 0
+                    totalCount: 1
+                pruned result:
+                  value:
+                    data:
+                      - id: 1
+                        name: app probe 1
+                    totalCount: 1
+              schema:
+                properties:
+                  data:
+                    items:
+                      properties:
+                        appDomains:
+                          items:
+                            type: string
+                          type: array
+                        appID:
+                          type: integer
+                        appName:
+                          type: string
+                        appType:
+                          enum:
+                            - predefined
+                            - custom
+                          type: string
+                        deviceClassification:
+                          example:
+                            - managed
+                            - unmanaged
+                          items:
+                            type: string
+                          type: array
+                        entity:
+                          properties:
+                            group:
+                              example:
+                                - group1
+                                - group2
+                              items:
+                                type: string
+                              type: array
+                            ou:
+                              example:
+                                - ou1
+                                - ou2
+                              items:
+                                type: string
+                              type: array
+                            user:
+                              example:
+                                - user1
+                                - user2
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        frequency:
+                          type: integer
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        os:
+                          example:
+                            - windows
+                            - mac
+                          items:
+                            enum:
+                              - windows
+                              - mac
+                            type: string
+                          type: array
+                        priority:
+                          type: integer
+                        status:
+                          type: integer
+                        modifiedTime:
+                          type: string
+                        createdTime:
+                          type: string
+                      type: object
+                    type: array
+                  totalCount:
+                    description: total count of results
+                    type: integer
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get all app probes
+      tags:
+        - App Probe
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              create app probe with custom app and least priority:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: bottom
+                  name: app probe 3
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              create app probe with custom app and second-from-top priority:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: after
+                    position: 0
+                  name: app probe 3
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              create app probe with custom app and second-from-top priority - 2:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: before
+                    position: 1
+                  name: app probe 3
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              create app probe with custom app and top priority:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: top
+                  name: app probe 3
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              create disabled app probe:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: top
+                  name: app probe 4
+                  os:
+                    - windows
+                    - mac
+                  status: 0
+              create first app probe with predefined app(without any existing probes):
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appName: predefined app 1
+                  appType: predefined
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  move:
+                    operation: top
+                  name: app probe 1
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+            schema:
+              properties:
+                appDomains:
+                  items:
+                    type: string
+                  type: array
+                appID:
+                  type: integer
+                appName:
+                  type: string
+                appType:
+                  enum:
+                    - predefined
+                    - custom
+                  type: string
+                deviceClassification:
+                  example:
+                    - managed
+                    - unmanaged
+                  items:
+                    type: string
+                  type: array
+                entity:
+                  properties:
+                    group:
+                      example:
+                        - group1
+                        - group2
+                      items:
+                        type: string
+                      type: array
+                    ou:
+                      example:
+                        - ou1
+                        - ou2
+                      items:
+                        type: string
+                      type: array
+                    user:
+                      example:
+                        - user1
+                        - user2
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                frequency:
+                  type: integer
+                move:
+                  $ref: "#/components/schemas/MoveProbeReqBody"
+                name:
+                  type: string
+                os:
+                  example:
+                    - windows
+                    - mac
+                  items:
+                    enum:
+                      - windows
+                      - mac
+                    type: string
+                  type: array
+                status:
+                  type: integer
+              required:
+                - name
+                - appName
+                - appType
+                - appDomains
+                - frequency
+                - entity
+                - os
+                - deviceClassification
+                - status
+                - move
+              type: object
+        description: JSON object containing new app app probe information
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                app probe with custom app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 2
+                    name: app probe 3
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                app probe with predefined app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 0
+                    appName: predefined app 1
+                    appType: predefined
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 0
+                    name: app probe 1
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                disabled app probe:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 3
+                    name: app probe 4
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 0
+              schema:
+                properties:
+                  appDomains:
+                    items:
+                      type: string
+                    type: array
+                  appID:
+                    type: integer
+                  appName:
+                    type: string
+                  appType:
+                    enum:
+                      - predefined
+                      - custom
+                    type: string
+                  deviceClassification:
+                    example:
+                      - managed
+                      - unmanaged
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        example:
+                          - group1
+                          - group2
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        example:
+                          - ou1
+                          - ou2
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        example:
+                          - user1
+                          - user2
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: Successfully created a new app probe
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App probe limit reached
+        "409":
+          content:
+            application/json:
+              examples:
+                app-occupied:
+                  value:
+                    message: App already used by other app probes
+                app-probe-exists:
+                  value:
+                    message: App probe name already exists
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Create a new app app probe
+      tags:
+        - App Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/appprobes/{id}:
+    delete:
+      parameters:
+        - description: Unique identifier for an app probe
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Probe deleted successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              example:
+                message: Probe not found
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Deletes an app probe by ID
+      tags:
+        - App Probe
+    get:
+      parameters:
+        - description: unique identifier for an app probe
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                app probe with custom app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 2
+                    name: app probe 3
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                app probe with predefined app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 0
+                    appName: predefined app 1
+                    appType: predefined
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 0
+                    name: app probe 1
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                disabled app probe:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 3
+                    name: app probe 3
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 0
+              schema:
+                properties:
+                  appDomains:
+                    items:
+                      type: string
+                    type: array
+                  appID:
+                    type: integer
+                  appName:
+                    type: string
+                  appType:
+                    enum:
+                      - predefined
+                      - custom
+                    type: string
+                  deviceClassification:
+                    example:
+                      - managed
+                      - unmanaged
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        example:
+                          - group1
+                          - group2
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        example:
+                          - ou1
+                          - ou2
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        example:
+                          - user1
+                          - user2
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              example:
+                message: Probe not found
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get one app probe
+      tags:
+        - App Probe
+    put:
+      description: Edit an app probe by ID
+      parameters:
+        - description: ID of the app probe to edit
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            examples:
+              app probe with custom app:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  name: app probe 3
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              app probe with predefined app:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appName: predefined app 1
+                  appType: predefined
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  name: app probe 1
+                  os:
+                    - windows
+                    - mac
+                  status: 1
+              disabled app probe:
+                value:
+                  appDomains:
+                    - domain1
+                    - domain2
+                  appID: 2
+                  appName: custom app 1
+                  appType: custom
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 5
+                  name: app probe 4
+                  os:
+                    - windows
+                    - mac
+                  status: 0
+            schema:
+              properties:
+                appDomains:
+                  items:
+                    type: string
+                  type: array
+                appID:
+                  type: integer
+                appName:
+                  type: string
+                appType:
+                  enum:
+                    - predefined
+                    - custom
+                  type: string
+                deviceClassification:
+                  example:
+                    - managed
+                    - unmanaged
+                  items:
+                    type: string
+                  type: array
+                entity:
+                  properties:
+                    group:
+                      example:
+                        - group1
+                        - group2
+                      items:
+                        type: string
+                      type: array
+                    ou:
+                      example:
+                        - ou1
+                        - ou2
+                      items:
+                        type: string
+                      type: array
+                    user:
+                      example:
+                        - user1
+                        - user2
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                frequency:
+                  type: integer
+                name:
+                  type: string
+                os:
+                  example:
+                    - windows
+                    - mac
+                  items:
+                    enum:
+                      - windows
+                      - mac
+                    type: string
+                  type: array
+                status:
+                  type: integer
+              required:
+                - name
+                - appName
+                - appType
+                - appDomains
+                - frequency
+                - entity
+                - os
+                - deviceClassification
+                - status
+              type: object
+        description: JSON object containing new app probe information
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                app probe with custom app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 2
+                    name: app probe 3
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                app probe with predefined app:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 0
+                    appName: predefined app 1
+                    appType: predefined
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 0
+                    name: app probe 1
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 1
+                disabled app probe:
+                  value:
+                    appDomains:
+                      - domain1
+                      - domain2
+                    appID: 2
+                    appName: custom app 1
+                    appType: custom
+                    deviceClassification:
+                      - managed
+                      - unmanaged
+                    entity:
+                      group:
+                        - group1
+                        - group2
+                      ou:
+                        - ou1
+                        - ou2
+                      user:
+                        - user1
+                        - user2
+                    frequency: 5
+                    id: 3
+                    name: app probe 4
+                    os:
+                      - windows
+                      - mac
+                    priority: 0
+                    status: 0
+              schema:
+                properties:
+                  appDomains:
+                    items:
+                      type: string
+                    type: array
+                  appID:
+                    type: integer
+                  appName:
+                    type: string
+                  appType:
+                    enum:
+                      - predefined
+                      - custom
+                    type: string
+                  deviceClassification:
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "409":
+          content:
+            application/json:
+              examples:
+                app probe-exists:
+                  value:
+                    message: Probe name already exists
+                app-occupied:
+                  value:
+                    message: App already used by other probes
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit an app probe
+      tags:
+        - App Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/appprobes/{id}/move:
+    patch:
+      description:
+        Move App probe priority to either top, bottom, after position x
+        or before position x
+      parameters:
+        - description: Unique identifier for an app probe
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            examples:
+              move probe after position 0:
+                $ref: "#/components/examples/move_probe_after_position_0"
+              move probe at bottom:
+                $ref: "#/components/examples/move_probe_at_bottom"
+              move probe at top:
+                $ref: "#/components/examples/move_probe_at_top"
+              move probe before position 0:
+                $ref: "#/components/examples/move_probe_before_position_0"
+            schema:
+              $ref: "#/components/schemas/MoveProbeReqBody"
+        description: JSON object containing new App probe position
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MoveProbeResp"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Move App probe priority
+      tags:
+        - App Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/appprobes/{id}/status:
+    patch:
+      description: Edit an app probe status
+      parameters:
+        - description: Unique identifier for an app probe
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            examples:
+              disable app probe:
+                value:
+                  status: 0
+              enable app probe:
+                value:
+                  status: 1
+            schema:
+              $ref: "#/components/schemas/EditProbeStatusReqBody"
+        description: JSON object containing new App probe status
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditProbeStatusResp"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit an app probe status
+      tags:
+        - App Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/apps:
+    get:
+      parameters:
+        - description: Filter result by app type
+          in: query
+          name: type
+          schema:
+            enum:
+              - custom
+              - predefined
+            type: string
+        - description: Filter result by app name
+          in: query
+          name: name
+          schema:
+            type: string
+        - description: Filter result by whether it is associated with app probe or not
+          in: query
+          name: appprobe
+          schema:
+            type: boolean
+        - description: The (zero-based) offset of the first item in the list to retrieve
+          in: query
+          name: offset
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max items to retrieve
+          in: query
+          name: limit
+          schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                app not used by any app probe:
+                  value:
+                    data:
+                      - domains:
+                          - domain.com
+                        id: 1
+                        name: app 1
+                        type: custom
+                    totalCount: 1
+                app used by an app probe:
+                  value:
+                    data:
+                      - domains:
+                          - domain.com
+                        id: 1
+                        name: app 1
+                        probeID: 1
+                        probeName: probe 1
+                        type: custom
+                    totalCount: 1
+              schema:
+                properties:
+                  data:
+                    items:
+                      properties:
+                        domains:
+                          description: List of domains for the app
+                          example:
+                            - domains1
+                            - domains2
+                          items:
+                            type: string
+                          type: array
+                        id:
+                          description: Unique identifier for the app
+                          type: integer
+                        name:
+                          description: Name of the app
+                          type: string
+                        probeID:
+                          description: ID of the probe using current app
+                          type: integer
+                        probeName:
+                          description: Name of the probe using current app
+                          type: string
+                        type:
+                          description: Type of the app (predefined/custom)
+                          type: string
+                        modifiedTime:
+                          type: string
+                        createdTime:
+                          type: string
+                      type: object
+                    type: array
+                  totalCount:
+                    description: total count of results
+                    type: integer
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get all apps
+      tags:
+        - App
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                domains:
+                  description: List of domains for the app
+                  example:
+                    - domains1
+                    - domains2
+                  items:
+                    type: string
+                  type: array
+                name:
+                  description: Name of the app
+                  type: string
+              required:
+                - name
+                - domains
+              type: object
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                properties:
+                  domains:
+                    description: List of domains for the app
+                    example:
+                      - domains1
+                      - domains2
+                    items:
+                      type: string
+                    type: array
+                  id:
+                    description: Unique identifier for the app
+                    type: integer
+                  name:
+                    description: Name of the app
+                    type: string
+                  type:
+                    description: Always return "custom"
+                    example: custom
+                    type: string
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App limit reached
+        "409":
+          content:
+            application/json:
+              example:
+                message: App name already exists
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Create a new app profile
+      tags:
+        - App
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/apps/{id}:
+    delete:
+      parameters:
+        - description: Unique identifier for the app
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: An app probe is using current app
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Delete an existing app profile
+      tags:
+        - App
+    put:
+      parameters:
+        - description: Unique identifier for the app
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                domains:
+                  description: List of domains for the app
+                  example:
+                    - domains1
+                    - domains2
+                  items:
+                    type: string
+                  type: array
+                name:
+                  description: Name of the app
+                  type: string
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  domains:
+                    description: List of domains for the app
+                    items:
+                      type: string
+                    type: array
+                  id:
+                    description: Unique identifier for the app
+                    type: integer
+                  name:
+                    description: Name of the app
+                    type: string
+                  type:
+                    description: Always return "custom"
+                    example: custom
+                    type: string
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: App name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit an existing app profile
+      tags:
+        - App
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/globalsettings:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    modifiedBy: Netskope default setting
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      enabled: true
+                disable-all:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      enabled: false
+                disable-subset:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      disabledEntity:
+                        group:
+                          - group2
+                        ou:
+                          - ou1
+                          - ou2
+                        user:
+                          - user1
+                          - user2
+                      enabled: false
+              schema:
+                $ref: "#/components/schemas/GlobalSettingDEMServiceResp"
+          description: Successfully get DEM settings
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get DEM global setting
+      tags:
+        - Global Setting
+    put:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              disable-all:
+                value:
+                  enabled: false
+              disable-subset:
+                value:
+                  disabledEntity:
+                    group:
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  enabled: false
+              enable-true:
+                value:
+                  enabled: true
+            schema:
+              properties:
+                disabledEntity:
+                  properties:
+                    group:
+                      items:
+                        type: string
+                      type: array
+                    ou:
+                      items:
+                        type: string
+                      type: array
+                    user:
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                enabled:
+                  type: boolean
+              required:
+                - enabled
+              type: object
+        description: Request body for DEM settings
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                disable-all:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      enabled: false
+                disable-subset:
+                  value:
+                    setting:
+                      disabledEntity:
+                        group:
+                          - group2
+                        ou:
+                          - ou1
+                          - ou2
+                        user:
+                          - user1
+                          - user2
+                      enabled: false
+                      modifiedBy: admin@netskope.com
+                      modifiedTime: "2023-01-01T00:00:00.000Z"
+                enable-true:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      enabled: true
+              schema:
+                $ref: "#/components/schemas/GlobalSettingDEMServiceResp"
+          description: Successfully updated DEM settings
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Disable/Enable DEM
+      tags:
+        - Global Setting
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/globalsettings/monitoredapps:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    modifiedBy: Netskope default setting
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      apps: []
+                with some app set up:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      apps:
+                        - app1
+                        - app2
+              schema:
+                $ref: "#/components/schemas/GlobalSettingMonitoredAppsResp"
+          description: Successfully get DEM monitored applications setting
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get DEM monitored applications setting
+      tags:
+        - Global Setting
+    put:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              set up app1 and app2:
+                value:
+                  apps:
+                    - app1
+                    - app2
+            schema:
+              properties:
+                apps:
+                  items:
+                    type: string
+                  type: array
+              required:
+                - apps
+              type: object
+        description: Request body for editing DEM monitored application setting
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                set up app1 and app2:
+                  value:
+                    modifiedBy: admin@netskope.com
+                    modifiedTime: "2023-01-01T00:00:00.000Z"
+                    setting:
+                      apps:
+                        - app1
+                        - app2
+              schema:
+                $ref: "#/components/schemas/GlobalSettingMonitoredAppsResp"
+          description: Successfully updated DEM monitored application setting
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit monitored applications
+      tags:
+        - Global Setting
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/monitoredapps:
+    get:
+      description: Retrieve a list of all supported monitored apps
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  properties:
+                    currentName:
+                      example: X
+                      type: string
+                    fixedName:
+                      example: Twitter
+                      type: string
+                  type: object
+                type: array
+          description: OK
+      summary: Get all supported monitored apps
+      tags:
+        - Monitored Apps
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/networkprobes:
+    get:
+      parameters:
+        - description: filter network probe by name
+          in: query
+          name: name
+          schema:
+            type: string
+        - description: The (zero-based) offset of the first item in the list to retrieve
+          in: query
+          name: offset
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: max item to retrieve
+          in: query
+          name: limit
+          schema:
+            default: 100
+            maximum: 1000
+            minimum: 1
+            type: integer
+        - description: Whether to prune result and leave only id and name
+          in: query
+          name: prune
+          schema:
+            default: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                full result:
+                  value:
+                    data:
+                      - deviceClassification:
+                          - managed
+                          - unmanaged
+                        entity:
+                          group:
+                            - group1
+                          ou:
+                            - ou1
+                          user:
+                            - user1
+                        frequency: 10
+                        id: 1
+                        name: network probe 1
+                        networkPathDeviceHealthCollection: true
+                        os:
+                          - windows
+                          - mac
+                        priority: 1
+                        processInfoCollection: false
+                        status: 0
+                    totalCount: 1
+                pruned result:
+                  value:
+                    data:
+                      - id: 1
+                        name: network probe 2
+                    totalCount: 1
+              schema:
+                properties:
+                  data:
+                    items:
+                      properties:
+                        deviceClassification:
+                          example:
+                            - managed
+                            - unmanaged
+                          items:
+                            type: string
+                          type: array
+                        entity:
+                          properties:
+                            group:
+                              example:
+                                - group1
+                                - group2
+                              items:
+                                type: string
+                              type: array
+                            ou:
+                              example:
+                                - ou1
+                                - ou2
+                              items:
+                                type: string
+                              type: array
+                            user:
+                              example:
+                                - user1
+                                - user2
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        frequency:
+                          type: integer
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        networkPathDeviceHealthCollection:
+                          type: boolean
+                        os:
+                          example:
+                            - windows
+                            - mac
+                          items:
+                            enum:
+                              - windows
+                              - mac
+                            type: string
+                          type: array
+                        priority:
+                          type: integer
+                        processInfoCollection:
+                          type: boolean
+                        status:
+                          type: integer
+                        modifiedTime:
+                          type: string
+                        createdTime:
+                          type: string
+                      type: object
+                    type: array
+                  totalCount:
+                    description: total count of results
+                    type: integer
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get multiple network probes
+      tags:
+        - Network Probe
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              create network probe after position 0:
+                value:
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 10
+                  move:
+                    operation: after
+                    position: 0
+                  name: network_probe
+                  networkPathDeviceHealthCollection: true
+                  os:
+                    - windows
+                    - mac
+                  processInfoCollection: true
+                  status: 1
+              create network probe at bottom:
+                value:
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 10
+                  move:
+                    operation: bottom
+                  name: network_probe
+                  networkPathDeviceHealthCollection: true
+                  os:
+                    - windows
+                    - mac
+                  processInfoCollection: true
+                  status: 1
+              create network probe at top:
+                value:
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 10
+                  move:
+                    operation: top
+                  name: network_probe
+                  networkPathDeviceHealthCollection: true
+                  os:
+                    - windows
+                    - mac
+                  processInfoCollection: true
+                  status: 1
+              create network probe before position 0:
+                value:
+                  deviceClassification:
+                    - managed
+                    - unmanaged
+                  entity:
+                    group:
+                      - group1
+                      - group2
+                    ou:
+                      - ou1
+                      - ou2
+                    user:
+                      - user1
+                      - user2
+                  frequency: 10
+                  move:
+                    operation: before
+                    position: 0
+                  name: network_probe
+                  networkPathDeviceHealthCollection: true
+                  os:
+                    - windows
+                    - mac
+                  processInfoCollection: true
+                  status: 1
+            schema:
+              properties:
+                deviceClassification:
+                  example:
+                    - managed
+                    - unmanaged
+                  items:
+                    type: string
+                  type: array
+                entity:
+                  properties:
+                    group:
+                      example:
+                        - group1
+                        - group2
+                      items:
+                        type: string
+                      type: array
+                    ou:
+                      example:
+                        - ou1
+                        - ou2
+                      items:
+                        type: string
+                      type: array
+                    user:
+                      example:
+                        - user1
+                        - user2
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                frequency:
+                  type: integer
+                move:
+                  $ref: "#/components/schemas/MoveProbeReqBody"
+                name:
+                  type: string
+                networkPathDeviceHealthCollection:
+                  type: boolean
+                os:
+                  example:
+                    - windows
+                    - mac
+                  items:
+                    enum:
+                      - windows
+                      - mac
+                    type: string
+                  type: array
+                processInfoCollection:
+                  type: boolean
+                status:
+                  type: integer
+              required:
+                - name
+                - networkPathDeviceHealthCollection
+                - processInfoCollection
+                - frequency
+                - entity
+                - os
+                - deviceClassification
+                - status
+                - operation
+                - position
+                - move
+              type: object
+        description: JSON object containing new network probe information
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                deviceClassification:
+                  - managed
+                  - unmanaged
+                entity:
+                  group:
+                    - group1
+                    - group2
+                  ou:
+                    - ou1
+                    - ou2
+                  user:
+                    - user1
+                    - user2
+                frequency: 10
+                id: 1
+                name: network_probe
+                networkPathDeviceHealthCollection: true
+                os:
+                  - windows
+                  - mac
+                priority: 1
+                processInfoCollection: true
+                status: 1
+              schema:
+                properties:
+                  deviceClassification:
+                    example:
+                      - managed
+                      - unmanaged
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        example:
+                          - group1
+                          - group2
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        example:
+                          - ou1
+                          - ou2
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        example:
+                          - user1
+                          - user2
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  networkPathDeviceHealthCollection:
+                    type: boolean
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  processInfoCollection:
+                    type: boolean
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: Successfully created a new network probe
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Network probe limit reached
+        "409":
+          content:
+            application/json:
+              examples:
+                network-probe-exists:
+                  value:
+                    message: Network probe name already exists
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Create a new network probe
+      tags:
+        - Network Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/networkprobes/default:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                default:
+                  value:
+                    frequency: 10
+                    networkPathDeviceHealthCollection: true
+                    processInfoCollection: false
+              schema:
+                properties:
+                  frequency:
+                    type: integer
+                  networkPathDeviceHealthCollection:
+                    type: boolean
+                  processInfoCollection:
+                    type: boolean
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get default network probe
+      tags:
+        - Network Probe
+    put:
+      description: Edit default network probe setting
+      requestBody:
+        content:
+          application/json:
+            examples:
+              default:
+                value:
+                  frequency: 10
+                  networkPathDeviceHealthCollection: true
+                  processInfoCollection: false
+            schema:
+              properties:
+                frequency:
+                  type: integer
+                networkPathDeviceHealthCollection:
+                  type: boolean
+                processInfoCollection:
+                  type: boolean
+              required:
+                - networkPathDeviceHealthCollection
+                - processInfoCollection
+                - frequency
+              type: object
+        description: JSON object containing new network probe information
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  frequency:
+                    type: integer
+                  networkPathDeviceHealthCollection:
+                    type: boolean
+                  processInfoCollection:
+                    type: boolean
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit default network probe
+      tags:
+        - Network Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/networkprobes/{id}:
+    delete:
+      parameters:
+        - description: Unique identifier for a network probe
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Probe deleted successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              example:
+                message: Probe not found
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Delete a network probe by ID
+      tags:
+        - Network Probe
+    get:
+      parameters:
+        - description: unique identifier for a network probe
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  deviceClassification:
+                    example:
+                      - managed
+                      - unmanaged
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        example:
+                          - group1
+                          - group2
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        example:
+                          - ou1
+                          - ou2
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        example:
+                          - user1
+                          - user2
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  networkPathDeviceHealthCollection:
+                    type: boolean
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  processInfoCollection:
+                    type: boolean
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              example:
+                message: Probe not found
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get one network probe
+      tags:
+        - Network Probe
+    put:
+      description: Edit a network probe by ID
+      parameters:
+        - description: Unique identifier for a network probe
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                deviceClassification:
+                  example:
+                    - managed
+                    - unmanaged
+                  items:
+                    type: string
+                  type: array
+                entity:
+                  properties:
+                    group:
+                      example:
+                        - group1
+                        - group2
+                      items:
+                        type: string
+                      type: array
+                    ou:
+                      example:
+                        - ou1
+                        - ou2
+                      items:
+                        type: string
+                      type: array
+                    user:
+                      example:
+                        - user1
+                        - user2
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                frequency:
+                  type: integer
+                name:
+                  type: string
+                networkPathDeviceHealthCollection:
+                  type: boolean
+                os:
+                  example:
+                    - windows
+                    - mac
+                  items:
+                    enum:
+                      - windows
+                      - mac
+                    type: string
+                  type: array
+                processInfoCollection:
+                  type: boolean
+                status:
+                  type: integer
+              required:
+                - name
+                - networkPathDeviceHealthCollection
+                - processInfoCollection
+                - frequency
+                - entity
+                - os
+                - deviceClassification
+                - status
+              type: object
+        description: JSON object containing new app probe information
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  deviceClassification:
+                    example:
+                      - managed
+                      - unmanaged
+                    items:
+                      type: string
+                    type: array
+                  entity:
+                    properties:
+                      group:
+                        example:
+                          - group1
+                          - group2
+                        items:
+                          type: string
+                        type: array
+                      ou:
+                        example:
+                          - ou1
+                          - ou2
+                        items:
+                          type: string
+                        type: array
+                      user:
+                        example:
+                          - user1
+                          - user2
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  frequency:
+                    type: integer
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  networkPathDeviceHealthCollection:
+                    type: boolean
+                  os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      enum:
+                        - windows
+                        - mac
+                      type: string
+                    type: array
+                  priority:
+                    type: integer
+                  processInfoCollection:
+                    type: boolean
+                  status:
+                    type: integer
+                  modifiedTime:
+                    type: string
+                  createdTime:
+                    type: string
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "409":
+          content:
+            application/json:
+              examples:
+                network probe exists:
+                  value:
+                    message: Probe name already exists
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe name already exists
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit a network probe
+      tags:
+        - Network Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/networkprobes/{id}/move:
+    patch:
+      description:
+        Move network probe priority to either top, bottom, after position
+        x or before position x
+      parameters:
+        - description: Unique identifier for a network probe
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            examples:
+              move probe after position 0:
+                $ref: "#/components/examples/move_probe_after_position_0"
+              move probe at bottom:
+                $ref: "#/components/examples/move_probe_at_bottom"
+              move probe at top:
+                $ref: "#/components/examples/move_probe_at_top"
+              move probe before position 0:
+                $ref: "#/components/examples/move_probe_before_position_0"
+            schema:
+              $ref: "#/components/schemas/MoveProbeReqBody"
+        description: JSON object containing new network probe position
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MoveProbeResp"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Move network probe priority
+      tags:
+        - Network Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/networkprobes/{id}/status:
+    patch:
+      description: Edit an network probe status
+      parameters:
+        - description: Unique identifier for an app probe
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int64
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            examples:
+              disable network probe:
+                value:
+                  status: 0
+              enable network probe:
+                value:
+                  status: 1
+            schema:
+              $ref: "#/components/schemas/EditProbeStatusReqBody"
+        description: JSON object containing new Network probe status
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EditProbeStatusResp"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Probe not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Edit a network probe status
+      tags:
+        - Network Probe
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+  /dem/operatingsystems:
+    get:
+      description: Retrieve a list of all supported operating systems
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  supported_os:
+                    example:
+                      - windows
+                      - mac
+                    items:
+                      type: string
+                    type: array
+                type: object
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid input parameter
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get all supported operating systems
+      tags:
+        - Os
+    x-netskope-params:
+      apiGroup: demconfig
+      customerFacing: true
+      serviceConfig: demconfig
+      version: 2
+servers:
+  - url: localhost:80

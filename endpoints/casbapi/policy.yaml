@@ -1,0 +1,1034 @@
+components:
+  examples:
+    newPolicyWithPendingChanges:
+      value:
+        pending:
+          deleteOnApply: false
+          description: this is an example policy.
+          enabled: true
+          excludeCriteria: {}
+          matchCriteria: {}
+          name: my-policy
+          notifications: []
+          remediationOptions:
+            - remediationAction:
+                alert: {}
+    policiesWithTotalCount:
+      value:
+        policies:
+          - active:
+              description: This is a threat protection policy.
+              enabled: true
+              matchCriteria:
+                threatProtectionProfileNames:
+                  - Default Malware Scan
+              name: TSS policy
+              notifications: []
+              remediationOptions:
+                - remediationAction:
+                    alert: {}
+            appliedAt: 345
+            createdAt: 123
+            id: policy-1
+            lastChangeBy: user-1
+            modifiedAt: 234
+            pending: {}
+            versionId: version-1
+          - active:
+              description: This is a DLP policy.
+              enabled: true
+              matchCriteria:
+                dlpProfileNames:
+                  - DLP-PCI
+              name: DLP policy
+              notifications: []
+              remediationOptions:
+                - remediationAction:
+                    alert: {}
+            appliedAt: 345
+            createdAt: 123
+            id: policy-2
+            lastChangeBy: user-1
+            modifiedAt: 234
+            pending: {}
+            versionId: version-1
+        totalCount: 123
+    policyWithPendingChanges:
+      value:
+        active:
+          deleteOnApply: false
+          description: This is an old example policy.
+          enabled: true
+          excludeCriteria: {}
+          matchCriteria: {}
+          name: old-my-policy
+          notifications: []
+          remediationOptions:
+            - remediationAction:
+                alert: {}
+        pending:
+          deleteOnApply: false
+          description: This is a new example policy.
+          enabled: true
+          excludeCriteria: {}
+          matchCriteria: {}
+          name: new-my-policy
+          notifications: []
+          remediationOptions:
+            - remediationAction:
+                alert: {}
+        versionId: cd8c7v898t33jpurq7g0
+    policyWithoutPendingChanges:
+      value:
+        active:
+          deleteOnApply: false
+          description: this is an example policy.
+          enabled: true
+          excludeCriteria: {}
+          matchCriteria: {}
+          name: my-policy
+          notifications: []
+          remediationOptions:
+            - remediationAction:
+                alert: {}
+        versionId: cd8c7v898t33jpurq7g0
+    simpleCompletePolicy:
+      value:
+        policy:
+          active:
+            deleteOnApply: false
+            description: A policy for example purposes
+            enabled: true
+            excludeCriteria:
+              appCategories: []
+              appInstances: []
+              collaborators: []
+              dataClassificationLabels: []
+              dlpProfileNames: []
+              domainProfileIds:
+                - "3"
+              domains: []
+              exposures:
+                - EXPOSURE_INTERNAL
+                - EXPOSURE_ORGWIDE
+              geographicRegions: []
+              mediaTypeCategories: []
+              resourceIds: []
+              resourceTypes: []
+              threatProtectionProfileNames: []
+              userGroups: []
+              userProfileIds: []
+            matchCriteria:
+              appCategories: []
+              appInstances:
+                - appName: github
+                  instanceName: example.github.com
+              collaborators: []
+              dataClassificationLabels: []
+              dlpProfileNames:
+                - DLP-PCI
+              domainProfileIds: []
+              domains: []
+              exposures: []
+              geographicRegions: []
+              mediaTypeCategories: []
+              resourceIds: []
+              resourceTypes: []
+              threatProtectionProfileNames: []
+              userGroups: []
+              userProfileIds: []
+            name: example policy
+            notifications: []
+            remediationOptions: []
+          appliedAt: 1666237437
+          createdAt: 1666237437
+          id: cc7h8cg98t39g2ug6mng
+          lastChangeBy: user-1@example.com
+          modifiedAt: 1666237437
+          versionId: cd8c7v898t33jpurq7g0
+  schemas:
+    TSSCriteria:
+      description: TSS criteria specified for taking an action.
+      properties:
+        tssSeverity:
+          description: Severity of the malware found in the entity.
+          enum:
+            - TSS_SEVERITY_LOW
+            - TSS_SEVERITY_MEDIUM
+            - TSS_SEVERITY_HIGH
+          type: string
+      required:
+        - tssSeverity
+      type: object
+    appInstance:
+      description: Specify the app or app instance to be matched.
+      properties:
+        appName:
+          description: App name.
+          type: string
+        instanceName:
+          description: Instance name.
+          type: string
+      required:
+        - appName
+      type: object
+    exposure:
+      description: Exposure defines how an entity is exposed to users.
+      enum:
+        - EXPOSURE_UNSPECIFIED
+        - EXPOSURE_PRIVATE
+        - EXPOSURE_INTERNAL
+        - EXPOSURE_EXTERNAL
+        - EXPOSURE_PUBLIC
+        - EXPOSURE_ORGWIDE
+      type: string
+    getOngoingPoliciesPostRequest:
+      description: Request body for listing ongoing policies with filters.
+      properties:
+        filters:
+          description:
+            A list of ongoing policy filters. The filters are combined
+            using AND logic.
+          properties:
+            appNames:
+              description:
+                Only the policies matching at least one of the application
+                name will be returned.
+              items:
+                description: The NG CASB APP name.
+                example: sharepoint
+                type: string
+              type: array
+            dlpProfileNames:
+              description:
+                Only the policies matching at least one of the dlp profile
+                names will be returned.
+              items:
+                description: The DLP profile name.
+                example: DLP-PCI (predefined)
+                type: string
+              type: array
+            instanceName:
+              description:
+                Only the policies matching partially the policy name substring
+                will be returned.
+              example: example.onmicrosoft.com
+              type: string
+            policyName:
+              description:
+                Only the policies matching partially the policy name substring
+                will be returned.
+              type: string
+            remediationActions:
+              description:
+                Only the policies matching at least one of the remediation
+                actions will be returned.
+              items:
+                description: The policy remediation action.
+                example: alert
+                type: string
+              type: array
+            status:
+              default: all
+              description:
+                Only the ongoing policies in the specific status will be
+                returned.
+              enum:
+                - all
+                - pending
+                - active
+              type: string
+          type: object
+        pagination:
+          description: Pagination parameters.
+          properties:
+            limit:
+              default: 100
+              description: Max number of items to retrieve.
+              minimum: 0
+              type: integer
+            offset:
+              default: 0
+              description:
+                The zero-based offset of the first item in the list to
+                retrieve.
+              minimum: 0
+              type: integer
+          type: object
+        sorting:
+          description: Sorting parameters.
+          properties:
+            sortby:
+              default: appliedAt
+              description: Key will be used to sort the ongoing policies.
+              enum:
+                - appliedAt
+                - modifiedAt
+              type: string
+            sortorder:
+              default: asc
+              description: Order of the listed ongoing policies.
+              enum:
+                - asc
+                - desc
+              type: string
+          type: object
+      type: object
+    mediaTypeCategory:
+      description:
+        Well known classification of media types can be selected to evaluate
+        a policy match.
+      enum:
+        - MEDIA_TYPE_CATEGORY_UNSPECIFIED
+        - MEDIA_TYPE_CATEGORY_ANALYTICS
+        - MEDIA_TYPE_CATEGORY_COMPRESSED
+        - MEDIA_TYPE_CATEGORY_AUDIO
+        - MEDIA_TYPE_CATEGORY_SECURITY
+        - MEDIA_TYPE_CATEGORY_BINARY
+        - MEDIA_TYPE_CATEGORY_COMMUNICATION
+        - MEDIA_TYPE_CATEGORY_DATABASE
+        - MEDIA_TYPE_CATEGORY_DESIGN
+        - MEDIA_TYPE_CATEGORY_DESKTOPPUBLISH
+        - MEDIA_TYPE_CATEGORY_FONT
+        - MEDIA_TYPE_CATEGORY_GIS
+        - MEDIA_TYPE_CATEGORY_RASTERIMAGE
+        - MEDIA_TYPE_CATEGORY_VECTORGRAPHIC
+        - MEDIA_TYPE_CATEGORY_PRESENTATION
+        - MEDIA_TYPE_CATEGORY_SCHEDULE
+        - MEDIA_TYPE_CATEGORY_SCIENTIFIC
+        - MEDIA_TYPE_CATEGORY_SPREADSHEET
+        - MEDIA_TYPE_CATEGORY_TEXT
+        - MEDIA_TYPE_CATEGORY_VIDEO
+        - MEDIA_TYPE_CATEGORY_WORDPROCESSOR
+        - MEDIA_TYPE_CATEGORY_UNDETECTED
+        - MEDIA_TYPE_CATEGORY_PDF
+      type: string
+    numberOf:
+      description: The number of collaborators needed to match the policy.
+      maxProperties: 1
+      minProperties: 1
+      properties:
+        equalTo:
+          description: The number must be equal to this value.
+          format: uint32
+          type: integer
+        greaterThan:
+          description: The number must be greater than this value.
+          format: uint32
+          type: integer
+        lessThan:
+          description: The number must be less than this value.
+          format: uint32
+          type: integer
+      type: object
+    ongoingPoliciesApplyPostRequest:
+      description: Request body of applying pending Next-Gen CASB policies.
+      properties:
+        epoch:
+          description:
+            When specified, the apply action for a policy is executed only
+            if it has a modifiedAt timestamp equal to or older than this timestamp.
+          type: integer
+        note:
+          default: ""
+          description:
+            The description that appears in the audit log when the policy
+            change is applied.
+          type: string
+      type: object
+    ongoingPoliciesGetResponse:
+      description: Response body of getting specific ongoing policies.
+      properties:
+        policy:
+          $ref: "#/components/schemas/ongoingPolicy"
+      type: object
+    ongoingPoliciesListResponse:
+      description: Response body of listing ongoing policies.
+      properties:
+        policies:
+          description: Ongoing policies that match the filter rules.
+          items:
+            $ref: "#/components/schemas/ongoingPolicy"
+          type: array
+        totalCount:
+          description: Total count of the ongoing policies.
+          minimum: 0
+          type: integer
+      type: object
+    ongoingPoliciesPostRequest:
+      description: Request body of creating a new ongoing policy.
+      properties:
+        active:
+          $ref: "#/components/schemas/policyAttributes"
+        pending:
+          $ref: "#/components/schemas/policyAttributes"
+      type: object
+    ongoingPoliciesPostResponse:
+      description: Response body of successfully creating a new ongoing policy.
+      properties:
+        policy:
+          $ref: "#/components/schemas/ongoingPolicy"
+      type: object
+    ongoingPoliciesPutRequest:
+      description: Request body for updating specific ongoing policies.
+      properties:
+        active:
+          $ref: "#/components/schemas/policyAttributes"
+        pending:
+          $ref: "#/components/schemas/policyAttributes"
+        versionId:
+          description:
+            The version ID that the policy changes are based on. If the
+            version ID is not the latest, the request will fail because it indicates
+            that someone else has already made changes. Your request will overwrite
+            the changes made by someone else.
+          type: string
+      required:
+        - versionId
+      type: object
+    ongoingPoliciesPutResponse:
+      description: Response body for updating specific ongoing policies.
+      properties:
+        policy:
+          $ref: "#/components/schemas/ongoingPolicy"
+      type: object
+    ongoingPolicy:
+      allOf:
+        - $ref: "#/components/schemas/policyReadOnlyAttributes"
+        - properties:
+            active:
+              $ref: "#/components/schemas/policyAttributes"
+            pending:
+              $ref: "#/components/schemas/policyAttributes"
+      description: The Next-Gen CASB ongoing policy resource.
+      type: object
+    owner:
+      description: The owner of entity for which policies are evaluated for.
+      properties:
+        domainProfileIds:
+          description: The list of domain profile IDs the policy applies to.
+          items:
+            type: string
+          type: array
+        domains:
+          description: The list of domains the policy applies to.
+          items:
+            type: string
+          type: array
+        userGroups:
+          description: The list of user groups the policy applies to.
+          items:
+            type: string
+          type: array
+        userProfileIds:
+          description: The list of user profile IDs the policy applies to.
+          items:
+            type: string
+          type: array
+        users:
+          description:
+            The list of users the policy applies to. The values could be
+            the emails or display names of selected users.
+          items:
+            type: string
+          type: array
+      type: object
+    policyAction:
+      description: Action taken on the entity. Exactly one action needs to be defined.
+      properties:
+        alert:
+          $ref: "#/components/schemas/emptyObject"
+        applyLabel:
+          $ref: "#/components/schemas/applyLabel"
+        changeOwnerToUser:
+          $ref: "#/components/schemas/changeOwnerToUser"
+        delete:
+          $ref: "#/components/schemas/emptyObject"
+        legalHold:
+          $ref: "#/components/schemas/legalHold"
+        quarantine:
+          $ref: "#/components/schemas/quarantine"
+        restrictAccessToInternalCollaborators:
+          $ref: "#/components/schemas/emptyObject"
+        restrictAccessToInternalCollaboratorsAndSpecificDomains:
+          $ref: "#/components/schemas/restrictAccessToInternalCollaboratorsAndSpecificDomains"
+        restrictAccessToOwner:
+          $ref: "#/components/schemas/emptyObject"
+        revokeIndividualCollaborators:
+          $ref: "#/components/schemas/emptyObject"
+        revokeOrgWideSharing:
+          $ref: "#/components/schemas/emptyObject"
+        revokePublicSharing:
+          $ref: "#/components/schemas/emptyObject"
+        revokeSpecificDomains:
+          $ref: "#/components/schemas/revokeSpecificDomains"
+      type: object
+    policyAttributes:
+      description:
+        The policy attributes that will be used for policy evaluation if
+        this is the value of active. If this object is the value of pending, then
+        it's pending changes of the policy attributes which is not used for policy
+        evaluation.
+      properties:
+        deleteOnApply:
+          default: false
+          description:
+            To indicates whether the Next-Gen CASB policy will be deleted
+            on the next apply action.
+          type: boolean
+        description:
+          description: The description of Next-Gen CASB policy.
+          type: string
+        enabled:
+          default: false
+          description:
+            To indicates whether it is enabled. Disabled policies are ignored
+            during evaluation.
+          type: boolean
+        excludeCriteria:
+          $ref: "#/components/schemas/policyCriteria"
+          description:
+            The criteria that, when specified, are evaluated after a policy
+            match. If there is a match with these criteria, the policy is ignored.
+        matchCriteria:
+          $ref: "#/components/schemas/policyCriteria"
+          description: The criteria that must be evaluated to match this policy.
+        name:
+          description: The name of Next-Gen CASB policy.
+          type: string
+        notifications:
+          description: The notifications to be sent when there is a policy match.
+          items:
+            $ref: "#/components/schemas/notification"
+          type: array
+        remediationOptions:
+          description: Remediation to be performed when there is a policy match.
+          items:
+            $ref: "#/components/schemas/policyRemediationOption"
+          minimum: 1
+          type: array
+      required:
+        - name
+        - matchCriteria
+        - remediationOptions
+      type: object
+    policyCriteria:
+      description: The rules to be matched during evaluation.
+      properties:
+        appCategories:
+          description: List of app categories.
+          items:
+            type: string
+          type: array
+        appInstances:
+          description: List of apps and instances.
+          items:
+            $ref: "#/components/schemas/appInstance"
+          type: array
+        collaborators:
+          description: The number of collaborators needed to match the policy.
+          items:
+            $ref: "#/components/schemas/numberOf"
+          type: array
+        contentTypes:
+          description: List of content types the policy applies to.
+          items:
+            $ref: "#/components/schemas/scannableContentType"
+          type: array
+        dataClassificationLabels:
+          description: List of data classification labels the policy applies to.
+          items:
+            type: string
+          type: array
+        dlpProfileNames:
+          description: List of DLP profile names.
+          items:
+            type: string
+          type: array
+        domainProfileIds:
+          description: List of domain profile IDs.
+          items:
+            type: string
+          type: array
+        domains:
+          description: List of domains the policy applies to.
+          items:
+            type: string
+          type: array
+        exposures:
+          description: List of entity exposures.
+          items:
+            $ref: "#/components/schemas/exposure"
+          type: array
+        geographicRegions:
+          description: List of geographic regions the policy applies to.
+          items:
+            type: string
+          type: array
+        mediaTypeCategories:
+          description: List of media type categories the policy applies to.
+          items:
+            $ref: "#/components/schemas/mediaTypeCategory"
+          type: array
+        owner:
+          $ref: "#/components/schemas/owner"
+          description:
+            The owner needed to match the policy. Fields within owner are
+            OR'd.
+        resourceIds:
+          description: List of IDs of the entities to be evaluated or it's ancestor.
+          items:
+            $ref: "#/components/schemas/resourceId"
+          type: array
+        resourceTypes:
+          description: List of resource types the policy applies to.
+          items:
+            $ref: "#/components/schemas/scannableResourceType"
+          type: array
+        threatProtectionProfileNames:
+          description: List of threat protection profile names.
+          items:
+            type: string
+          type: array
+        userGroups:
+          description: List of user groups the policy applies to.
+          items:
+            type: string
+          type: array
+        userProfileIds:
+          description: List of user profile IDs the policy applies to.
+          items:
+            type: string
+          type: array
+      type: object
+    policyReadOnlyAttributes:
+      description: The Next-Gen CASB policy read-only attributes.
+      properties:
+        appliedAt:
+          description: Epoch timestamp of the applying Next-Gen CASB policy.
+          readOnly: true
+          type: integer
+        createdAt:
+          description: Epoch timestamp of creating Next-Gen CASB policy.
+          readOnly: true
+          type: integer
+        id:
+          description: Globally unique ID of the Next-Gen CASB policy.
+          readOnly: true
+          type: string
+        lastChangeBy:
+          description: ID of the user who last made a change to the policy.
+          readOnly: true
+          type: string
+        modifiedAt:
+          description: Epoch timestamp of the last modification to Next-Gen CASB policy.
+          readOnly: true
+          type: integer
+        versionId:
+          description: Version of the Next-Gen CASB ongoing policy.
+          readOnly: true
+          type: string
+      type: object
+    policyRemediationOption:
+      description: The actions to take when there is a policy match.
+      properties:
+        remediationAction:
+          $ref: "#/components/schemas/policyAction"
+        remediationCriteria:
+          $ref: "#/components/schemas/TSSCriteria"
+      required:
+        - remediationAction
+      type: object
+    resourceId:
+      description: The ID of a unique app specific entity for which policies are evaluated.
+      properties:
+        appName:
+          description: The app name.
+          type: string
+        id:
+          description: The resource ID.
+          type: string
+        instanceName:
+          description: The instance name.
+          type: string
+      required:
+        - appName
+        - instanceName
+        - id
+      type: object
+    scannableContentType:
+      description: The types of content to be matched by policies.
+      enum:
+        - SCANNABLE_CONTENT_TYPE_UNSPECIFIED
+        - SCANNABLE_CONTENT_TYPE_TEAM_DRIVE
+        - SCANNABLE_CONTENT_TYPE_PERSONAL_DRIVE
+        - SCANNABLE_CONTENT_TYPE_PUBLIC_CHANNEL
+        - SCANNABLE_CONTENT_TYPE_PRIVATE_CHANNEL
+        - SCANNABLE_CONTENT_TYPE_DIRECT_MESSAGE
+      type: string
+    scannableResourceType:
+      description: The types of resources to be matched by policies.
+      enum:
+        - SCANNABLE_RESOURCE_TYPE_UNSPECIFIED
+        - SCANNABLE_RESOURCE_TYPE_CHAT_MESSAGE
+        - SCANNABLE_RESOURCE_TYPE_COMMENT
+        - SCANNABLE_RESOURCE_TYPE_COMMIT
+        - SCANNABLE_RESOURCE_TYPE_EMAIL
+        - SCANNABLE_RESOURCE_TYPE_FILE
+        - SCANNABLE_RESOURCE_TYPE_PAGE
+        - SCANNABLE_RESOURCE_TYPE_RECORD
+      type: string
+info:
+  contact:
+    name: Netskope Inc.
+  description: The service and APIs manage the Next-Gen CASB policies.
+  title: Next-Gen CASB Policy Service
+  version: 1.0.0
+openapi: 3.0.1
+paths:
+  /casbapi/ongoing/getpolicies:
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              List active policies of sharepoint instances sorted by modified time:
+                value:
+                  filters:
+                    appname:
+                      - sharepoint
+                    status: active
+                  sorting:
+                    sortby: modifiedAt
+            schema:
+              $ref: "#/components/schemas/getOngoingPoliciesPostRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                A list of ongoing policies with a total count:
+                  $ref: "#/components/examples/policiesWithTotalCount"
+              schema:
+                $ref: "#/components/schemas/ongoingPoliciesListResponse"
+          description: Ongoing policies retrieved successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: The `x-netskope-tenantid` header must be a string.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+        "422":
+          content:
+            application/json:
+              examples:
+                Fail to return a page of ongoing policies because there are malformed policies:
+                  value:
+                    error:
+                      Found malformed policies from the database. Please contact
+                      support to resolve the issue.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Unprocessable content, possible caused by malformed policy.
+      summary:
+        List policies with a post-as-get endpoint. This endpoint support more
+        filters compare with the GET /ongoing/policies endpoint.
+    x-netskope-params:
+      apiGroup: casbapi
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: policymgr
+      version: 2
+  /casbapi/ongoing/policies:
+    get:
+      deprecated: true
+      parameters:
+        - description: The zero-based offset of the first item in the list to retrieve.
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: integer
+        - description: Max number of items to retrieve.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: integer
+        - description: Key will be used to sort the ongoing policies.
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: appliedAt
+            enum:
+              - appliedAt
+              - modifiedAt
+            type: string
+        - description: Order of the listed ongoing policies.
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+        - description: Only the resources in the specific status will be returned.
+          in: query
+          name: status
+          required: false
+          schema:
+            default: all
+            enum:
+              - all
+              - pending
+              - active
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                A list of ongoing policies with a total count:
+                  $ref: "#/components/examples/policiesWithTotalCount"
+              schema:
+                $ref: "#/components/schemas/ongoingPoliciesListResponse"
+          description: Ongoing policies retrieved successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: The `x-netskope-tenantid` header must be a string.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+        "422":
+          content:
+            application/json:
+              examples:
+                Fail to return a page of ongoing policies because there are malformed policies:
+                  value:
+                    error:
+                      Found malformed policies from the database. Please contact
+                      support to resolve the issue.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Unprocessable content, possible caused by malformed policy.
+      summary: List ongoing policies
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Create a pending policy:
+                $ref: "#/components/examples/newPolicyWithPendingChanges"
+                description:
+                  Create a new ongoing policy with pending status. Call
+                  `POST /ongoing/policies/apply` to apply the changes.
+              Create an active policy:
+                $ref: "#/components/examples/policyWithoutPendingChanges"
+                description: Create a new ongoing policy with active status.
+            schema:
+              $ref: "#/components/schemas/ongoingPoliciesPostRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              examples:
+                An example policy that was just created:
+                  $ref: "#/components/examples/simpleCompletePolicy"
+              schema:
+                $ref: "#/components/schemas/ongoingPoliciesPostResponse"
+          description: Ongoing policy created successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Missing a required property in the request data:
+                  value:
+                    error: 'property "name" is missing
+
+                      '
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+      summary:
+        Create a new ongoing policy. If changes are made to the policy inside
+        the `pending` field, please use `POST /ongoing/policies/apply` to apply the
+        changes.
+    x-netskope-params:
+      apiGroup: casbapi
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: policymgr
+      version: 2
+  /casbapi/ongoing/policies/apply:
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Apply pending policies:
+                value:
+                  epoch: 1709251200
+                  note: Apply pending policies for security review.
+            schema:
+              $ref: "#/components/schemas/ongoingPoliciesApplyPostRequest"
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successfully activated the pending policy attributes for all the policies.:
+                  value:
+                    message: Pending policies attributes activated successfully.
+              schema:
+                $ref: "#/components/schemas/messageResponse"
+          description: Pending policies attributes activated successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: The `x-netskope-tenantid` header must be a string.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Fail to activate pending policies attributes.
+      summary: Apply all the pending policies attributes to active status
+    x-netskope-params:
+      apiGroup: casbapi
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: policymgr
+      version: 2
+  /casbapi/ongoing/policies/{pid}:
+    delete:
+      responses:
+        "204":
+          description: Ongoing policy deleted successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: The `x-netskope-tenantid` header must be a string.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+      summary: Delete specific ongoing policy in pending stage.
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                An ongoing policies:
+                  $ref: "#/components/examples/simpleCompletePolicy"
+              schema:
+                $ref: "#/components/schemas/ongoingPoliciesGetResponse"
+          description: Ongoing policy retrieved successfully.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: The `x-netskope-tenantid` header must be a string.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+        "404":
+          content:
+            application/json:
+              examples:
+                Policy not found:
+                  value:
+                    error: policy with ID 'cl78ji0o95o198gue850' not found.
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: The ongoing policy with the given ID does not exist.
+      summary: Retrieve specific ongoing policy
+    parameters:
+      - in: path
+        name: pid
+        required: true
+        schema:
+          type: string
+    put:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Clear the pending changes:
+                $ref: "#/components/examples/policyWithoutPendingChanges"
+                description: Clear the pending changes.
+              Update a policy with pending changes:
+                $ref: "#/components/examples/policyWithPendingChanges"
+                description:
+                  Update the policy with pending changes. Call `POST /ongoing/policies/apply`
+                  to apply the changes to the active
+              Update an active policy:
+                $ref: "#/components/examples/policyWithoutPendingChanges"
+                description: Update the active policy.
+            schema:
+              $ref: "#/components/schemas/ongoingPoliciesPutRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successfully updated a policy with the given version:
+                  $ref: "#/components/examples/simpleCompletePolicy"
+              schema:
+                $ref: "#/components/schemas/ongoingPoliciesPutResponse"
+          description: The ongoing policy has been successfully updated.
+        "400":
+          content:
+            application/json:
+              examples:
+                Incorrect data type in an HTTP header:
+                  value:
+                    error: 'property "name" is missing
+
+                      '
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+        "409":
+          content:
+            application/json:
+              examples:
+                Policy version conflict:
+                  value:
+                    error:
+                      "unable to update policy with id 'cl78ji0o95o198gue850':
+                      version mismatch"
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description:
+            The policy change request with given version ID has already
+            been modified by someone else. Please retry with the latest version ID.
+      summary:
+        Update the specific ongoing policy. If changes are made to the policy
+        inside the `pending` field, please use `POST /ongoing/policies/apply` to apply
+        the changes.
+    x-netskope-params:
+      apiGroup: casbapi
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: policymgr
+      version: 2

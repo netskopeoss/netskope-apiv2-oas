@@ -1,0 +1,496 @@
+components:
+  headers:
+    Clear-Site-Data:
+      description:
+        Ensure that data associated with the site is cleared from the user's
+        browser.
+      example: cache
+      schema:
+        type: string
+    Content-Security-Policy:
+      description:
+        Scripts, stylesheets, images, and fonts, should only be loaded
+        from the same origin ('self').
+      example: default-src 'self'
+      schema:
+        type: string
+    Cross-Origin-Embedder-Policy:
+      description:
+        The embedding resource be served from the same origin (or with
+        CORS headers allowing the embedding).
+      example: require-corp
+      schema:
+        type: string
+    Cross-Origin-Opener-Policy:
+      description: Restrict the interaction  to the same origin.
+      example: same-origin
+      schema:
+        type: string
+    Cross-Origin-Resource-Policy:
+      description: Restricts resource loading to the same origin.
+      example: same-origin
+      schema:
+        type: string
+    Referrer-Policy:
+      description:
+        Send the origin, path, and query string for same-origin requests.
+        Don't send the Referer header for cross-origin requests.
+      example: same-origin
+      schema:
+        type: string
+    Strict-Transport-Security:
+      description:
+        Ensure that the browser only access the site via HTTPS for a specified
+        period of time and include all subdomains in the strict transport security
+        policy.
+      example: max-age=31536000; includeSubDomains
+      schema:
+        type: string
+    X-Content-Type-Options:
+      description:
+        Ensure that the browser not to perform content type sniffing and
+        to honor the declared content type of a response.
+      example: nosniff
+      schema:
+        type: string
+    X-Frame-Options:
+      description: Allow the page to be framed by other pages from the same origin.
+      example: SAMEORIGIN
+      schema:
+        type: string
+    X-Permitted-Cross-Domain-Policies:
+      description: No cross-domain policies are permitted.
+      example: none
+      schema:
+        type: string
+  parameters: {}
+  responses:
+    400-Bad-Request:
+      content:
+        application/json:
+          schema:
+            properties:
+              msg:
+                example: error message
+                type: string
+      description: Bad Request
+      headers:
+        Clear-Site-Data:
+          $ref: "#/components/headers/Clear-Site-Data"
+        Content-Security-Policy:
+          $ref: "#/components/headers/Content-Security-Policy"
+        Cross-Origin-Embedder-Policy:
+          $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+        Cross-Origin-Opener-Policy:
+          $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+        Cross-Origin-Resource-Policy:
+          $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+        Referrer-Policy:
+          $ref: "#/components/headers/Referrer-Policy"
+        Strict-Transport-Security:
+          $ref: "#/components/headers/Strict-Transport-Security"
+        X-Content-Type-Options:
+          $ref: "#/components/headers/X-Content-Type-Options"
+        X-Frame-Options:
+          $ref: "#/components/headers/X-Frame-Options"
+        X-Permitted-Cross-Domain-Policies:
+          $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+    500-Internal-Server-Error:
+      content:
+        application/json:
+          schema:
+            properties:
+              msg:
+                example: error message
+                type: string
+      description: Internal Server Error
+      headers:
+        Clear-Site-Data:
+          $ref: "#/components/headers/Clear-Site-Data"
+        Content-Security-Policy:
+          $ref: "#/components/headers/Content-Security-Policy"
+        Cross-Origin-Embedder-Policy:
+          $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+        Cross-Origin-Opener-Policy:
+          $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+        Cross-Origin-Resource-Policy:
+          $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+        Referrer-Policy:
+          $ref: "#/components/headers/Referrer-Policy"
+        Strict-Transport-Security:
+          $ref: "#/components/headers/Strict-Transport-Security"
+        X-Content-Type-Options:
+          $ref: "#/components/headers/X-Content-Type-Options"
+        X-Frame-Options:
+          $ref: "#/components/headers/X-Frame-Options"
+        X-Permitted-Cross-Domain-Policies:
+          $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+  schemas:
+    label:
+      properties:
+        id:
+          example: 40d83777-85f6-4ccc-b53d-501a07474b75
+          type: string
+        isEncrypted:
+          type: boolean
+        name:
+          example: confidential
+          type: string
+        priority:
+          example: 2
+          type: integer
+        scope:
+          items:
+            example: file
+            type: string
+          type: array
+      required:
+        - id
+        - name
+      type: object
+info:
+  description: REST APIs exposed by the DRM service
+  title: DRM Service
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /drm/config/{vendor}/{instance}/labels:
+    patch:
+      operationId: update_labels
+      parameters:
+        - in: path
+          name: vendor
+          required: true
+          schema:
+            enum:
+              - gdrive
+              - box
+            type: string
+        - in: path
+          name: instance
+          required: true
+          schema:
+            example: test
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              items:
+                properties:
+                  id:
+                    example: 50d83787-95f6-4cdc-e53d-701a07474b76
+                    type: string
+                  priority:
+                    example: 1
+                    type: integer
+                required:
+                  - id
+                type: object
+              type: array
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                example:
+                  message: OK
+                type: string
+          description: Success
+          headers:
+            Clear-Site-Data:
+              $ref: "#/components/headers/Clear-Site-Data"
+            Content-Security-Policy:
+              $ref: "#/components/headers/Content-Security-Policy"
+            Cross-Origin-Embedder-Policy:
+              $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+            Cross-Origin-Opener-Policy:
+              $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+            Cross-Origin-Resource-Policy:
+              $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+            Referrer-Policy:
+              $ref: "#/components/headers/Referrer-Policy"
+            Strict-Transport-Security:
+              $ref: "#/components/headers/Strict-Transport-Security"
+            X-Content-Type-Options:
+              $ref: "#/components/headers/X-Content-Type-Options"
+            X-Frame-Options:
+              $ref: "#/components/headers/X-Frame-Options"
+            X-Netskope-Trid:
+              description: X-Netskope-Trid for the request tracing
+              schema:
+                type: string
+            X-Permitted-Cross-Domain-Policies:
+              $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+        "400":
+          $ref: "#/components/responses/400-Bad-Request"
+        "500":
+          $ref: "#/components/responses/500-Internal-Server-Error"
+      summary: Updates the label details in the DRM DB.
+      tags:
+        - Config Service
+    x-netskope-params:
+      apiGroup: drm_config_service
+      customerFacing: true
+      serviceConfig: drm-config-service
+      version: 2
+  /drm/config/{vendor}/{instance}/listlabels:
+    get:
+      description: Fetches and returns the list of labels from the DRM SaaS vendor.
+      operationId: list_labels
+      parameters:
+        - in: path
+          name: vendor
+          required: true
+          schema:
+            enum:
+              - mip
+              - gdrive
+              - box
+            type: string
+        - in: path
+          name: instance
+          required: true
+          schema:
+            example: test
+            type: string
+        - description: Maximum number of labels to be fetched and maximum value is 500
+          in: query
+          name: limit
+          schema:
+            default: 500
+            maximum: 500
+            minimum: 1
+            type: integer
+        - description: Zero based offset of the fist element in the list
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Field name which is used for the sorting
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: priority
+            enum:
+              - priority
+            type: string
+        - description: order of the list
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+        - description: Refresh the labels
+          in: query
+          name: forcerefresh
+          schema:
+            default: false
+            example: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  count:
+                    description: Total number of labels
+                    example: 1
+                    type: integer
+                  labels:
+                    items:
+                      properties:
+                        children:
+                          items:
+                            $ref: "#/components/schemas/label"
+                          type: array
+                        id:
+                          example: 50d83787-95f6-4cdc-e53d-701a07474b76
+                          type: string
+                        isEncrypted:
+                          example: false
+                          type: boolean
+                        name:
+                          example: engineering
+                          type: string
+                        priority:
+                          example: 1
+                          type: integer
+                        scope:
+                          items:
+                            example: file
+                            type: string
+                          type: array
+                        color:
+                          type: string
+                          description: color in lowercase string. This key might not exist if backend is unable to parse the label color.
+                          example: orange
+                        definition:
+                          type: string
+                          example: label for eng group
+                      required:
+                        - id
+                        - name
+                      type: object
+                    type: array
+                required:
+                  - count
+                  - labels
+                type: object
+          description: Label information for the given instance
+        "204":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: instance has no labels
+                    type: string
+          description: Instance has no labels configured
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example:
+                      'Invalid/Missing parameters. Key: ''listLabelRequest.Vendor''
+                      Error:Field validation for ''Vendor'' failed on the ''required''
+                      tag\nKey: ''listLabelRequest.Instance'' Error:Field validation
+                      for ''Instance'' failed on the ''required'' tag'
+                    type: string
+          description: Invalid path parameters
+          headers:
+            Clear-Site-Data:
+              $ref: "#/components/headers/Clear-Site-Data"
+            Content-Security-Policy:
+              $ref: "#/components/headers/Content-Security-Policy"
+            Cross-Origin-Embedder-Policy:
+              $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+            Cross-Origin-Opener-Policy:
+              $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+            Cross-Origin-Resource-Policy:
+              $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+            Referrer-Policy:
+              $ref: "#/components/headers/Referrer-Policy"
+            Strict-Transport-Security:
+              $ref: "#/components/headers/Strict-Transport-Security"
+            X-Content-Type-Options:
+              $ref: "#/components/headers/X-Content-Type-Options"
+            X-Frame-Options:
+              $ref: "#/components/headers/X-Frame-Options"
+            X-Permitted-Cross-Domain-Policies:
+              $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+        "401":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example:
+                      ListLabels API failed. TokenExpiredErr. Testing TokenExpiredErr
+                      Error
+                    type: string
+          description: Authentication error
+          headers:
+            Clear-Site-Data:
+              $ref: "#/components/headers/Clear-Site-Data"
+            Content-Security-Policy:
+              $ref: "#/components/headers/Content-Security-Policy"
+            Cross-Origin-Embedder-Policy:
+              $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+            Cross-Origin-Opener-Policy:
+              $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+            Cross-Origin-Resource-Policy:
+              $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+            Referrer-Policy:
+              $ref: "#/components/headers/Referrer-Policy"
+            Strict-Transport-Security:
+              $ref: "#/components/headers/Strict-Transport-Security"
+            X-Content-Type-Options:
+              $ref: "#/components/headers/X-Content-Type-Options"
+            X-Frame-Options:
+              $ref: "#/components/headers/X-Frame-Options"
+            X-Permitted-Cross-Domain-Policies:
+              $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+        "404":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example:
+                      ListLabels API failed. NonRetriableErr. Testing NonRetriable
+                      Error
+                    type: string
+          description: Source not found
+          headers:
+            Clear-Site-Data:
+              $ref: "#/components/headers/Clear-Site-Data"
+            Content-Security-Policy:
+              $ref: "#/components/headers/Content-Security-Policy"
+            Cross-Origin-Embedder-Policy:
+              $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+            Cross-Origin-Opener-Policy:
+              $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+            Cross-Origin-Resource-Policy:
+              $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+            Referrer-Policy:
+              $ref: "#/components/headers/Referrer-Policy"
+            Strict-Transport-Security:
+              $ref: "#/components/headers/Strict-Transport-Security"
+            X-Content-Type-Options:
+              $ref: "#/components/headers/X-Content-Type-Options"
+            X-Frame-Options:
+              $ref: "#/components/headers/X-Frame-Options"
+            X-Permitted-Cross-Domain-Policies:
+              $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+        "500":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example:
+                      ListLabels API failed. RetriableErr. Testing Retriable
+                      Error
+                    type: string
+          description: Internal Server Error
+          headers:
+            Clear-Site-Data:
+              $ref: "#/components/headers/Clear-Site-Data"
+            Content-Security-Policy:
+              $ref: "#/components/headers/Content-Security-Policy"
+            Cross-Origin-Embedder-Policy:
+              $ref: "#/components/headers/Cross-Origin-Embedder-Policy"
+            Cross-Origin-Opener-Policy:
+              $ref: "#/components/headers/Cross-Origin-Opener-Policy"
+            Cross-Origin-Resource-Policy:
+              $ref: "#/components/headers/Cross-Origin-Resource-Policy"
+            Referrer-Policy:
+              $ref: "#/components/headers/Referrer-Policy"
+            Strict-Transport-Security:
+              $ref: "#/components/headers/Strict-Transport-Security"
+            X-Content-Type-Options:
+              $ref: "#/components/headers/X-Content-Type-Options"
+            X-Frame-Options:
+              $ref: "#/components/headers/X-Frame-Options"
+            X-Permitted-Cross-Domain-Policies:
+              $ref: "#/components/headers/X-Permitted-Cross-Domain-Policies"
+      summary: List labels for the given instance
+      tags:
+        - Config Service
+    x-netskope-params:
+      apiGroup: drm_config_service
+      customerFacing: true
+      serviceConfig: drm-config-service
+      version: 2

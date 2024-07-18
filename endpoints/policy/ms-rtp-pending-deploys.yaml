@@ -1,0 +1,53 @@
+components:
+  schemas:
+    Error:
+      properties:
+        message:
+          type: string
+    StatusResponseObject:
+      properties:
+        error:
+          description: Deployment failed reason if the status is 'error'
+          type: string
+        status:
+          description: Status of the pending deploy (error | pending)
+          type: string
+info:
+  title: Get Pending Deploy Status
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /policy/apply/status:
+    get:
+      operationId: getApplyStatus
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/StatusResponseObject"
+                  type: object
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get apply status for a particular tenant
+      tags:
+        - timer-based-applies
+    x-netskope-params:
+      apiGroup: timer-based-applies
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2

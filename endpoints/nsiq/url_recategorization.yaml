@@ -1,0 +1,648 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        error_message:
+          type: string
+        status:
+          type: string
+      type: object
+    PaginatedRecatTaskStatusResponse:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/RecatTaskStatus"
+          type: array
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        status:
+          type: string
+      type: object
+    Pagination:
+      properties:
+        limit:
+          format: int32
+          type: integer
+        offset:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      type: object
+    RecatSubmissionRequest:
+      properties:
+        email:
+          description: Requester’s email address
+          type: string
+        justification:
+          description: Reason for the re-categorization request
+          maxLength: 2000
+          minLength: 0
+          type: string
+        recat_requests:
+          items:
+            $ref: "#/components/schemas/RequestInfo"
+          type: array
+      required:
+        - email
+        - recat_requests
+      type: object
+    RecatSubmissionResponse:
+      properties:
+        data:
+          $ref: "#/components/schemas/SubmissionDetail"
+        status:
+          type: string
+      type: object
+    RecatTaskStatus:
+      properties:
+        email:
+          type: string
+        end_time:
+          format: int64
+          type: integer
+        justification:
+          type: string
+        start_time:
+          format: int64
+          type: integer
+        status:
+          enum:
+            - completed
+            - duplicate
+            - inprogress
+            - received
+            - rejected
+          type: string
+        task_id:
+          type: string
+        urls:
+          items:
+            $ref: "#/components/schemas/RecatUrlStatus"
+          type: array
+      type: object
+    RecatTaskStatusResponse:
+      properties:
+        data:
+          $ref: "#/components/schemas/RecatTaskStatus"
+        status:
+          type: string
+      type: object
+    RecatUrlId:
+      properties:
+        id:
+          type: string
+        status:
+          enum:
+            - completed
+            - duplicate
+            - inprogress
+            - received
+            - rejected
+          type: string
+        url:
+          type: string
+      type: object
+    RecatUrlStatus:
+      properties:
+        end_time:
+          format: int64
+          type: integer
+        id:
+          type: string
+        status:
+          enum:
+            - completed
+            - duplicate
+            - inprogress
+            - received
+            - rejected
+          type: string
+        url:
+          type: string
+      type: object
+    RecatUrlStatusResponse:
+      properties:
+        data:
+          $ref: "#/components/schemas/RecatUrlStatus"
+        status:
+          type: string
+      type: object
+    RequestInfo:
+      properties:
+        suggested_categories:
+          description:
+            Suggested categories for the url. See https://docs.netskope.com/en/category-definitions.html
+            for the list of accepted categories
+          items:
+            type: string
+          type: array
+        url:
+          description: Url to be re-categorized
+          maxLength: 2000
+          type: string
+      required:
+        - suggested_categories
+        - url
+      type: object
+    SubmissionDetail:
+      properties:
+        task_id:
+          type: string
+        urls:
+          items:
+            $ref: "#/components/schemas/RecatUrlId"
+          type: array
+      type: object
+info:
+  description: APIs to submit re-categorization requests and query the request status.
+  title: NSIQ URL Recategorization API
+  version: v0.0.1
+openapi: 3.0.1
+paths:
+  /nsiq/url/recategorizations:
+    get:
+      description:
+        "Retrieve the details of the re-categorization requests and status\
+        \ of the urls. <br>\nRequests for the last 90 days will be retrieved if there\
+        \ are no `starttime` and `endtime` parameters provided in the query. <br>\n\
+        <br>\n**Note** that completed requests are only retained for 90 days. Requests\
+        \ older than 90 days can still be\n retrieved if they are not completed yet.\
+        \ <br>\n"
+      operationId: getStatus
+      parameters:
+        - description:
+            Retrieve requests for the given time range. Used together with
+            endtime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: starttime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            Retrieve requests for the given time range. Used together with
+            starttime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: endtime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description: Status of the requests to retrieve.
+          in: query
+          name: status
+          required: false
+          schema:
+            enum:
+              - received
+              - inprogress
+              - completed
+              - rejected
+            type: string
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0).
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 5
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Field to use for sorting the result.
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: task_id
+            enum:
+              - task_id
+              - start_time
+              - end_time
+              - status
+            type: string
+        - description: Order to use for sorting the result.
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  - email: user@netskope.com
+                    end_time: 1660874639
+                    justification: reason
+                    start_time: 1654567422
+                    status: completed
+                    task_id: "100"
+                    urls:
+                      - end_time: 1660874639
+                        id: "12345"
+                        status: completed
+                        url: netskope.com
+                pagination:
+                  limit: 10
+                  offset: 0
+                  total: 1
+                status: Success
+              schema:
+                $ref: "#/components/schemas/PaginatedRecatTaskStatusResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid parameter value:
+                  description: Invalid parameter value
+                  value:
+                    error_message: Invalid 'status' value.
+                    status: Error
+                starttime more than 120 days earlier than today:
+                  description: starttime more than 120 days earlier than today
+                  value:
+                    error_message:
+                      "'starttime' cannot be more than 120 days earlier
+                      than today."
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: List the re-categorization requests
+      tags:
+        - Re-categorization Request
+    post:
+      description:
+        "Submit url re-categorization requests with the given details.\
+        \ <br>\n### Duplicate Url Handling\nA url is considered duplicate if:\n* The\
+        \ same url is included in a previous batch and the url in the previous batch\
+        \ is still in an open/on-going status\n* The same url is already included\
+        \ in the same POST request\n\nFor cases of duplicate url, the API will return\
+        \ the url id of the previous open url. <br>\n<br>\n**Note** that the urls\
+        \ are normalized when checking for duplicates. <br>\nExample:\n| Original\
+        \ Url          | Normalized Url |\n|-----------------------|----------------|\n\
+        | `http://netskope.com` | `netskope.com` |\n| `netskope.com/`       | `netskope.com`\
+        \ |\nWith the above example, if there's an ongoing re-categorization request\
+        \ for `http://netskope.com` url,\n the `netskope.com/` url will be considered\
+        \ as duplicate when you try to submit it. <br>\n\n### Url Quota Limit\nThe\
+        \ number of urls for re-categorization is subject to 50 urls per day per tenant\
+        \ limit (default). <br>\nYou can check your quota limit status using the response's\
+        \ HTTP headers. <br>\n```\n$ curl -i -X 'POST' $HOST/url/recategorizations\
+        \ -d '{...}'\n> HTTP/1.1 201\n> x-netskope-url-quota-limit: 50\n> x-netskope-url-quota-remaining:\
+        \ 9\n> x-netskope-url-quota-reset: 1664871531\n```\n"
+      operationId: submitRecat
+      requestBody:
+        content:
+          application/json:
+            example:
+              email: user@netskope.com
+              justification: test
+              recat_requests:
+                - suggested_categories:
+                    - Technology
+                    - Security
+                  url: netskope.com
+                - suggested_categories:
+                    - Technology
+                    - Business
+                  url: example.com
+                - suggested_categories:
+                    - Business
+                  url: example.net
+            schema:
+              $ref: "#/components/schemas/RecatSubmissionRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                data:
+                  task_id: "100"
+                  urls:
+                    - id: "12345"
+                      status: received
+                      url: netskope.com
+                    - id: "12346"
+                      status: received
+                      url: example.com
+                    - id: "12347"
+                      status: inprogress
+                      url: example.net
+                status: Created
+              schema:
+                $ref: "#/components/schemas/RecatSubmissionResponse"
+          description: Created
+          headers:
+            x-netskope-url-quota-limit:
+              description:
+                The maximum number of urls for recategorization you're
+                allowed to submit per day per tenant.
+              schema:
+                default: 50
+                type: integer
+            x-netskope-url-quota-remaining:
+              description:
+                The remaining number of urls for recategorization in the
+                current quota limit window.
+              schema:
+                type: integer
+            x-netskope-url-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid url:
+                  description: Invalid url
+                  value:
+                    error_message: Invalid url in indices [0, 1].
+                    status: Error
+                Justification field exceeds max string length:
+                  description: Justification field exceeds max string length
+                  value:
+                    error_message:
+                      "'justification' field exceeds max string length
+                      (2000)."
+                    status: Error
+                Missing required request body field:
+                  description: Missing required request body field
+                  value:
+                    error_message: Null or empty 'recat_requests' field.
+                    status: Error
+                Number of suggested categories per url(s) exceeds max count:
+                  description:
+                    Number of suggested categories per url(s) exceeds max
+                    count
+                  value:
+                    error_message:
+                      Number of categories exceeds max count per url
+                      (5) in indices [1].
+                    status: Error
+                Total number of urls exceeds max count:
+                  description: Total number of urls exceeds max count
+                  value:
+                    error_message: Total number of urls (200) exceeds max count (50).
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              examples:
+                Url quota limit exceeded:
+                  description: Url quota limit exceeded
+                  value:
+                    error_message:
+                      Url quota limit exceeded. Please reduce the number
+                      of urls for recategorization or retry your request again later.
+                    status: Error
+                User not allowed:
+                  description: User not allowed
+                  value:
+                    error_message: Forbidden. User is not allowed to use the service.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+          headers:
+            x-netskope-url-quota-limit:
+              description:
+                The maximum number of urls for recategorization you're
+                allowed to submit per day per tenant.
+              schema:
+                default: 50
+                type: integer
+            x-netskope-url-quota-remaining:
+              description:
+                The remaining number of urls for recategorization in the
+                current quota limit window.
+              schema:
+                type: integer
+            x-netskope-url-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Submit url re-categorization requests
+      tags:
+        - Re-categorization Request
+    x-netskope-params:
+      apiGroup: url_recategorization
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+  /nsiq/url/recategorizations/{id}:
+    get:
+      description:
+        "Retrieve the details of the re-categorization request for the\
+        \ given id. <br>\n<br>\n**Note** that completed requests are only retained\
+        \ for 90 days. Requests older than 90 days can still be\n retrieved if they\
+        \ are not completed yet. <br>\n"
+      operationId: getStatus_1
+      parameters:
+        - description: Task ID to retrieve.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  email: user@netskope.com
+                  end_time: 1660874639
+                  justification: reason
+                  start_time: 1654567422
+                  status: completed
+                  task_id: "100"
+                  urls:
+                    - end_time: 1660874639
+                      id: "12345"
+                      status: completed
+                      url: netskope.com
+                status: Success
+              schema:
+                $ref: "#/components/schemas/RecatTaskStatusResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid id value:
+                  description: Invalid id value
+                  value:
+                    error_message: Invalid 'id' value.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get the re-categorization request details by id
+      tags:
+        - Re-categorization Request
+    x-netskope-params:
+      apiGroup: url_recategorization
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+  /nsiq/url/recategorizations/{id}/urls/{url_id}:
+    get:
+      description:
+        "Retrieve the status of the url for the given re-categorization\
+        \ id and url id. <br>\n<br>\n**Note** that completed requests are only retained\
+        \ for 90 days. Requests older than 90 days can still be\n retrieved if they\
+        \ are not completed yet. <br>\n"
+      operationId: getStatus_2
+      parameters:
+        - description: Task ID.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: Specific url ID to retrieve.
+          in: path
+          name: url_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  end_time: 1660874639
+                  id: "12345"
+                  status: completed
+                  url: netskope.com
+                status: Success
+              schema:
+                $ref: "#/components/schemas/RecatUrlStatusResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid id value:
+                  description: Invalid id value
+                  value:
+                    error_message: Invalid 'id' value.
+                    status: Error
+                Invalid url_id value:
+                  description: Invalid url_id value
+                  value:
+                    error_message: Invalid 'url_id' value.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get the status of the url under a re-categorization request by id
+      tags:
+        - Re-categorization Request
+    x-netskope-params:
+      apiGroup: url_recategorization
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+tags:
+  - description: APIs to submit re-categorization requests and query the request status
+    name: Re-categorization Request

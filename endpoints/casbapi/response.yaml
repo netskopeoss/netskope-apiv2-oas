@@ -1,0 +1,29 @@
+components:
+  schemas:
+    emptyObject:
+      description: Generic empty object.
+      type: object
+    errorResponse:
+      description: A response object contains error details.
+      properties:
+        error:
+          description: An error message.
+          type: string
+      required:
+        - error
+      type: object
+    messageResponse:
+      description: A response object contains message details.
+      properties:
+        message:
+          description: A human-readable message indicating the result of the operation.
+          type: string
+      required:
+        - message
+      type: object
+info:
+  description: ""
+  title: ""
+  version: ""
+openapi: 3.0.0
+paths: {}

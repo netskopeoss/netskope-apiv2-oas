@@ -1,0 +1,250 @@
+components:
+  schemas:
+    CustomAttributeNames:
+      properties:
+        pageNum:
+          example: 1
+          format: int32
+          type: integer
+        pageSize:
+          example: 3
+          format: int32
+          type: integer
+        result:
+          example:
+            name: manager_email
+            values:
+              - abc@xyz.com
+              - def@xyz.com
+              - ghi@xyz.com
+          properties:
+            name:
+              type: string
+            values:
+              items:
+                type: string
+              type: array
+          type: object
+        totalCount:
+          example: 3
+          format: int32
+          type: integer
+      type: object
+    CustomAttributes:
+      properties:
+        pageNum:
+          example: 1
+          format: int32
+          type: integer
+        pageSize:
+          example: 3
+          format: int32
+          type: integer
+        results:
+          example:
+            names:
+              - ManagerEmail
+              - BUFUGU
+          properties:
+            name:
+              items:
+                type: string
+              type: array
+          type: object
+        totalCount:
+          example: 3
+          format: int32
+          type: integer
+      type: object
+info:
+  contact:
+    email: eng-provisioner-dev-blr@netskope.com
+  description: API spec for Userattribute API service for custom attributes
+  title: Userattribute API Service for custom attributes
+  version: 2.0.0
+openapi: 3.0.0
+paths:
+  /users/attributes:
+    get:
+      description: Retrieve a list of all the custom attribute names and values
+      operationId: getAttribute
+      parameters:
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0)
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Data values to return in response call. Defaults to all values
+          explode: true
+          in: query
+          name: fields
+          required: false
+          schema:
+            items:
+              enum:
+                - name
+                - values
+              type: string
+            type: array
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributes"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  description:
+                    example: Invalid request
+                    type: string
+                  status:
+                    enum:
+                      - "400"
+                      - failed
+                    example: "400"
+                    type: string
+                type: object
+          description: "Failed "
+        "501":
+          content:
+            application/json:
+              schema:
+                properties:
+                  detail:
+                    example: Internal server error.
+                    type: string
+                  status:
+                    enum:
+                      - failed
+                      - "501"
+                    example: 501/failed
+                    type: string
+                type: object
+          description: Internal error Failed
+      summary: List attribute names and associated values
+      tags:
+        - attribute
+    x-netskope-params:
+      apiGroup: user_attributes
+      customerFacing: true
+      serviceConfig: userattributeservice
+      version: 2
+  /users/attributes/{name}:
+    get:
+      description: ""
+      operationId: getAttributeByName
+      parameters:
+        - description: Attribute Name
+          in: path
+          name: name
+          required: true
+          schema:
+            example: ManagerEmail
+            type: string
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0)
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description:
+            Search for attribute values containing the search string. Without
+            the searchop query parameter this defaults to regex search
+          in: query
+          name: search
+          required: false
+          schema:
+            type: string
+        - description: Search operation to be used with the provided search string
+          in: query
+          name: searchop
+          required: false
+          schema:
+            enum:
+              - eq
+              - regex
+              - ne
+              - in
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAttributeNames"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  description:
+                    example: Invalid request
+                    type: string
+                  status:
+                    enum:
+                      - "400"
+                      - failed
+                    example: "400"
+                    type: string
+                type: object
+          description: "Failed "
+        "501":
+          content:
+            application/json:
+              schema:
+                properties:
+                  detail:
+                    example: Internal server error.
+                    type: string
+                  status:
+                    enum:
+                      - failed
+                      - "501"
+                    example: 501/failed
+                    type: string
+                type: object
+          description: Internal error Failed
+      summary: Get attribute values associated with a custom attribute name
+      tags:
+        - attribute
+    x-netskope-params:
+      apiGroup: user_attributes
+      customerFacing: true
+      serviceConfig: userattributeservice
+      version: 2
+tags:
+  - description: APIs to retrieve attributes data for a tenant
+    name: attribute

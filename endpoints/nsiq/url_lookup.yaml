@@ -1,0 +1,285 @@
+components:
+  schemas:
+    bulk-lookup-request:
+      properties:
+        query:
+          properties:
+            disable_dns_lookup:
+              description: optional flag to turn off DNS resolution and IP address matching on queried URLs
+              example: true
+              default: false
+              type: boolean
+            urls:
+              description: user queried URLs
+              example:
+                - https://www.netskope.com
+                - https://www.google.com
+                - https://www.airbnb.com
+              items:
+                format: url
+                type: string
+              type: array
+          type: object
+      type: object
+    category:
+      properties:
+        id:
+          example: "1"
+          type: string
+        name:
+          example: Security Industry
+          type: string
+        type:
+          description: enumeration in ["predefined", "custom"]
+          example: predefined
+          type: string
+      type: object
+    error-response:
+      properties:
+        datetime:
+          description: the time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: unique error code for troubleshooting {service}{category}{detail}
+          example: "010203"
+          type: string
+        message:
+          description: human readable error message, could be general or specific
+          example: database query error / internal error
+          type: string
+        trace_id:
+          description: trace id for troubleshooting {service}{category}{detail}
+          example: "12345"
+          type: string
+      type: object
+    url-list:
+      properties:
+        id:
+          example: "1"
+          type: string
+        name:
+          example: My custom web list
+          type: string
+      type: object
+    url-lookup-report:
+      properties:
+        categories:
+          description: matched categories of the specified URL
+          items:
+            $ref: "#/components/schemas/category"
+          type: array
+        dynamic_classification:
+          description:
+            indicates if the site was dynamically categorized based on
+            the content in the website
+          example: true
+          type: boolean
+        url:
+          description: the queried URL
+          example: netskope.com
+          type: string
+        resolved_ip:
+          description: the resolved IP used for subsequent URL matching
+          example: 141.193.213.21
+          type: string
+        url_lists:
+          description: matched URL lists of the specified URL
+          items:
+            $ref: "#/components/schemas/url-list"
+          type: array
+      type: object
+    url-lookup-response:
+      properties:
+        query:
+          properties:
+            urls:
+              description: user queried URLs
+              example:
+                - https://www.netskope.com
+                - https://www.airbnb.com
+                - https://www.google.com
+              items:
+                format: url
+                type: string
+              type: array
+          type: object
+        result:
+          description: The query result
+          example:
+            - categories:
+                - id: "26"
+                  name: Security Industry
+                  type: predefined
+                - id: "10023"
+                  name: My first category
+                  type: custom
+              dynamic_classification: true
+              url: https://www.netskope.com
+              resolved_ip: 141.193.213.21
+              url_lists:
+                - id: "1"
+                  name: My custom web list
+            - categories:
+                - id: "572"
+                  name: Housing and property
+                  type: predefined
+                - id: "10004"
+                  name: Blocked IPs
+                  type: custom
+              dynamic_classification: true
+              url: https://www.airbnb.com
+              resolved_ip: 23.212.62.210
+              url_lists:
+                - id: "1"
+                  name: My custom web list
+                - id: "10004"
+                  name: Blocked IPs
+            - categories:
+                - id: "551"
+                  name: Search Engine
+                  type: predefined
+              dynamic_classification: false
+              url: https://www.google.com
+              resolved_ip: 142.251.46.196
+              url_lists:
+                - id: "1"
+                  name: My custom web list
+          items:
+            $ref: "#/components/schemas/url-lookup-report"
+          type: array
+      type: object
+info:
+  description: API to lookup url for web categories and urllists
+  title: URL Lookup API
+  version: 0.0.1
+openapi: 3.0.3
+paths:
+  /nsiq/urllookup:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/bulk-lookup-request"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/url-lookup-response"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  datetime:
+                    description: the time error occured
+                    example: "2024-01-11T11:14:23.187Z"
+                    type: string
+                  err_code:
+                    description: unique error code for troubleshooting {service}{category}{detail}
+                    example: "010103"
+                    type: string
+                  message:
+                    description:
+                      human readable error message, could be general or
+                      specific
+                    example: The urls in the query have duplicated entries
+                    type: string
+                  trace_id:
+                    description: trace id for troubleshooting {service}{category}{detail}
+                    example: "12345"
+                    type: string
+                type: object
+          description: Invalid request body
+        "403":
+          content:
+            application/json:
+              schema:
+                properties:
+                  datetime:
+                    description: the time error occured
+                    example: "2024-01-11T11:14:23.187Z"
+                    type: string
+                  err_code:
+                    description: unique error code for troubleshooting {service}{category}{detail}
+                    example: "010303"
+                    type: string
+                  message:
+                    description:
+                      human readable error message, could be general or
+                      specific
+                    example:
+                      This is a licensed feature, please contact Netskope support
+                      for enablement
+                    type: string
+                  trace_id:
+                    description: trace id for troubleshooting {service}{category}{detail}
+                    example: "12345"
+                    type: string
+                type: object
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "429":
+          content:
+            application/json:
+              schema:
+                properties:
+                  datetime:
+                    description: the time error occured
+                    example: "2024-01-11T11:14:23.187Z"
+                    type: string
+                  err_code:
+                    description: unique error code for troubleshooting {service}{category}{detail}
+                    example: "010303"
+                    type: string
+                  message:
+                    description:
+                      human readable error message, could be general or
+                      specific
+                    example:
+                      The request you sent has exceed daily limit, you have
+                      10 urls remaining and your daily quota will be reset on 2024-01-15
+                    type: string
+                  trace_id:
+                    description: trace id for troubleshooting {service}{category}{detail}
+                    example: "12345"
+                    type: string
+                type: object
+          description: Daily quota exceed on this API.
+          headers:
+            X-RateLimit-Limit:
+              description: URLs limit per day.
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              description: The number of URLs left for today.
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              description:
+                The UTC date/time at which the current rate limit window
+                resets.
+              schema:
+                format: date-time
+                type: string
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response"
+          description: Error occurrance
+      summary:
+        Bulk query for urls, given list of urls, will return all urls query
+        result. Limit to be 100 urls at most
+    x-netskope-params:
+      apiGroup: url_lookup
+      customerFacing: true
+      serviceConfig: swg-api-service
+      version: 2
+tags:
+  - description: API to lookup url for web categories and urllists
+    name: URL Lookup API

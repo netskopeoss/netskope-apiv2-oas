@@ -1,0 +1,266 @@
+components:
+  schemas:
+    400_error_response:
+      properties:
+        body:
+          properties:
+            errors:
+              items:
+                example: bad request
+                type: string
+              type: array
+          type: object
+        status:
+          example: 400
+          type: integer
+      type: object
+    500_error_response:
+      properties:
+        body:
+          properties:
+            errors:
+              items:
+                example: We encountered a backend error. Please try again.
+                type: string
+              type: array
+          type: object
+        status:
+          example: 500
+          type: integer
+      type: object
+    create_filter_request:
+      properties:
+        name:
+          description: name of the custom filter
+          example: test_filter
+          type: string
+        page:
+          description: the page the filter is used for
+          example: compliance
+          type: string
+        query:
+          description: query of the custom filter
+          example: (asset_category in [ 'Database', 'Account' ])
+          type: string
+      required:
+        - name
+        - query
+        - page
+      type: object
+    custom_filter:
+      properties:
+        created_by_me:
+          description: indicates if the filter is created by the current user
+          type: boolean
+        id:
+          description: ID of the filter custom
+          type: integer
+        name:
+          description: name of the custom filter
+          type: string
+        page:
+          type: string
+        query:
+          description: query of the custom filter
+          type: string
+        shared:
+          description: indicates the filter is shared with other users or not
+          type: boolean
+        username:
+          description: the user who creates this filter
+          type: string
+      required:
+        - id
+        - name
+        - page
+        - query
+        - shared
+        - username
+        - created_by_me
+      type: object
+    customer_filters:
+      example:
+        - created_by_me: false
+          id: 1
+          name: test_filter1
+          page: compliance
+          query: (asset_category in [ 'Database', 'Account' ])
+          shared: false
+          username: admin@netskope.com
+        - created_by_me: true
+          id: "2"
+          name: test_filter2
+          page: inventory
+          query: (app_suite in [ 'AWS', 'Azure' ])
+          shared: true
+          username: user@netskkope.com
+      items:
+        $ref: "#/components/schemas/custom_filter"
+      type: array
+    filter_patch_request:
+      properties:
+        name:
+          description: name of the filter.
+          type: string
+        query:
+          description: query of the filter
+          type: string
+        shared:
+          description: share the filter with others or not.
+          type: boolean
+      required:
+        - shared
+        - name
+        - query
+      type: object
+info:
+  description:
+    APIs for managing custom preferences, such as saved filters, default
+    columns.
+  title: SPM custom preferences APIs
+  version: v1
+openapi: 3.0.3
+paths:
+  /spm/preferences/customfilters:
+    get:
+      parameters:
+        - description: The page the filters saved for
+          in: query
+          name: page
+          required: true
+          schema:
+            enum:
+              - compliance, inventory
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/customer_filters"
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400_error_response"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500_error_response"
+          description: Internal Server Error
+      summary: fetch all the custom filters for a given page
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/create_filter_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/custom_filter"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400_error_response"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500_error_response"
+          description: Internal Server Error
+      summary: create the filter specified in the request
+    x-netskope-params:
+      apiGroup: custom-preference-api
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/preferences/customfilters/{id}:
+    delete:
+      parameters:
+        - description: ID of the filter to be deleted
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400_error_response"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500_error_response"
+          description: Internal Server Error
+      summary: delete a custom filter identified by a given id
+    patch:
+      parameters:
+        - description: ID of the custom filter
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/filter_patch_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/custom_filter"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400_error_response"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500_error_response"
+          description: Internal Server Error
+      summary:
+        update the custom filter with the details given in the request identified
+        by a given id
+    x-netskope-params:
+      apiGroup: custom-preference-api
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+servers:
+  - url: https://spm-<tenant>-<app>.netskope.com/api/v2/spm

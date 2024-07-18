@@ -1,0 +1,5611 @@
+components:
+  schemas:
+    ApplicationInput:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        name:
+          maxLength: 128
+          minLength: 2
+          title: Name
+          type: string
+      required:
+        - name
+        - description
+      title: ApplicationInput
+      type: object
+    ApplicationOutput:
+      additionalProperties: false
+      properties:
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        description:
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        id:
+          examples:
+            - app::123456
+          title: Id
+          type: string
+        name:
+          maxLength: 128
+          minLength: 2
+          title: Name
+          type: string
+        num_http_tracers:
+          minimum: 0.0
+          title: Num Http Tracers
+          type: integer
+        num_net_tracers:
+          minimum: 0.0
+          title: Num Net Tracers
+          type: integer
+        num_runners:
+          minimum: 0.0
+          title: Num Runners
+          type: integer
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+      required:
+        - name
+        - description
+        - revision
+        - id
+        - tenant_id
+        - date_create
+        - date_modify
+        - num_runners
+        - num_http_tracers
+        - num_net_tracers
+      title: ApplicationOutput
+      type: object
+    ApplicationUpdate:
+      additionalProperties: false
+      properties:
+        description:
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        name:
+          maxLength: 128
+          minLength: 2
+          title: Name
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+      required:
+        - name
+        - description
+        - revision
+      title: ApplicationUpdate
+      type: object
+    ApplicationsMetaOutput:
+      properties:
+        omitted:
+          title: Omitted
+          type: integer
+      required:
+        - omitted
+      title: ApplicationsMetaOutput
+      type: object
+    ApplicationsOutput:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/ApplicationOutput"
+          title: Data
+          type: array
+        meta:
+          $ref: "#/components/schemas/ApplicationsMetaOutput"
+      required:
+        - data
+        - meta
+      title: ApplicationsOutput
+      type: object
+    CCIApplicationOutput:
+      description: CCI application output model.
+      properties:
+        available_domains:
+          items:
+            type: string
+          title: Available Domains
+          type: array
+        category:
+          title: Category
+          type: string
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        description:
+          title: Description
+          type: string
+        enabled_domains:
+          items:
+            type: string
+          maxItems: 3
+          title: Enabled Domains
+          type: array
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+        num_runners:
+          minimum: 0.0
+          title: Num Runners
+          type: integer
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tenant_name:
+          title: Tenant Name
+          type: string
+      required:
+        - id
+        - name
+        - revision
+        - category
+        - description
+        - tenant_id
+        - tenant_name
+        - available_domains
+        - enabled_domains
+        - num_runners
+        - date_create
+        - date_modify
+      title: CCIApplicationOutput
+      type: object
+    CCIApplicationSimpleOutput:
+      description: CCI application simple output model.
+      properties:
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+      required:
+        - id
+        - name
+      title: CCIApplicationSimpleOutput
+      type: object
+    CCIApplicationUpdate:
+      additionalProperties: false
+      description: CCI application update model.
+      properties:
+        enabled_domains:
+          items:
+            type: string
+          maxItems: 3
+          title: Enabled Domains
+          type: array
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+      required:
+        - revision
+        - enabled_domains
+      title: CCIApplicationUpdate
+      type: object
+    CCIApplicationsMeta:
+      properties:
+        omitted:
+          title: Omitted
+          type: integer
+      required:
+        - omitted
+      title: CCIApplicationsMeta
+      type: object
+    CCIApplicationsOutput:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/CCIApplicationOutput"
+          title: Data
+          type: array
+        meta:
+          $ref: "#/components/schemas/CCIApplicationsMeta"
+      required:
+        - data
+        - meta
+      title: CCIApplicationsOutput
+      type: object
+    Coordinates:
+      additionalProperties: false
+      properties:
+        latitude:
+          maximum: 90.0
+          minimum: -90.0
+          title: Latitude
+          type: number
+        longitude:
+          maximum: 180.0
+          minimum: -180.0
+          title: Longitude
+          type: number
+      required:
+        - latitude
+        - longitude
+      title: Coordinates
+      type: object
+    DNSResolve:
+      properties:
+        addr:
+          anyOf:
+            - format: ipv4
+              type: string
+            - format: ipv6
+              type: string
+          title: Addr
+        host:
+          maxLength: 128
+          minLength: 3
+          title: Host
+          type: string
+        port:
+          maximum: 65536.0
+          minimum: 0.0
+          title: Port
+          type: integer
+      required:
+        - host
+        - port
+        - addr
+      title: DNSResolve
+      type: object
+    DeviceNameAndroid:
+      enum:
+        - computer_name
+        - imei
+        - android_id
+      title: DeviceNameAndroid
+      type: string
+    DeviceNameWindows:
+      enum:
+        - computer_name
+        - user_name
+      title: DeviceNameWindows
+      type: string
+    ErrorDict:
+      properties:
+        ctx:
+          title: Ctx
+        loc:
+          anyOf:
+            - items:
+                anyOf:
+                  - type: string
+                  - type: integer
+              type: array
+            - type: "null"
+          title: Loc
+        msg:
+          title: Msg
+          type: string
+        type:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Type
+      required:
+        - msg
+      title: ErrorDict
+      type: object
+    ErrorMessage:
+      additionalProperties: false
+      properties:
+        detail:
+          items:
+            $ref: "#/components/schemas/ErrorDict"
+          title: Detail
+          type: array
+      required:
+        - detail
+      title: ErrorMessage
+      type: object
+    FleetInput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        android_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameAndroid"
+          maxItems: 3
+          minItems: 3
+          title: Android Device Name Priority
+          type: array
+          uniqueItems: true
+        ask_battery_optimization:
+          default: true
+          title: Ask Battery Optimization
+          type: boolean
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        minimum_period:
+          const: 900
+          default: 900
+          description: This field is deprecated
+          enum:
+            - 900
+          title: Minimum Period
+          type: integer
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        show_foreground_service:
+          default: true
+          title: Show Foreground Service
+          type: boolean
+        site_id:
+          title: Site Id
+          type: string
+        type:
+          const: fleet
+          enum:
+            - fleet
+          title: Type
+          type: string
+        windows_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameWindows"
+          maxItems: 2
+          minItems: 2
+          title: Windows Device Name Priority
+          type: array
+          uniqueItems: true
+      required:
+        - name
+        - site_id
+        - type
+      title: FleetInput
+      type: object
+    FleetOutput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        android_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameAndroid"
+          maxItems: 3
+          minItems: 3
+          title: Android Device Name Priority
+          type: array
+          uniqueItems: true
+        applications:
+          items:
+            $ref: "#/components/schemas/RunnerApplicationDetail"
+          title: Applications
+          type: array
+        ask_battery_optimization:
+          title: Ask Battery Optimization
+          type: boolean
+        cci_applications:
+          items:
+            $ref: "#/components/schemas/RunnerCCIApplicationDetail"
+          title: Cci Applications
+          type: array
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Modify
+        date_registered:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Registered
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        id:
+          title: Id
+          type: string
+        ip_security_status:
+          title: Ip Security Status
+          type: string
+        labels:
+          items:
+            type: string
+          title: Labels
+          type: array
+        last_ip:
+          anyOf:
+            - format: ipv4
+              type: string
+            - format: ipv6
+              type: string
+            - type: "null"
+          title: Last Ip
+        minimum_period:
+          const: 900
+          default: 900
+          description: This field is deprecated
+          enum:
+            - 900
+          title: Minimum Period
+          type: integer
+        name:
+          pattern: ^[^,;:"\t\r\n\\]+$
+          title: Name
+          type: string
+        new_errors:
+          anyOf:
+            - type: integer
+            - type: "null"
+          default: 0
+          title: New Errors
+        num_applications:
+          title: Num Applications
+          type: integer
+        num_cci_applications:
+          title: Num Cci Applications
+          type: integer
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        show_foreground_service:
+          title: Show Foreground Service
+          type: boolean
+        site_city:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site City
+        site_continent:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Continent
+        site_country:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Country
+        site_id:
+          title: Site Id
+          type: string
+        site_location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        site_name:
+          anyOf:
+            - pattern: ^[A-Za-z0-9_@ \.-]{2,32}$
+              type: string
+            - type: "null"
+          title: Site Name
+        site_region:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Region
+        status:
+          title: Status
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tenant_name:
+          title: Tenant Name
+          type: string
+        type:
+          const: fleet
+          enum:
+            - fleet
+          title: Type
+          type: string
+        windows_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameWindows"
+          maxItems: 2
+          minItems: 2
+          title: Windows Device Name Priority
+          type: array
+          uniqueItems: true
+      required:
+        - name
+        - site_id
+        - id
+        - tenant_id
+        - revision
+        - num_applications
+        - applications
+        - num_cci_applications
+        - cci_applications
+        - tenant_name
+        - date_create
+        - ip_security_status
+        - status
+        - labels
+        - type
+        - show_foreground_service
+        - ask_battery_optimization
+        - windows_device_name_priority
+        - android_device_name_priority
+      title: FleetOutput
+      type: object
+    FleetUpdateInput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        android_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameAndroid"
+          maxItems: 3
+          minItems: 3
+          title: Android Device Name Priority
+          type: array
+          uniqueItems: true
+        ask_battery_optimization:
+          title: Ask Battery Optimization
+          type: boolean
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        minimum_period:
+          const: 900
+          default: 900
+          description: This field is deprecated
+          enum:
+            - 900
+          title: Minimum Period
+          type: integer
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        show_foreground_service:
+          title: Show Foreground Service
+          type: boolean
+        site_id:
+          title: Site Id
+          type: string
+        type:
+          const: fleet
+          enum:
+            - fleet
+          title: Type
+          type: string
+        windows_device_name_priority:
+          items:
+            $ref: "#/components/schemas/DeviceNameWindows"
+          maxItems: 2
+          minItems: 2
+          title: Windows Device Name Priority
+          type: array
+          uniqueItems: true
+      required:
+        - name
+        - site_id
+        - type
+        - show_foreground_service
+        - ask_battery_optimization
+        - revision
+      title: FleetUpdateInput
+      type: object
+    GatewayDetail:
+      properties:
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+      required:
+        - id
+        - name
+      title: GatewayDetail
+      type: object
+    GatewayInput:
+      additionalProperties: false
+      properties:
+        name:
+          maxLength: 32
+          minLength: 2
+          title: Name
+          type: string
+        subnets:
+          examples:
+            - - 10.0.0.0/24
+          items:
+            type: string
+          title: Subnets
+          type: array
+      required:
+        - name
+      title: GatewayInput
+      type: object
+    GatewayNetworkBinding:
+      additionalProperties: false
+      properties:
+        site_ids:
+          items:
+            type: string
+          maxItems: 2000
+          minItems: 0
+          title: Site Ids
+          type: array
+          uniqueItems: true
+      required:
+        - site_ids
+      title: GatewayNetworkBinding
+      type: object
+    GatewayNetworkBindingUpdate:
+      additionalProperties: false
+      properties:
+        add_site_ids:
+          items:
+            type: string
+          maxItems: 2000
+          minItems: 0
+          title: Add Site Ids
+          type: array
+          uniqueItems: true
+        del_site_ids:
+          items:
+            type: string
+          maxItems: 2000
+          minItems: 0
+          title: Del Site Ids
+          type: array
+          uniqueItems: true
+      title: GatewayNetworkBindingUpdate
+      type: object
+    GatewayOutput:
+      additionalProperties: false
+      properties:
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        id:
+          examples:
+            - gw::123456
+          title: Id
+          type: string
+        is_default:
+          title: Is Default
+          type: boolean
+        name:
+          title: Name
+          type: string
+        num_sites:
+          minimum: 0.0
+          title: Num Sites
+          type: integer
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        subnets:
+          examples:
+            - - 10.0.0.0/24
+          items:
+            type: string
+          title: Subnets
+          type: array
+        tenant_id:
+          anyOf:
+            - type: integer
+            - type: "null"
+          title: Tenant Id
+      required:
+        - name
+        - revision
+        - id
+        - num_sites
+        - is_default
+        - date_create
+        - date_modify
+      title: GatewayOutput
+      type: object
+    GatewayUpdate:
+      additionalProperties: false
+      properties:
+        name:
+          maxLength: 32
+          minLength: 2
+          title: Name
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        subnets:
+          examples:
+            - - 10.0.0.0/24
+          items:
+            type: string
+          title: Subnets
+          type: array
+      required:
+        - name
+        - revision
+      title: GatewayUpdate
+      type: object
+    HTTPStatusRange:
+      additionalProperties: false
+      properties:
+        max:
+          maximum: 999.0
+          minimum: 100.0
+          title: Max
+          type: integer
+        min:
+          maximum: 999.0
+          minimum: 100.0
+          title: Min
+          type: integer
+      required:
+        - min
+        - max
+      title: HTTPStatusRange
+      type: object
+    HTTPTracerInput:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        connection_timeout:
+          default: 5
+          maximum: 10.0
+          minimum: 5.0
+          title: Connection Timeout
+          type: integer
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        follow_redirect:
+          default: true
+          title: Follow Redirect
+          type: boolean
+        headers:
+          patternProperties:
+            ^[-!#$%&'*+.^_`|~0-9A-Za-z]+$:
+              type: string
+          title: Headers
+          type: object
+        http_status:
+          $ref: "#/components/schemas/HTTPStatusRange"
+        max_redirects:
+          default: 5
+          maximum: 10.0
+          minimum: 0.0
+          title: Max Redirects
+          type: integer
+        max_transfer_size:
+          default: 500
+          exclusiveMinimum: 0.0
+          maximum: 2048.0
+          title: Max Transfer Size
+          type: integer
+        method:
+          allOf:
+            - $ref: "#/components/schemas/HTTPTracerMethod"
+          default: GET
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        period:
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        resolves:
+          items:
+            $ref: "#/components/schemas/DNSResolve"
+          maxItems: 20
+          title: Resolves
+          type: array
+          uniqueItems: true
+        send_data:
+          default: ""
+          maxLength: 2048
+          title: Send Data
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target_url:
+          format: uri
+          minLength: 1
+          title: Target Url
+          type: string
+        timeout:
+          default: 10
+          maximum: 30.0
+          minimum: 5.0
+          title: Timeout
+          type: integer
+        tls_verify:
+          default: true
+          title: Tls Verify
+          type: boolean
+        user_agent:
+          anyOf:
+            - maxLength: 512
+              minLength: 1
+              type: string
+            - type: "null"
+          title: User Agent
+      required:
+        - application_id
+        - name
+        - status
+        - target_url
+        - period
+      title: HTTPTracerInput
+      type: object
+    HTTPTracerInputUpdate:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        connection_timeout:
+          default: 5
+          maximum: 10.0
+          minimum: 5.0
+          title: Connection Timeout
+          type: integer
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        follow_redirect:
+          default: true
+          title: Follow Redirect
+          type: boolean
+        headers:
+          patternProperties:
+            ^[-!#$%&'*+.^_`|~0-9A-Za-z]+$:
+              type: string
+          title: Headers
+          type: object
+        http_status:
+          $ref: "#/components/schemas/HTTPStatusRange"
+        max_redirects:
+          default: 5
+          maximum: 10.0
+          minimum: 0.0
+          title: Max Redirects
+          type: integer
+        max_transfer_size:
+          default: 500
+          exclusiveMinimum: 0.0
+          maximum: 2048.0
+          title: Max Transfer Size
+          type: integer
+        method:
+          allOf:
+            - $ref: "#/components/schemas/HTTPTracerMethod"
+          default: GET
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        period:
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        resolves:
+          items:
+            $ref: "#/components/schemas/DNSResolve"
+          maxItems: 20
+          title: Resolves
+          type: array
+          uniqueItems: true
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        send_data:
+          default: ""
+          maxLength: 2048
+          title: Send Data
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target_url:
+          format: uri
+          minLength: 1
+          title: Target Url
+          type: string
+        timeout:
+          default: 10
+          maximum: 30.0
+          minimum: 5.0
+          title: Timeout
+          type: integer
+        tls_verify:
+          default: true
+          title: Tls Verify
+          type: boolean
+        user_agent:
+          anyOf:
+            - maxLength: 512
+              minLength: 1
+              type: string
+            - type: "null"
+          title: User Agent
+      required:
+        - application_id
+        - name
+        - status
+        - target_url
+        - period
+        - revision
+      title: HTTPTracerInputUpdate
+      type: object
+    HTTPTracerMethod:
+      description: HTTP-Tracer methods
+      enum:
+        - GET
+        - POST
+        - PUT
+        - HEAD
+        - DELETE
+        - PATCH
+        - OPTIONS
+        - CONNECT
+        - TRACE
+      title: HTTPTracerMethod
+      type: string
+    HTTPTracerOutput:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        connection_timeout:
+          default: 5
+          maximum: 10.0
+          minimum: 5.0
+          title: Connection Timeout
+          type: integer
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        follow_redirect:
+          default: true
+          title: Follow Redirect
+          type: boolean
+        headers:
+          patternProperties:
+            ^[-!#$%&'*+.^_`|~0-9A-Za-z]+$:
+              type: string
+          title: Headers
+          type: object
+        http_status:
+          $ref: "#/components/schemas/HTTPStatusRange"
+        id:
+          title: Id
+          type: string
+        max_redirects:
+          default: 5
+          maximum: 10.0
+          minimum: 0.0
+          title: Max Redirects
+          type: integer
+        max_transfer_size:
+          default: 500
+          exclusiveMinimum: 0.0
+          maximum: 2048.0
+          title: Max Transfer Size
+          type: integer
+        method:
+          allOf:
+            - $ref: "#/components/schemas/HTTPTracerMethod"
+          default: GET
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        period:
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        resolves:
+          items:
+            $ref: "#/components/schemas/DNSResolve"
+          maxItems: 20
+          title: Resolves
+          type: array
+          uniqueItems: true
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        send_data:
+          default: ""
+          maxLength: 2048
+          title: Send Data
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target_url:
+          format: uri
+          minLength: 1
+          title: Target Url
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tenant_name:
+          title: Tenant Name
+          type: string
+        timeout:
+          default: 10
+          maximum: 30.0
+          minimum: 5.0
+          title: Timeout
+          type: integer
+        tls_verify:
+          default: true
+          title: Tls Verify
+          type: boolean
+        user_agent:
+          anyOf:
+            - maxLength: 512
+              minLength: 1
+              type: string
+            - type: "null"
+          title: User Agent
+      required:
+        - application_id
+        - name
+        - status
+        - target_url
+        - period
+        - revision
+        - id
+        - tenant_id
+        - tenant_name
+        - date_create
+        - date_modify
+      title: HTTPTracerOutput
+      type: object
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: "#/components/schemas/ValidationError"
+          title: Detail
+          type: array
+      title: HTTPValidationError
+      type: object
+    IpDatabaseEntryInput:
+      properties:
+        as_id:
+          default: 0
+          maximum: 4294967295.0
+          minimum: 0.0
+          title: As Id
+          type: integer
+        as_name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: As Name
+        city:
+          anyOf:
+            - maxLength: 200
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: City
+        country:
+          anyOf:
+            - maxLength: 2
+              minLength: 2
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Country
+        isp:
+          maxLength: 100
+          title: Isp
+          type: string
+        name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Name
+        region:
+          default: ""
+          maxLength: 200
+          title: Region
+          type: string
+        subnet:
+          title: Subnet
+          type: string
+      required:
+        - isp
+        - subnet
+      title: IpDatabaseEntryInput
+      type: object
+    IpDatabaseEntryOutput:
+      properties:
+        as_id:
+          default: 0
+          maximum: 4294967295.0
+          minimum: 0.0
+          title: As Id
+          type: integer
+        as_name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: As Name
+        city:
+          anyOf:
+            - maxLength: 200
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: City
+        country:
+          anyOf:
+            - type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Country
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Modify
+        id:
+          title: Id
+          type: string
+        isp:
+          maxLength: 100
+          title: Isp
+          type: string
+        name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Name
+        region:
+          default: ""
+          maxLength: 200
+          title: Region
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        subnet:
+          title: Subnet
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+      required:
+        - isp
+        - subnet
+        - revision
+        - id
+        - tenant_id
+        - date_create
+      title: IpDatabaseEntryOutput
+      type: object
+    IpDatabaseEntryUpdate:
+      properties:
+        as_id:
+          default: 0
+          maximum: 4294967295.0
+          minimum: 0.0
+          title: As Id
+          type: integer
+        as_name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: As Name
+        city:
+          anyOf:
+            - maxLength: 200
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: City
+        country:
+          anyOf:
+            - maxLength: 2
+              minLength: 2
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Country
+        isp:
+          maxLength: 100
+          title: Isp
+          type: string
+        name:
+          anyOf:
+            - maxLength: 100
+              minLength: 1
+              type: string
+            - const: ""
+              enum:
+                - ""
+              type: string
+          default: ""
+          title: Name
+        region:
+          default: ""
+          maxLength: 200
+          title: Region
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        subnet:
+          title: Subnet
+          type: string
+      required:
+        - isp
+        - subnet
+        - revision
+      title: IpDatabaseEntryUpdate
+      type: object
+    NetTracerInput:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        methods:
+          default:
+            - udp-paris
+          items:
+            $ref: "#/components/schemas/NetTracerMethod"
+          title: Methods
+          type: array
+          uniqueItems: true
+        name:
+          default: ""
+          maxLength: 100
+          minLength: 0
+          title: Name
+          type: string
+        period:
+          default: 300
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target:
+          maxLength: 128
+          minLength: 3
+          title: Target
+          type: string
+      required:
+        - application_id
+        - status
+        - target
+      title: NetTracerInput
+      type: object
+    NetTracerInputUpdate:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        methods:
+          default:
+            - udp-paris
+          items:
+            $ref: "#/components/schemas/NetTracerMethod"
+          title: Methods
+          type: array
+          uniqueItems: true
+        name:
+          default: ""
+          maxLength: 100
+          minLength: 0
+          title: Name
+          type: string
+        period:
+          default: 300
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target:
+          maxLength: 128
+          minLength: 3
+          title: Target
+          type: string
+      required:
+        - application_id
+        - status
+        - target
+        - revision
+      title: NetTracerInputUpdate
+      type: object
+    NetTracerMethod:
+      description: Net-Tracer methods
+      enum:
+        - icmp-paris
+        - udp-paris
+        - tcp
+        - tcp-ack
+      title: NetTracerMethod
+      type: string
+    NetTracerOutput:
+      additionalProperties: false
+      properties:
+        application_id:
+          maxLength: 64
+          minLength: 5
+          title: Application Id
+          type: string
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        id:
+          title: Id
+          type: string
+        labels:
+          items:
+            type: string
+          title: Labels
+          type: array
+        methods:
+          default:
+            - udp-paris
+          items:
+            $ref: "#/components/schemas/NetTracerMethod"
+          title: Methods
+          type: array
+          uniqueItems: true
+        name:
+          default: ""
+          maxLength: 100
+          minLength: 0
+          title: Name
+          type: string
+        period:
+          default: 300
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        resolution_mode:
+          allOf:
+            - $ref: "#/components/schemas/ResolutionMode"
+          default: auto
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusT"
+        target:
+          maxLength: 128
+          minLength: 3
+          title: Target
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tenant_name:
+          title: Tenant Name
+          type: string
+      required:
+        - application_id
+        - status
+        - target
+        - revision
+        - id
+        - labels
+        - tenant_id
+        - tenant_name
+        - date_create
+        - date_modify
+      title: NetTracerOutput
+      type: object
+    NetworkAllowlistSSIDInput:
+      additionalProperties: false
+      properties:
+        patterns:
+          items:
+            type: string
+          maxItems: 100
+          title: Patterns
+          type: array
+      required:
+        - patterns
+      title: NetworkAllowlistSSIDInput
+      type: object
+    NetworkAllowlistSSIDOutput:
+      additionalProperties: false
+      properties:
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          format: date-time
+          title: Date Modify
+          type: string
+        patterns:
+          items:
+            type: string
+          maxItems: 100
+          title: Patterns
+          type: array
+      required:
+        - patterns
+        - date_create
+        - date_modify
+      title: NetworkAllowlistSSIDOutput
+      type: object
+    NetworkGatewayBinding:
+      additionalProperties: false
+      properties:
+        gateway_ids:
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 0
+          title: Gateway Ids
+          type: array
+          uniqueItems: true
+      required:
+        - gateway_ids
+      title: NetworkGatewayBinding
+      type: object
+    NetworkGatewayBindingUpdate:
+      additionalProperties: false
+      properties:
+        add_gateway_ids:
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 0
+          title: Add Gateway Ids
+          type: array
+          uniqueItems: true
+        del_gateway_ids:
+          items:
+            type: string
+          maxItems: 1000
+          minItems: 0
+          title: Del Gateway Ids
+          type: array
+          uniqueItems: true
+      title: NetworkGatewayBindingUpdate
+      type: object
+    POPTracingInput:
+      additionalProperties: false
+      properties:
+        gslb:
+          default: false
+          title: Gslb
+          type: boolean
+        method:
+          allOf:
+            - $ref: "#/components/schemas/NetTracerMethod"
+          default: icmp-paris
+        period:
+          default: 300
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        tunnels:
+          items:
+            $ref: "#/components/schemas/SiteTunnel"
+          title: Tunnels
+          type: array
+      title: POPTracingInput
+      type: object
+    POPTracingOutput:
+      additionalProperties: false
+      properties:
+        gslb:
+          title: Gslb
+          type: boolean
+        method:
+          $ref: "#/components/schemas/NetTracerMethod"
+        period:
+          enum:
+            - 300
+            - 600
+            - 900
+            - 1200
+            - 1500
+            - 1800
+            - 2100
+            - 2400
+            - 2700
+            - 3000
+            - 3300
+            - 3600
+          title: Period
+          type: integer
+        tunnels:
+          items:
+            $ref: "#/components/schemas/SiteTunnel"
+          title: Tunnels
+          type: array
+      required:
+        - gslb
+        - tunnels
+        - period
+        - method
+      title: POPTracingOutput
+      type: object
+    RegisterInput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          anyOf:
+            - items:
+                anyOf:
+                  - format: ipv4
+                    type: string
+                  - format: ipv6
+                    type: string
+                  - format: ipv4network
+                    type: string
+                  - format: ipv6network
+                    type: string
+              maxItems: 16
+              type: array
+              uniqueItems: true
+            - type: "null"
+          title: Allowed Ips
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusActionable"
+      required:
+        - status
+        - revision
+      title: RegisterInput
+      type: object
+    ResolutionMode:
+      enum:
+        - IPv4
+        - IPv6
+        - auto
+      title: ResolutionMode
+      type: string
+    RunnerApplicationDetail:
+      properties:
+        id:
+          title: Id
+          type: string
+        name:
+          maxLength: 128
+          minLength: 2
+          title: Name
+          type: string
+      required:
+        - id
+        - name
+      title: RunnerApplicationDetail
+      type: object
+    RunnerCCIApplicationDetail:
+      properties:
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+      required:
+        - id
+        - name
+      title: RunnerCCIApplicationDetail
+      type: object
+    RunnerDetail:
+      properties:
+        id:
+          title: Id
+          type: string
+        name:
+          title: Name
+          type: string
+      required:
+        - id
+        - name
+      title: RunnerDetail
+      type: object
+    RunnerLogKind:
+      enum:
+        - state
+        - error
+      title: RunnerLogKind
+      type: string
+    RunnerLogOutput:
+      additionalProperties: false
+      properties:
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        device_id:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Device Id
+        http_tracer_id:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Http Tracer Id
+        info:
+          title: Info
+          type: object
+        kind:
+          $ref: "#/components/schemas/RunnerLogKind"
+        nettracer_id:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Nettracer Id
+        runner_id:
+          title: Runner Id
+          type: string
+      required:
+        - runner_id
+        - date_create
+        - kind
+        - info
+      title: RunnerLogOutput
+      type: object
+    RunnersBindingOutput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipvanyaddress
+                type: string
+              - format: ipvanynetwork
+                type: string
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        id:
+          title: Id
+          type: string
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        site_city:
+          title: Site City
+          type: string
+        site_continent:
+          maxLength: 2
+          title: Site Continent
+          type: string
+        site_country:
+          title: Site Country
+          type: string
+        site_id:
+          title: Site Id
+          type: string
+        site_location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        site_name:
+          pattern: ^[A-Za-z0-9_@ \.-]{2,32}$
+          title: Site Name
+          type: string
+        site_region:
+          title: Site Region
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tracer_owner:
+          title: Tracer Owner
+          type: string
+        type:
+          $ref: "#/components/schemas/Type"
+      required:
+        - id
+        - type
+        - allowed_ips
+        - tenant_id
+        - tracer_owner
+        - site_id
+        - site_name
+        - site_continent
+        - site_country
+        - site_region
+        - site_city
+      title: RunnersBindingOutput
+      type: object
+    RunnersBindingsInputReplace:
+      additionalProperties: false
+      properties:
+        runner_ids:
+          items:
+            type: string
+          maxItems: 256
+          title: Runner Ids
+          type: array
+      required:
+        - runner_ids
+      title: RunnersBindingsInputReplace
+      type: object
+    RunnersBindingsInputUpdate:
+      additionalProperties: false
+      properties:
+        add_runner_ids:
+          items:
+            type: string
+          maxItems: 256
+          title: Add Runner Ids
+          type: array
+        del_runner_ids:
+          items:
+            type: string
+          maxItems: 256
+          title: Del Runner Ids
+          type: array
+      title: RunnersBindingsInputUpdate
+      type: object
+    Sharing:
+      enum:
+        - private
+        - organization
+        - public
+      title: Sharing
+      type: string
+    SiteInput:
+      additionalProperties: false
+      properties:
+        city:
+          maxLength: 200
+          minLength: 1
+          title: City
+          type: string
+        country:
+          maxLength: 2
+          minLength: 2
+          title: Country
+          type: string
+        location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        name:
+          maxLength: 32
+          minLength: 2
+          title: Name
+          type: string
+        pop_tracing:
+          $ref: "#/components/schemas/POPTracingInput"
+        subnets:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          examples:
+            - - 10.0.0.0/24
+          title: Subnets
+      required:
+        - country
+        - name
+        - city
+      title: SiteInput
+      type: object
+    SiteOutput:
+      additionalProperties: false
+      properties:
+        city:
+          maxLength: 200
+          minLength: 1
+          title: City
+          type: string
+        continent:
+          maxLength: 2
+          title: Continent
+          type: string
+        country:
+          title: Country
+          type: string
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Modify
+        gateways:
+          items:
+            $ref: "#/components/schemas/GatewayDetail"
+          title: Gateways
+          type: array
+        id:
+          examples:
+            - site::123456
+          title: Id
+          type: string
+        kind:
+          enum:
+            - managed_site
+            - tenant_site
+          title: Kind
+          type: string
+        location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        name:
+          pattern: ^[A-Za-z0-9_@ \.-]{2,32}$
+          title: Name
+          type: string
+        num_gateways:
+          minimum: 0.0
+          title: Num Gateways
+          type: integer
+        num_runners:
+          minimum: 0.0
+          title: Num Runners
+          type: integer
+        pop_tracing:
+          $ref: "#/components/schemas/POPTracingOutput"
+        region:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Region
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        runners:
+          items:
+            $ref: "#/components/schemas/RunnerDetail"
+          title: Runners
+          type: array
+        subnets:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          title: Subnets
+        tenant_id:
+          title: Tenant Id
+          type: integer
+      required:
+        - country
+        - name
+        - city
+        - id
+        - tenant_id
+        - kind
+        - revision
+        - continent
+        - num_gateways
+        - gateways
+        - num_runners
+        - runners
+        - date_create
+        - pop_tracing
+      title: SiteOutput
+      type: object
+    SiteTunnel:
+      additionalProperties: false
+      properties:
+        id:
+          title: Id
+          type: integer
+        kind:
+          $ref: "#/components/schemas/TunnelKind"
+      required:
+        - kind
+        - id
+      title: SiteTunnel
+      type: object
+    SiteUpdate:
+      additionalProperties: false
+      properties:
+        city:
+          maxLength: 200
+          minLength: 1
+          title: City
+          type: string
+        country:
+          maxLength: 2
+          minLength: 2
+          title: Country
+          type: string
+        location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        name:
+          maxLength: 32
+          minLength: 2
+          title: Name
+          type: string
+        pop_tracing:
+          $ref: "#/components/schemas/POPTracingInput"
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        subnets:
+          anyOf:
+            - items:
+                type: string
+              type: array
+            - type: "null"
+          examples:
+            - - 10.0.0.0/24
+          title: Subnets
+      required:
+        - country
+        - name
+        - city
+        - revision
+      title: SiteUpdate
+      type: object
+    StationInput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        minimum_period:
+          default: 300
+          enum:
+            - 60
+            - 300
+          title: Minimum Period
+          type: integer
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        secure_registration:
+          default: true
+          title: Secure Registration
+          type: boolean
+        sharing:
+          allOf:
+            - $ref: "#/components/schemas/Sharing"
+          default: private
+        site_id:
+          title: Site Id
+          type: string
+        type:
+          const: station
+          enum:
+            - station
+          title: Type
+          type: string
+      required:
+        - name
+        - site_id
+        - type
+      title: StationInput
+      type: object
+    StationOutput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        applications:
+          items:
+            $ref: "#/components/schemas/RunnerApplicationDetail"
+          title: Applications
+          type: array
+        arch:
+          title: Arch
+          type: string
+        cci_applications:
+          items:
+            $ref: "#/components/schemas/RunnerCCIApplicationDetail"
+          title: Cci Applications
+          type: array
+        cpu_count:
+          anyOf:
+            - type: integer
+            - type: "null"
+          title: Cpu Count
+        date_checkin:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Checkin
+        date_create:
+          format: date-time
+          title: Date Create
+          type: string
+        date_modify:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Modify
+        date_registered:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Date Registered
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        host:
+          title: Host
+          type: string
+        id:
+          title: Id
+          type: string
+        info:
+          anyOf:
+            - type: object
+            - type: "null"
+          title: Info
+        ip_security_status:
+          title: Ip Security Status
+          type: string
+        is_alive:
+          anyOf:
+            - type: boolean
+            - type: "null"
+          default: true
+          title: Is Alive
+        is_ours:
+          title: Is Ours
+          type: boolean
+        labels:
+          items:
+            type: string
+          title: Labels
+          type: array
+        last_ip:
+          anyOf:
+            - format: ipv4
+              type: string
+            - format: ipv6
+              type: string
+            - type: "null"
+          title: Last Ip
+        last_state_date:
+          anyOf:
+            - format: date-time
+              type: string
+            - type: "null"
+          title: Last State Date
+        minimum_period:
+          enum:
+            - 60
+            - 300
+          title: Minimum Period
+          type: integer
+        name:
+          pattern: ^[^,;:"\t\r\n\\]+$
+          title: Name
+          type: string
+        new_errors:
+          anyOf:
+            - type: integer
+            - type: "null"
+          default: 0
+          title: New Errors
+        num_applications:
+          title: Num Applications
+          type: integer
+        num_cci_applications:
+          title: Num Cci Applications
+          type: integer
+        os:
+          title: Os
+          type: string
+        physical_memory:
+          anyOf:
+            - type: integer
+            - type: "null"
+          title: Physical Memory
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        sharing:
+          $ref: "#/components/schemas/Sharing"
+        site_city:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site City
+        site_continent:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Continent
+        site_country:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Country
+        site_id:
+          title: Site Id
+          type: string
+        site_location:
+          anyOf:
+            - $ref: "#/components/schemas/Coordinates"
+            - type: "null"
+        site_name:
+          anyOf:
+            - pattern: ^[A-Za-z0-9_@ \.-]{2,32}$
+              type: string
+            - type: "null"
+          title: Site Name
+        site_region:
+          anyOf:
+            - type: string
+            - type: "null"
+          title: Site Region
+        state_minute_period:
+          title: State Minute Period
+          type: integer
+        status:
+          title: Status
+          type: string
+        tenant_id:
+          title: Tenant Id
+          type: integer
+        tenant_name:
+          title: Tenant Name
+          type: string
+        type:
+          const: station
+          enum:
+            - station
+          title: Type
+          type: string
+      required:
+        - name
+        - site_id
+        - id
+        - tenant_id
+        - revision
+        - num_applications
+        - applications
+        - num_cci_applications
+        - cci_applications
+        - tenant_name
+        - date_create
+        - ip_security_status
+        - status
+        - labels
+        - type
+        - minimum_period
+        - date_checkin
+        - is_ours
+        - last_state_date
+        - info
+        - host
+        - arch
+        - cpu_count
+        - os
+        - physical_memory
+        - state_minute_period
+        - sharing
+      title: StationOutput
+      type: object
+    StationUpdateInput:
+      additionalProperties: false
+      properties:
+        allowed_ips:
+          items:
+            anyOf:
+              - format: ipv4
+                type: string
+              - format: ipv6
+                type: string
+              - format: ipv4network
+                type: string
+              - format: ipv6network
+                type: string
+          maxItems: 16
+          title: Allowed Ips
+          type: array
+          uniqueItems: true
+        description:
+          default: ""
+          maxLength: 2048
+          minLength: 0
+          title: Description
+          type: string
+        gap_limit:
+          default: 8
+          maximum: 16.0
+          minimum: 1.0
+          title: Gap Limit
+          type: integer
+        minimum_period:
+          default: 300
+          enum:
+            - 60
+            - 300
+          title: Minimum Period
+          type: integer
+        name:
+          maxLength: 100
+          minLength: 1
+          title: Name
+          type: string
+        provider:
+          default: ""
+          maxLength: 100
+          title: Provider
+          type: string
+        revision:
+          format: uuid
+          title: Revision
+          type: string
+        sharing:
+          $ref: "#/components/schemas/Sharing"
+        site_id:
+          title: Site Id
+          type: string
+        type:
+          const: station
+          enum:
+            - station
+          title: Type
+          type: string
+      required:
+        - name
+        - site_id
+        - type
+        - sharing
+        - revision
+      title: StationUpdateInput
+      type: object
+    StatusActionable:
+      enum:
+        - registered
+        - inactive
+      title: StatusActionable
+      type: string
+    StatusT:
+      enum:
+        - active
+        - inactive
+      title: StatusT
+      type: string
+    TunnelKind:
+      enum:
+        - ipsec
+        - gre
+      title: TunnelKind
+      type: string
+    Type:
+      enum:
+        - fleet
+        - station
+      title: Type
+      type: string
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          title: Location
+          type: array
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
+      type: object
+info:
+  description: "
+
+    API endpoints `/config/*` to create, update and delete configuration elements,
+
+    like Net-Probes, App-Probes and Stations.
+
+
+    This API is not for querying DEM Enterprise's metrics. Please look at `/docs/query`
+    for details.
+
+
+    Method Not Allowed
+
+    ------------------
+
+
+    The status *405 Method Not Allowed* is returned when the requested endpoint exists
+
+    but the Method (GET, PUT, POST...) does not match anything.
+
+
+    Modifying Objects
+
+    -----------------
+
+
+    When using a PUT or a PATCH to alter or replace a configuration object, a `revision`
+    field is mandatory.
+
+    This `revision` field is there to guarantee the integrity of your data: if someone
+    else has modified the
+
+    data since you retrieved it then you will receive an error when sending your API
+    call. The error is an
+
+    HTTP `409 Conflict`. The header `X-KD-CURRENT-REVISION` gives you the current
+    `revision` on the server
+
+    if you want to force your update. This is not recommended as it could erase the
+    information that was made
+
+    in the meanwhile.
+
+    "
+  title: DEM Enterprise Configuration API
+  version: v1
+openapi: 3.1.0
+paths:
+  /dem/config/applications:
+    get:
+      operationId: list_custom_applications_api_v1_config_applications_get
+      parameters:
+        - description: Filter applications by name.
+          in: query
+          name: pattern
+          required: false
+          schema:
+            default: ""
+            description: Filter applications by name.
+            title: Pattern
+            type: string
+        - description: Filter applications by assigned status.
+          in: query
+          name: isassigned
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: "null"
+            description: Filter applications by assigned status.
+            title: Isassigned
+        - description: Limit the number of returned applications.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 1000
+            description: Limit the number of returned applications.
+            maximum: 1000
+            minimum: 1
+            title: Limit
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationsOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List Applications.
+      tags:
+        - Application
+    post:
+      operationId: create_custom_application_api_v1_config_applications_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create an Application.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/applications/{id}:
+    delete:
+      operationId: delete_custom_application_api_v1_config_applications__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Method not allowed
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Permanently delete the given Application.
+      tags:
+        - Application
+    get:
+      operationId: get_custom_application_api_v1_config_applications__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get Application details.
+      tags:
+        - Application
+    put:
+      description:
+        "All fields of the Application will be updated. If a field is not
+        specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` field is mandatory."
+      operationId: update_custom_application_api_v1_config_applications__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update all the fields of the given Application
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/applications/{id}/runners:
+    get:
+      operationId: list_custom_application_runners_api_v1_config_applications__id__runners_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/RunnersBindingOutput"
+                title:
+                  Response List Custom Application Runners Api V1 Config Applications  Id  Runners
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List runners attached to the given application.
+      tags:
+        - Application
+    patch:
+      operationId: update_custom_application_runners_api_v1_config_applications__id__runners_patch
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunnersBindingsInputUpdate"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update the runners attached to the given application.
+      tags:
+        - Application
+    put:
+      operationId: replace_custom_application_runners_api_v1_config_applications__id__runners_put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunnersBindingsInputReplace"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Replace the runners attached to the given application.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/cci/allapplications:
+    get:
+      operationId: list_all_cci_applications_api_v1_config_cci_allapplications_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/CCIApplicationSimpleOutput"
+                title:
+                  Response List All Cci Applications Api V1 Config Cci Allapplications
+                  Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List all CCI applications.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/cci/applications:
+    get:
+      operationId: list_cci_applications_api_v1_config_cci_applications_get
+      parameters:
+        - description: Filter applications by name.
+          in: query
+          name: pattern
+          required: false
+          schema:
+            default: ""
+            description: Filter applications by name.
+            title: Pattern
+            type: string
+        - description: Filter applications by assigned status.
+          in: query
+          name: isassigned
+          required: false
+          schema:
+            anyOf:
+              - type: boolean
+              - type: "null"
+            description: Filter applications by assigned status.
+            title: Isassigned
+        - description: Limit the number of returned applications.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 1000
+            description: Limit the number of returned applications.
+            maximum: 1000
+            minimum: 1
+            title: Limit
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CCIApplicationsOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List CCI applications.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/cci/applications/{id}:
+    get:
+      operationId: get_cci_application_api_v1_config_cci_applications__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CCIApplicationOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get CCI application details.
+      tags:
+        - Application
+    put:
+      operationId: update_cci_application_api_v1_config_cci_applications__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CCIApplicationUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CCIApplicationOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update a CCI application.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/cci/applications/{id}/runners:
+    get:
+      operationId: list_cci_application_runners_api_v1_config_cci_applications__id__runners_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/RunnersBindingOutput"
+                title:
+                  Response List Cci Application Runners Api V1 Config Cci Applications  Id  Runners
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List runners attached to the given CCI application.
+      tags:
+        - Application
+    patch:
+      operationId: update_cci_application_runners_api_v1_config_cci_applications__id__runners_patch
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunnersBindingsInputUpdate"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update the runners attached to the given CCI application.
+      tags:
+        - Application
+    put:
+      operationId: replace_cci_application_runners_api_v1_config_cci_applications__id__runners_put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RunnersBindingsInputReplace"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Replace the runners attached to the given CCI application.
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/gateways:
+    get:
+      operationId: all_gateways_api_v1_config_gateways_get
+      parameters:
+        - in: query
+          name: with_predefined
+          required: false
+          schema:
+            default: true
+            title: With Predefined
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/GatewayOutput"
+                title: Response All Gateways Api V1 Config Gateways Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List Gateways.
+      tags:
+        - Gateway
+    post:
+      operationId: create_gateway_api_v1_config_gateways_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GatewayInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GatewayOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create a Gateway.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/gateways/{id}:
+    delete:
+      operationId: delete_gateway_api_v1_config_gateways__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Method not allowed
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Permanently delete the given Gateway.
+      tags:
+        - Gateway
+    get:
+      operationId: get_gateway_api_v1_config_gateways__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GatewayOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get Gateways details.
+      tags:
+        - Gateway
+    put:
+      description:
+        "All fields of the Gateway will be updated. If a field is not specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` field is mandatory."
+      operationId: update_gateway_api_v1_config_gateways__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GatewayUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GatewayOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Method not allowed
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update all the fields of a Gateway.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/gateways/{id}/sites:
+    get:
+      operationId: get_gateway_sites_api_v1_config_gateways__id__sites_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteOutput"
+                title:
+                  Response Get Gateway Sites Api V1 Config Gateways  Id  Sites
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List the Sites associated with the given Gateway.
+      tags:
+        - Gateway
+    patch:
+      description:
+        "The Sites from `del_site_ids` are removed from the given Gateway,\n\
+        \    then those in `add_site_ids` are added to it.\n    Note that if a Sites\
+        \ is listed in both list, adding the Sites takes priority."
+      operationId: update_gateway_sites_api_v1_config_gateways__id__sites_patch
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GatewayNetworkBindingUpdate"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update the set of Sites associated with the given Gateway.
+      tags:
+        - Gateway
+    put:
+      operationId: set_gateway_sites_api_v1_config_gateways__id__sites_put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GatewayNetworkBinding"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Reset the list of Sites associated with the given Gateway.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/geoips:
+    get:
+      operationId: list_entries_api_v1_config_geoips_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/IpDatabaseEntryOutput"
+                title: Response List Entries Api V1 Config Geoips Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get custom IP database for IP enrichment
+      tags:
+        - GEOIP Database
+    post:
+      operationId: create_entry_api_v1_config_geoips_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IpDatabaseEntryInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpDatabaseEntryOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Add an entry on the IP database.
+      tags:
+        - GEOIP Database
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/geoips/{id}:
+    delete:
+      operationId: delete_entry_api_v1_config_geoips__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Delete a specific entry from the IP database.
+      tags:
+        - GEOIP Database
+    get:
+      operationId: get_entry_api_v1_config_geoips__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpDatabaseEntryOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get a specific entry from the IP database.
+      tags:
+        - GEOIP Database
+    put:
+      operationId: replace_entry_api_v1_config_geoips__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IpDatabaseEntryUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IpDatabaseEntryOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update a specific entry from the IP database.
+      tags:
+        - GEOIP Database
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/httptracers:
+    get:
+      operationId: get_own_http_tracers_api_v1_config_httptracers_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/HTTPTracerOutput"
+                title: Response Get Own Http Tracers Api V1 Config Httptracers Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List available HTTP tracers.
+      tags:
+        - HTTP Tracer
+    post:
+      description:
+        "Once created, an HTTP tracer must be attached to some Runners
+        to be executed.
+
+        You can attach it to a runner by using `PATCH` on `/config/httptracers/{id}/runners`."
+      operationId: create_http_tracer_api_v1_config_httptracers_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HTTPTracerInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPTracerOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create an HTTP tracer.
+      tags:
+        - HTTP Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/httptracers/{id}:
+    delete:
+      operationId: delete_http_tracer_api_v1_config_httptracers__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary:
+        Permanently delete the given HTTP tracer. This will also remove any
+        Runner attachment.
+      tags:
+        - HTTP Tracer
+    get:
+      description: Get information about an HTTP tracer
+      operationId: get_http_tracers_api_v1_config_httptracers__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPTracerOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get details of the given HTTP tracer.
+      tags:
+        - HTTP Tracer
+    put:
+      description:
+        "All fields of the HTTP tracer will be updated. If a field is not
+        specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` field is mandatory."
+      operationId: update_http_tracer_api_v1_config_httptracers__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HTTPTracerInputUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPTracerOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update all the fields of the given HTTP tracer
+      tags:
+        - HTTP Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/httptracers/{id}/logs:
+    get:
+      operationId: get_tracer_logs_api_v1_config_httptracers__id__logs_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+        - in: query
+          name: kind
+          required: false
+          schema:
+            anyOf:
+              - $ref: "#/components/schemas/RunnerLogKind"
+              - type: "null"
+            title: Kind
+        - in: query
+          name: begin
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: Begin
+        - in: query
+          name: end
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: End
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/RunnerLogOutput"
+                title:
+                  Response Get Tracer Logs Api V1 Config Httptracers  Id  Logs
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List logs of the given http-tracer.
+      tags:
+        - HTTP Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/nettracers:
+    get:
+      operationId: get_own_net_tracers_api_v1_config_nettracers_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/NetTracerOutput"
+                title: Response Get Own Net Tracers Api V1 Config Nettracers Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List available Net-Tracers.
+      tags:
+        - Net-Tracer
+    post:
+      description:
+        "Once created, a Net-Tracer must be attached to some Runners to
+        be executed.
+
+        You can attach it to a runner by using `PATCH` on `/api/v1/config/nettracers/{id}/runners`."
+      operationId: create_net_tracer_api_v1_config_nettracers_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetTracerInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetTracerOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create a Net-Tracer.
+      tags:
+        - Net-Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/nettracers/{id}:
+    delete:
+      operationId: delete_net_tracer_api_v1_config_nettracers__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary:
+        Permanently delete the given Net-Tracer. This will also remove any
+        Runner attachment.
+      tags:
+        - Net-Tracer
+    get:
+      description: Get information about a net-tracer
+      operationId: get_net_tracers_api_v1_config_nettracers__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetTracerOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get details of the given Net-Tracer.
+      tags:
+        - Net-Tracer
+    put:
+      description:
+        "All fields of the Net-Tracer will be updated. If a field is not
+        specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` field is mandatory."
+      operationId: update_net_tracer_api_v1_config_nettracers__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetTracerInputUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetTracerOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update all the fields of the given Net-Tracer
+      tags:
+        - Net-Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/nettracers/{id}/logs:
+    get:
+      operationId: get_tracer_logs_api_v1_config_nettracers__id__logs_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+        - in: query
+          name: kind
+          required: false
+          schema:
+            anyOf:
+              - $ref: "#/components/schemas/RunnerLogKind"
+              - type: "null"
+            title: Kind
+        - in: query
+          name: begin
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: Begin
+        - in: query
+          name: end
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: End
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/RunnerLogOutput"
+                title:
+                  Response Get Tracer Logs Api V1 Config Nettracers  Id  Logs
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List logs of the given Net-Tracer.
+      tags:
+        - Net-Tracer
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/networks/ssidallowlist:
+    get:
+      operationId: get_ssid_allowlist_api_v1_config_networks_ssidallowlist_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkAllowlistSSIDOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get the network allowlist.
+      tags:
+        - Network
+    put:
+      operationId: update_ssid_allowlist_api_v1_config_networks_ssidallowlist_put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetworkAllowlistSSIDInput"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkAllowlistSSIDOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update the network allow-list.
+      tags:
+        - Network
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/ping:
+    get:
+      operationId: ping_api_config_ping_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                title: Response Ping Api Config Ping Get
+                type: string
+          description: Successful Response
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Ping
+      tags:
+        - Application
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/runners:
+    get:
+      operationId: get_available_runners_api_v1_config_runners_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  discriminator:
+                    mapping:
+                      fleet: "#/components/schemas/FleetOutput"
+                      station: "#/components/schemas/StationOutput"
+                    propertyName: type
+                  oneOf:
+                    - $ref: "#/components/schemas/StationOutput"
+                    - $ref: "#/components/schemas/FleetOutput"
+                title: Response Get Available Runners Api V1 Config Runners Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List available Runners.
+      tags:
+        - Runner
+    post:
+      description:
+        Once the Runner is created, you will need to generate an API key
+        to deploy it.
+      operationId: create_runner_api_v1_config_runners_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              discriminator:
+                mapping:
+                  fleet: "#/components/schemas/FleetInput"
+                  station: "#/components/schemas/StationInput"
+                propertyName: type
+              oneOf:
+                - $ref: "#/components/schemas/StationInput"
+                - $ref: "#/components/schemas/FleetInput"
+              title: Input
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    fleet: "#/components/schemas/FleetOutput"
+                    station: "#/components/schemas/StationOutput"
+                  propertyName: type
+                oneOf:
+                  - $ref: "#/components/schemas/StationOutput"
+                  - $ref: "#/components/schemas/FleetOutput"
+                title: Response Create Runner Api V1 Config Runners Post
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create a Runner.
+      tags:
+        - Runner
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/runners/{id}:
+    delete:
+      operationId: delete_runner_api_v1_config_runners__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Not enough privileges
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary:
+        Permanently delete the given Runner. This will also remove any Net-Tracer
+        attachment.
+      tags:
+        - Runner
+    get:
+      operationId: get_runner_api_v1_config_runners__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    fleet: "#/components/schemas/FleetOutput"
+                    station: "#/components/schemas/StationOutput"
+                  propertyName: type
+                oneOf:
+                  - $ref: "#/components/schemas/StationOutput"
+                  - $ref: "#/components/schemas/FleetOutput"
+                title: Response Get Runner Api V1 Config Runners  Id  Get
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get details of the given Runner.
+      tags:
+        - Runner
+    patch:
+      description:
+        "This endpoint allows to modify the status and allowed IP addresses\
+        \ of the Runner.\n\nTo finalize the registration of a Runner, change its `status`\
+        \ to `registered`,\nby using the following payload:\n```\n  { status: \"registered\"\
+        , \"allowed_ips\": [\"1.2.3.4\"] }\n```"
+      operationId: register_runner_api_v1_config_runners__id__patch
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    fleet: "#/components/schemas/FleetOutput"
+                    station: "#/components/schemas/StationOutput"
+                  propertyName: type
+                oneOf:
+                  - $ref: "#/components/schemas/StationOutput"
+                  - $ref: "#/components/schemas/FleetOutput"
+                title: Response Register Runner Api V1 Config Runners  Id  Patch
+          description: Successful Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Not enough privileges
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Modify the given Runner
+      tags:
+        - Runner
+    put:
+      description:
+        "All fields of the Runner will be updated. If a field is not specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` attribute is mandatory."
+      operationId: update_runner_api_v1_config_runners__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              discriminator:
+                mapping:
+                  fleet: "#/components/schemas/FleetUpdateInput"
+                  station: "#/components/schemas/StationUpdateInput"
+                propertyName: type
+              oneOf:
+                - $ref: "#/components/schemas/StationUpdateInput"
+                - $ref: "#/components/schemas/FleetUpdateInput"
+              title: Input
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                discriminator:
+                  mapping:
+                    fleet: "#/components/schemas/FleetOutput"
+                    station: "#/components/schemas/StationOutput"
+                  propertyName: type
+                oneOf:
+                  - $ref: "#/components/schemas/StationOutput"
+                  - $ref: "#/components/schemas/FleetOutput"
+                title: Response Update Runner Api V1 Config Runners  Id  Put
+          description: Successful Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Not enough privileges
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Modify the given Runner
+      tags:
+        - Runner
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/runners/{id}/apikeys:
+    post:
+      description: Get the API key needed to install a runner
+      operationId: get_runner_apikey_api_v1_config_runners__id__apikeys_post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                title:
+                  Response Get Runner Apikey Api V1 Config Runners  Id  Apikeys
+                  Post
+                type: string
+          description: Successful Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Not enough privileges
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Generate an API key needed to deploy a new Runner.
+      tags:
+        - Runner
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/runners/{id}/logs:
+    get:
+      operationId: get_runner_logs_api_v1_config_runners__id__logs_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+        - in: query
+          name: kind
+          required: false
+          schema:
+            anyOf:
+              - $ref: "#/components/schemas/RunnerLogKind"
+              - type: "null"
+            title: Kind
+        - in: query
+          name: begin
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: Begin
+        - in: query
+          name: end
+          required: false
+          schema:
+            anyOf:
+              - format: date-time
+                type: string
+              - type: "null"
+            title: End
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/RunnerLogOutput"
+                title: Response Get Runner Logs Api V1 Config Runners  Id  Logs Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List logs of the given Runner.
+      tags:
+        - Runner
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/runners/{id}/stationinstaller:
+    post:
+      description: Generate a station installer script
+      operationId: get_station_installer_api_v1_config_runners__id__stationinstaller_post
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "201":
+          content:
+            text/x-shellscript:
+              example: "#!/usr/bin/env bash
+
+                echo script"
+          description: Successful Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Not enough privileges
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Generate a station installer script for linux
+      tags:
+        - Runner
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/sites:
+    get:
+      operationId: all_sites_api_v1_config_sites_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SiteOutput"
+                title: Response All Sites Api V1 Config Sites Get
+                type: array
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List Site.
+      tags:
+        - Gateway
+    post:
+      operationId: create_site_api_v1_config_sites_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SiteInput"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteOutput"
+          description: Successful Response
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Create a Site.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/sites/{id}:
+    delete:
+      operationId: delete_site_api_v1_config_sites__id__delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Permanently delete the given Site.
+      tags:
+        - Gateway
+    get:
+      operationId: get_site_api_v1_config_sites__id__get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Get Site details.
+      tags:
+        - Gateway
+    put:
+      description:
+        "All fields of the Site will be updated. If a field is not specified,
+
+        it will be reset to its default value.
+
+
+        The `revision` field is mandatory."
+      operationId: update_site_api_v1_config_sites__id__put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SiteUpdate"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteOutput"
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: "Item revision conflicts.
+
+
+            The `revision` field was not up to date. This means that the object that
+            was modified
+
+            has already been changed in the meantime by another API call.
+
+
+            The header `X-KD-CURRENT-REVISION` gives you the new `revision`. You can
+            either force
+
+            the modifications by sending again the data with an updated `revision`
+            field or prefer
+
+            to refresh the values to be sure to not erase the already saved modifications."
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update all the fields of a Site.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/config/sites/{id}/gateways:
+    get:
+      operationId: get_network_gateways_api_v1_config_sites__id__gateways_get
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/GatewayOutput"
+                title:
+                  Response Get Network Gateways Api V1 Config Sites  Id  Gateways
+                  Get
+                type: array
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: List the Gateways associated with the given Site.
+      tags:
+        - Gateway
+    patch:
+      description:
+        "The Gateways from `del_gateway_ids` are removed from the given\
+        \ Site,\n    then those in `add_gateway_ids` are added to it.\n    Note that\
+        \ if a Gateway is listed in both list, adding the Gateway takes priority."
+      operationId: update_network_gateways_api_v1_config_sites__id__gateways_patch
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetworkGatewayBindingUpdate"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Update the set of Gateways associated with the given Site.
+      tags:
+        - Gateway
+    put:
+      operationId: set_network_gateways_api_v1_config_sites__id__gateways_put
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            title: Id
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetworkGatewayBinding"
+        required: true
+      responses:
+        "204":
+          description: Successful Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Item not found
+        "422":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HTTPValidationError"
+          description: Validation Error
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Reset the list of Gateways associated with the given Sites.
+      tags:
+        - Gateway
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2
+  /dem/v1/edem/sync/ping:
+    get:
+      operationId: ping_v1_edem_sync_ping_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                title: Response Ping V1 Edem Sync Ping Get
+                type: string
+          description: Successful Response
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+          description: Too many requests (quota exceeded)
+      summary: Ping
+      tags:
+        - Runner-Sync
+    x-netskope-params:
+      apiGroup: dem-workbench-conf
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: dem-workbench-conf
+      version: 2

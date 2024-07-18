@@ -1,0 +1,410 @@
+openapi: 3.0.1
+info:
+  title: Data Lineage API
+  contact: {}
+  version: "1.0"
+servers:
+  - url: /
+tags:
+  - name: Data Lineage Service
+    description: The API belongs to data lineage service
+  - name: Data Lineage Inferrer
+    description: The API belongs to data lineage inferrer
+paths:
+  /services/dlp/datalineage/activity:
+    x-netskope-params:
+      apiGroup: dlp-data-lineage
+      customerFacing: false
+      serviceConfig: dlp-data-lineage-service
+      version: 2
+    post:
+      tags:
+        - Data Lineage Service
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Insert activities into data lineage service to track the file lineage
+      description: |-
+        This API is used in two scenarios. The first scenario is to bootstrap a tenant when they enables the data
+        lineage feature. The second scenario is for testing or experiments. In both scenarios, the payload is a
+        list of events queried from Clickhouse. The real-time curation of lineage is handled via Kafka
+        subscriptions, not via this API.
+      #      parameters:
+      #        - name: X-Netskope-Tenantid
+      #          in: header
+      #          description: "The tenant id that the input activity belongs to. For example: 1057"
+      #          required: true
+      #          schema:
+      #            type: integer
+      #        - name: X-Request-Id
+      #          in: header
+      #          description: "The request id to store in log to facilitate debugging. For example: 2628115136719764480"
+      #          schema:
+      #            type: string
+      requestBody:
+        description: A batch of activities. Each activity is an event retrieved from Clickhouse. See the schema for example
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/model.ActivityPayload"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content: {}
+        "400":
+          description: Bad request. Refer to the error string for more information
+          content:
+            text/plain:
+              schema:
+                type: string
+      x-codegen-request-body-name: activityPayload
+  /services/dlp/datalineage/getid:
+    x-netskope-params:
+      apiGroup: dlp-data-lineage
+      customerFacing: false
+      serviceConfig: dlp-data-lineage-service
+      version: 2
+    post:
+      tags:
+        - Data Lineage Service
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Given an app event, return the file id(s) that is used by data lineage service internally.
+      description: |-
+        The app event is supplied in the request body. It should be unmodified from what Query Service returns.
+        Some events contain only 1 file, for example, a creation event. In this case, the id field of the response
+        contains the file id. Some events contain 2 files, for example, a copy event. In this case, the to_id
+        and from_id fields of the response contain the respective file ids.
+      #      parameters:
+      #        - name: X-Netskope-Tenantid
+      #          in: header
+      #          description: 'The tenant id that the request event belongs to. For example: 1057'
+      #          required: true
+      #          schema:
+      #            type: string
+      #        - name: X-Request-Id
+      #          in: header
+      #          description: 'The request id to store in log to facilitate debugging. For example: 2628115136719764480'
+      #          schema:
+      #            type: string
+      requestBody:
+        description: The event for the service to retrieve file ids contained by the event
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/model.ClickhouseAppEvent"
+        required: true
+      responses:
+        "200":
+          description: The structure contains extracted file ids
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/handler.FileIDResponse"
+        "400":
+          description: Bad request. Refer to the error string for more information
+          content:
+            "text/plain":
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content: {}
+      x-codegen-request-body-name: event
+  /services/dlp/datalineage/getlineage:
+    x-netskope-params:
+      apiGroup: dlp-data-lineage
+      customerFacing: false
+      serviceConfig: dlp-data-lineage-service
+      version: 2
+    post:
+      tags:
+        - Data Lineage Service
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Given a file object, traverse the data lineage graph either forward or backward according to params
+      description: |-
+        The API supports two ways to supply the file object to start the lineage traversal.
+        The first method is to provide a ClickhouseAppEvent JSON structure in the request body. The schema should
+        be unmodified from what Clickhouse returns in a query. If using this method, the client must provide the tenant
+        id in the header. The API will extract and use the file object from the provided input.
+        The second method is to provide the unique ID used internally by the service in the query parameter. The typical
+        scenario to use this method is to do a follow-up query after a previous lineage request, to further
+        expand the lineage graph from a node returned by the previous request. The unique ID is a part of the
+        response. If both the unique ID and the event is supplied, the API will use the unique ID and ignore the
+        event.
+      parameters:
+        #        - name: X-Netskope-Tenantid
+        #          in: header
+        #          description: 'The tenant id that the input activity belongs to. Only required if the caller supplies an event in the request body. For example: 1057'
+        #          schema:
+        #            type: integer
+        #        - name: X-Request-Id
+        #          in: header
+        #          description: 'The request id to store in log to facilitate debugging. For example: 2628115136719764480'
+        #          schema:
+        #            type: string
+        - name: id
+          in: query
+          description: "The id of the file to start the graph traversal. For example: 97c5268fc09233f886ca377df1e3f83f6a026c3895bcb0e38cd85a116b1e3c36"
+          schema:
+            type: string
+        - name: inferred
+          in: query
+          description: "Control whether the traversal includes inferred lineage. Default is true. For example: true"
+          schema:
+            type: boolean
+        - name: forward
+          in: query
+          description: "Control whether to traverse forward or backwards. Forward traversal finds descendents. Default is true. For example: true"
+          schema:
+            type: boolean
+        - name: verbose
+          in: query
+          description: "Control whether to include debug info in the response. If set to false, only pretty_nodes and pretty_relations are returned. Otherwise, all fields are returned. Default is false. For example: true"
+          schema:
+            type: boolean
+      requestBody:
+        description: In the absence of the id param, supply the event for the service to retrieve lineage of the file object included in the event
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/model.ClickhouseAppEvent"
+        required: false
+      responses:
+        "200":
+          description: The structure contains both raw nodes and edges as fetched from the database, as well as aggregated nodes and edges for easier representation
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/handler.LineageResponse"
+        "400":
+          description: Bad request. Refer to the error string for more information
+          content:
+            "text/plain":
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content: {}
+      x-codegen-request-body-name: event
+  /services/dlp/datalineage/inference:
+    x-netskope-params:
+      apiGroup: dlp-data-lineage
+      customerFacing: false
+      serviceConfig: dlp-data-lineage-inferrer
+      version: 2
+    post:
+      tags:
+        - Data Lineage Inferrer
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Request to infer lineages of all files in the given location
+      description: |-
+        The primary way to infer lineage is via periodically database scans. This API provides a backup way to
+        run tests, or to start the inference immediately without waiting for the next database scan. Location is
+        the concept to limit the scope of one inference task. A location can be a SaaS app, a host, or a device.
+        Lineage inference does not occur between files in different locations, e.g., between a file in SaaS app and
+        a file on a host. Rather, their lineage is directly observed from app events (out of scope of this API).
+      #      parameters:
+      #        - name: X-Request-Id
+      #          in: header
+      #          description: 'The request id to store in log to facilitate debugging. For example: 2628115136719764480'
+      #          schema:
+      #            type: string
+      requestBody:
+        description: "The inference task specifying the location and other metadata. Only 1 of the 3 locations should be set: app:instance pair, host, or device"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/model.InferenceTask"
+        required: true
+      responses:
+        "200":
+          description: The inference task is processed successfully
+          content: {}
+        "204":
+          description: The inference task is skipped because the same task is already running
+          content: {}
+        "400":
+          description: Bad request. Refer to the error string for more information
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content: {}
+      x-codegen-request-body-name: inferenceTask
+components:
+  schemas:
+    handler.FileIDResponse:
+      type: object
+      properties:
+        from_id:
+          type: string
+          example: da5769dee5e843140fa1435a51e6dfd4b8151e66e1e8bb51a8213ef8f2ef6467
+        id:
+          type: string
+          example: 97c5268fc09233f886ca377df1e3f83f6a026c3895bcb0e38cd85a116b1e3c36
+        to_id:
+          type: string
+          example: 32b8b871e3fefee48e78d01b5980e5336bf74da5a2ba84061a988852ffc19a5a
+    handler.LineageResponse:
+      type: object
+      properties:
+        hops:
+          type: integer
+          description: The number of hops that the traversal involves up to the predefined max value. Only present if "verbose" flag is set in the request
+          example: 5
+        latency_ms:
+          type: integer
+          description: The latency of the lineage query. Only present if "verbose" flag is set in the request
+          example: 15
+        nodes:
+          type: array
+          description: The list of nodes after aggregation. Multiple nodes that represent equivalent files are merged into one for better presentation
+          items:
+            $ref: "#/components/schemas/util.AggregatedNode"
+        raw_nodes:
+          type: array
+          description: The list of nodes in the lineage graph, before any post processing
+          items:
+            type: object
+            additionalProperties: true
+        raw_relations:
+          type: array
+          description: The list of edges in the lineage graph, before any post processing
+          items:
+            type: object
+            additionalProperties: true
+        relations:
+          type: array
+          description: The list of edges after aggregation, where the start and end nodes of the raw edges are replaced by their corresponding nodes after post processing
+          items:
+            $ref: "#/components/schemas/util.AggregatedRelation"
+    model.ActivityPayload:
+      type: object
+    model.ClickhouseAppEvent:
+      type: object
+    model.InferenceTask:
+      required:
+        - tenant_id
+      type: object
+      properties:
+        app:
+          type: string
+          description: The app name to run inference
+          example: Google Drive
+        device:
+          type: string
+          description: The device name to run inference. Device is attached to hosts, e.g., USB
+          example: USB\VID_0781&PID_5530&REV_0100,03020710012022092934
+        host:
+          type: string
+          description: The hostname to run inference. Host is usually a computer.
+          example: Q0P36MG6CP
+        instance_id:
+          type: string
+          description: The app's instance id. May accompany the App field.
+          example: netskope.com
+        min_uninferred_ts:
+          type: integer
+          description: Unix timestamp of the earliest file object that has not run lineage inference in this task
+          example: 1711038400
+        tenant_id:
+          type: integer
+          description: Tenant ID
+          example: 1057
+        ts:
+          type: integer
+          description: Unix timestamp when the task is scheduled(in seconds)
+          example: 1711038401
+    util.AggregatedNode:
+      type: object
+      properties:
+        app:
+          type: string
+          description: App name if the file is located in SaaS apps
+          example: Slack
+        device:
+          type: string
+          description: Device name if the file is located on device attached to an endpoint, e.g., USB
+        deviceHost:
+          type: string
+          description: Host name if the file is located on device attached to an endpoint
+        entityID:
+          type: string
+          description: Unique ID that identifies the files in the data lineage service
+          example: 97c5268fc09233f886ca377df1e3f83f6a026c3895bcb0e38cd85a116b1e3c36
+        eventID:
+          type: string
+          description: The list of event id that contains the files to help debug
+          example: '["87ea7d55-b6d5-4f03-bede-c67a0fe00f10"]'
+        host:
+          type: string
+          description: Host name if the file is located on an host, e.g., an employee's laptop
+          example: C02G40HBMD6T
+        id:
+          type: string
+          description: The canonical ID assigned to the file that is unique within that location
+          example: 1k1IIC0IcArGtD6KrzQ33THs6tP3WjJYw
+        instance:
+          type: string
+          description: App instance id if the file is located in SaaS apps
+          example: netskope
+        md5:
+          type: string
+          description: The list of md5 values that combines those from all the raw nodes
+          example: '["49f1ab00474b855e61a7b7ca5dc035e0"]'
+        object:
+          type: string
+          description: The list of filenames that combines those from all the raw nodes
+          example: '["epdlp_sys_log.txt"]'
+        owner:
+          type: string
+          description: The list of owners that combines those from all the raw nodes
+        sha256:
+          type: string
+          description: The list of sha256 values that combines those from all the raw nodes
+          example: '["3edcc4550f0a51a682d511c7e714c3aa0e831e5e98ec022d03985e7af97d507a"]'
+    util.AggregatedRelation:
+      type: object
+      properties:
+        action:
+          type: string
+          description: The action that Netskope took, if applicable. Examples are Allow, Block, Alert, etc.
+          example: '["alert"]'
+        activity:
+          type: string
+          description: The user activity that generated this relation, e.g., Upload, Download, etc.
+          example: '["Upload"]'
+        endEntityID:
+          type: string
+          description: The id of the end node of the relation
+          example: da5769dee5e843140fa1435a51e6dfd4b8151e66e1e8bb51a8213ef8f2ef6467
+        eventID:
+          type: string
+          description: The list of event ids that  to help debug
+          example: '["87ea7d55-b6d5-4f03-bede-c67a0fe00f10"]'
+        firstTs:
+          type: integer
+          description: Among all relations that aggregate into this one, the earliest timestamp
+          example: 1711038401
+        lastTs:
+          type: integer
+          description: Among all relations that aggregate into this one, the latest timestamp
+          example: 1711038401
+        startEntityID:
+          type: string
+          description: The id of the start node of the relation
+          example: 97c5268fc09233f886ca377df1e3f83f6a026c3895bcb0e38cd85a116b1e3c36
+        type:
+          type: string
+          description: The relation type. For example, HardLineage represents the lineage contained within an event
+          example: HardLineage
+        user:
+          type: string
+          description: The user who performed the activity to generate this relation
+          example: '["rramesh+user1@netskope.com"]'
+x-original-swagger-version: "2.0"

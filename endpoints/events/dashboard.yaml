@@ -1,0 +1,389 @@
+components:
+  examples:
+    dashboard_blocked_category_example:
+      value:
+        ok: 1
+        result:
+          - category: Cloud Storage
+            count: 140560
+          - category: Technology
+            count: 55910
+    dashboard_blocked_site_example:
+      value:
+        ok: 1
+        result:
+          - count: 124563
+            site: Box
+          - count: 22764
+            site: Google Drive
+          - count: 35
+            site: Google Cloud Storage
+          - count: 1
+            site: Chrome Web Store
+          - count: 1
+            site: Chrome Web Store
+    dashboard_ccl_app_example:
+      value:
+        ok: 1
+        result:
+          - ccl: Medium
+            count: 1
+          - ccl: Low
+            count: 1
+          - ccl: High
+            count: 11
+          - ccl: Excellent
+            count: 11
+          - ccl: Poor
+            count: 1
+    dashboard_events_topapplication_example:
+      value:
+        ok: 1
+        result:
+          - app: Box
+            numbytes: 140376727
+          - app: Salesforce.com
+            numbytes: 75089326
+          - app: Slack
+            numbytes: 18316482
+    dashboard_events_toplocation_example:
+      value:
+        ok: 1
+        result:
+          - numbytes: 157960422
+            src_location: Ashburn
+          - numbytes: 5133940
+            src_location: San Jose
+          - numbytes: 502552
+            src_location: New Taipei
+    dashboard_policy_hits_example:
+      value:
+        ok: 1
+        result:
+          - count: 36
+            policy: test no notification
+          - count: 1
+            policy: encryption-migration-box
+    usagesummary_example:
+      value:
+        ok: 1
+        result:
+          application-count: 15
+          client-bytes: 161720072
+          new-application-count: 1
+          server-bytes: 133196784
+          sessions-count: 104
+          total-bytes: 294916856
+          website-count: 2
+  schemas:
+    dashboard_events_400:
+      description: Invalid request
+      properties:
+        message:
+          type: string
+      type: object
+    dashboard_events_500:
+      description: API failed unexpectedly
+      properties:
+        message:
+          type: string
+      type: object
+    dashboard_events_dashboardByName_200:
+      description: Successful Operation
+      properties:
+        ok:
+          default: 1
+          enum:
+            - 0
+            - 1
+          type: integer
+        result:
+          items:
+            type: object
+          type: array
+      type: object
+    dashboard_events_topentity_200:
+      description: Successful Operation
+      properties:
+        ok:
+          default: 1
+          enum:
+            - 0
+            - 1
+          type: integer
+        result:
+          items:
+            type: object
+          type: array
+      type: object
+    dashboard_events_usagesummary_200:
+      description: Successful Operation
+      properties:
+        ok:
+          default: 1
+          enum:
+            - 0
+            - 1
+          type: integer
+        result:
+          properties:
+            application-count:
+              type: integer
+            client-bytes:
+              description: (client-bytes/total-bytes)*100 will be %Uploaded
+              type: integer
+            new-application-count:
+              type: integer
+            server-bytes:
+              description: (server-bytes/total-bytes)*100 will be %Downloaded
+              type: integer
+            sessions-count:
+              type: integer
+            total-bytes:
+              type: integer
+            website-count:
+              type: integer
+          type: object
+      type: object
+info:
+  description: ""
+  title: ""
+  version: ""
+openapi: 3.0.0
+paths:
+  /events/dashboard/dashboardbyname/{name}:
+    get:
+      description:
+        Retrieves data for dashboard like Blocked Categories, Real-time
+        Protection Policy Hits, Cloud Apps by CCL
+      parameters:
+        - description: Dashboard Name
+          in: path
+          name: name
+          required: true
+          schema:
+            enum:
+              - Blocked Categories
+              - Blocked Sites
+              - Real-time Protection Policy Hits
+              - Cloud Apps by CCL
+            type: string
+        - description: Unix timestamp of start time period
+          in: query
+          name: starttime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+        - description: Unix timestamp of end time period
+          in: query
+          name: endtime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+        - description: offset for the records fetched, by default offset will be 0
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Limit on records fetched
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 6
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                BlockedCategory:
+                  $ref: "#/components/examples/dashboard_blocked_category_example"
+                BlockedSites:
+                  $ref: "#/components/examples/dashboard_blocked_site_example"
+                CloudAppByCCL:
+                  $ref: "#/components/examples/dashboard_ccl_app_example"
+                RealTimePolicyHits:
+                  $ref: "#/components/examples/dashboard_policy_hits_example"
+              schema:
+                $ref: "#/components/schemas/dashboard_events_dashboardByName_200"
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_400"
+          description: Invalid request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_500"
+          description: Internal server error
+      summary: Get Dashboard data by dashboard name
+    x-netskope-params:
+      apiGroup: dashboard
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: queryservice
+      version: 2
+  /events/dashboard/topentity/{entity_type}/{category_type}:
+    get:
+      description:
+        "Retrieve top entity like Application, Source Location by category
+        value like TotalBytes, BytesDownloaded, BytesUploaded, Users, Sessions  "
+      parameters:
+        - description: entity type like Application, Source Location
+          in: path
+          name: entity_type
+          required: true
+          schema:
+            enum:
+              - app
+              - src_location
+            type: string
+        - description:
+            category type like TotalBytes, BytesDownloaded, BytesUploaded,
+            Users, Sessions
+          in: path
+          name: category_type
+          required: true
+          schema:
+            enum:
+              - numbytes
+              - server_bytes
+              - client_bytes
+              - sessions
+              - users
+            type: string
+        - description: Unix timestamp of start time period
+          in: query
+          name: starttime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+        - description: Unix timestamp of end time period
+          in: query
+          name: endtime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+        - description: offset for the records fetched, by default offset will be 0
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Limit on records fetched
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 6
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                TopApplicationExample:
+                  $ref: "#/components/examples/dashboard_events_topapplication_example"
+                TopLocationExample:
+                  $ref: "#/components/examples/dashboard_events_toplocation_example"
+              schema:
+                $ref: "#/components/schemas/dashboard_events_topentity_200"
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_400"
+          description: Invalid request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_500"
+          description: Internal server error
+      summary: Retrieve top entity by category value
+    x-netskope-params:
+      apiGroup: dashboard
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: queryservice
+      version: 2
+  /events/dashboard/usagesummary:
+    get:
+      description:
+        Get List of discovered applications, discovered sites and discovered
+        users along with total bytes and total sessions for a given time range
+      parameters:
+        - description: Unix timestamp of start time period
+          in: query
+          name: starttime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+        - description: Unix timestamp of end time period
+          in: query
+          name: endtime
+          required: true
+          schema:
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                UsageSummaryExample:
+                  $ref: "#/components/examples/usagesummary_example"
+              schema:
+                $ref: "#/components/schemas/dashboard_events_usagesummary_200"
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_400"
+          description: Invalid request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/dashboard_events_500"
+          description: Internal server error
+      summary: Retrieve data for cloud usage summary Dashboard
+    x-netskope-params:
+      apiGroup: dashboard
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: queryservice
+      version: 2

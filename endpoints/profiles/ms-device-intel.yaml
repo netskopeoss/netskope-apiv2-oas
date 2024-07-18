@@ -1,0 +1,677 @@
+openapi: 3.0.0
+paths:
+  /profiles/deviceintelligence/fields:
+    x-netskope-params:
+      serviceConfig: ms-device-intel
+      version: 2
+      customerFacing: false
+      nsBeta: true
+      apiGroup: ms-device-intel
+    get:
+      summary: Returns an array of fields/attributes and its properties
+      operationId: ProfileController_getAllFields
+      description: >-
+        This API endpoint returns an array of objects. Each object contains
+        details such as the attribute name, type (e.g., "multiselect"),
+        available values, and supported operators (e.g., "equals", "notequals").
+        UI can utilize this information to create profile with conditions.
+              Specific fields can be filtered by passing the optional filter ex: name eq "os"
+      parameters:
+        - name: filter
+          required: false
+          in: query
+          description: The attribute name to be filtered
+          example: name eq "os"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  - attribute: mac_address
+                    displayName: MAC Address
+                    fieldType: text
+                    values: []
+                    operator:
+                      - equals
+                  - attribute: os
+                    displayName: Operating System
+                    fieldType: multiselect
+                    values:
+                      - Windows
+                      - Linux
+                      - Unix
+                    operator:
+                      - equals
+        "404":
+          description: Field not found error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Field test not found
+                  path:
+                    type: string
+                    example: /deviceintelligence/fields?filter=name%20eq%20%22test%22
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+  /profiles/deviceintelligence/fieldnames:
+    x-netskope-params:
+      serviceConfig: ms-device-intel
+      version: 2
+      customerFacing: false
+      nsBeta: true
+      apiGroup: ms-device-intel
+    get:
+      summary: Returns an array of attribute names
+      operationId: ProfileController_getAllFieldnames
+      description: >-
+        This endpoint returns an array of attribute names. The array provides a
+        concise list of available attributes, such as "os" and "risk" which the
+        UI can use if they dont want to get the array of objects
+      parameters: []
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  - os
+                  - manufacturer
+                  - type
+                  - risk
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+  /profiles/deviceintelligence:
+    x-netskope-params:
+      serviceConfig: ms-device-intel
+      version: 2
+      customerFacing: false
+      nsBeta: true
+      apiGroup: ms-device-intel
+    post:
+      summary: Create a new profile
+      operationId: ProfileController_postProfile
+      description: >-
+        This API endpoint is used to create a profile with name and condition.
+        The attribute details got from the /field can be used to construct the
+        condition
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostProfileRequestDto"
+      responses:
+        "201":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  name: HighRisk2
+                  description: >-
+                    This is to filer high risk devices which are running Windows
+                    or Linux
+                  condition:
+                    - attribute: os
+                      operator: equals
+                      values:
+                        - windows
+                        - linux
+                    - attribute: risk
+                      operator: equals
+                      values:
+                        - high
+                  createdBy: abc
+                  updatedBy: abc
+                  status: pending
+                  pendingOperation: create
+                  id: 66600fd87ed088ce278952d7
+                  createdAt: "2024-06-05T07:12:24.958Z"
+                  updatedAt: "2024-06-05T07:12:24.958Z"
+        "409":
+          description: Profile with same name already exists
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+    get:
+      summary: Get all profiles
+      operationId: ProfileController_getAllProfiles
+      description: >-
+        This API endpoint returns the array of profiles. Optional filters can be
+        added to filter based on status, name and description
+      parameters:
+        - name: offset
+          required: false
+          in: query
+          description: offset as the page start
+          schema:
+            default: 0
+            type: number
+        - name: limit
+          required: false
+          in: query
+          description: limit should be between 1 and 100
+          schema:
+            default: 20
+            type: number
+        - name: sortby
+          required: false
+          in: query
+          description: The field by which to sort the results
+          schema:
+            default: updatedAt
+            type: string
+        - name: sortorder
+          required: false
+          in: query
+          description: "The sorting order: asc for ascending, desc for descending"
+          schema:
+            default: desc
+            type: string
+        - name: filter
+          required: false
+          in: query
+          description: The attribute name to be filtered
+          example: status eq "pending"
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  totalCount: 2
+                  profiles:
+                    - id: 6655ba4cf734e354f789f1f1
+                      name: test
+                      description: >-
+                        This is to filer high risk devices which are running
+                        Windows or Linux
+                      condition:
+                        - attribute: os
+                          operator: equals
+                          values:
+                            - windows
+                            - linux
+                        - attribute: risk
+                          operator: equals
+                          values:
+                            - high
+                      createdBy: ams
+                      updatedBy: ams
+                      status: applied
+                      pendingOperation: null
+                      createdAt: "2024-05-28T11:04:44.290Z"
+                      updatedAt: "2024-05-28T11:04:44.290Z"
+                    - id: 6655ba20f734e354f789f1ed
+                      name: HighRisk
+                      description: >-
+                        This is to filer high risk devices which are running
+                        Windows or Linux
+                      condition:
+                        - attribute: os
+                          operator: equals
+                          values:
+                            - windows
+                            - linux
+                        - attribute: risk
+                          operator: equals
+                          values:
+                            - high
+                      createdBy: ams
+                      updatedBy: ams
+                      status: applied
+                      pendingOperation: null
+                      createdAt: "2024-05-28T11:04:00.148Z"
+                      updatedAt: "2024-05-28T11:04:00.148Z"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+  /profiles/deviceintelligence/{id}:
+    x-netskope-params:
+      serviceConfig: ms-device-intel
+      version: 2
+      customerFacing: false
+      nsBeta: true
+      apiGroup: ms-device-intel
+    get:
+      summary: Get a profile based on profile id
+      operationId: ProfileController_findOne
+      description: >-
+        This API endpoint returns a single profile object based on the profile
+        id passed
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  id: 6655ba4cf734e354f789f1f1
+                  name: test
+                  description: >-
+                    This is to filer high risk devices which are running Windows
+                    or Linux
+                  condition:
+                    - attribute: os
+                      operator: equals
+                      values:
+                        - windows
+                        - linux
+                    - attribute: risk
+                      operator: equals
+                      values:
+                        - high
+                  createdBy: ams
+                  updatedBy: ams
+                  status: pending
+                  pendingOperation: delete
+                  createdAt: "2024-05-28T11:04:44.290Z"
+                  updatedAt: "2024-05-28T11:04:44.290Z"
+                  pendingData: null
+        "400":
+          description: Bad user input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Invalid profile id
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+    patch:
+      summary: Update a profile based on profile id
+      operationId: ProfileController_update
+      description: >-
+        This API endpoint is used to update an existing profile's name or
+        condition based on the profile id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Example of a patch profile request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchProfileRequestDto"
+            examples:
+              example1:
+                summary: Example request
+                value:
+                  name: New Profile name
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  id: 6655ba4cf734e354f789f1f1
+                  name: test
+                  description: >-
+                    This is to filer high risk devices which are running Windows
+                    or Linux
+                  condition:
+                    - attribute: os
+                      operator: equals
+                      values:
+                        - windows
+                        - linux
+                    - attribute: risk
+                      operator: equals
+                      values:
+                        - high
+                  createdBy: ams
+                  updatedBy: ams
+                  status: pending
+                  pendingOperation: update
+                  createdAt: "2024-05-28T11:04:44.290Z"
+                  updatedAt: "2024-05-28T11:04:44.290Z"
+                  pendingData:
+                    name: HighRisk5
+                    description: >-
+                      This is to filer high risk devices which are running
+                      Windows or Linux
+                    condition:
+                      - attribute: os
+                        operator: equals
+                        values:
+                          - windows
+                          - linux
+                      - attribute: risk
+                        operator: equals
+                        values:
+                          - high
+                    updatedBy: abc
+                    updatedAt: "2024-06-05T07:20:36.294Z"
+        "400":
+          description: Bad user input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Invalid profile id
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+    delete:
+      summary: Delete a profile based onm profile id
+      operationId: ProfileController_remove
+      description: >-
+        This API endpoint is used to delete an existing profile based on the
+        profile id
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Marked for deletion
+          content:
+            application/json:
+              schema:
+                example:
+                  statusCode: 202
+                  message: Profile marked for deletion
+                  profile:
+                    id: 66714b77e139eee0754d453d
+                    name: test
+                    description: zenmax
+                    condition:
+                      - attribute: os
+                        operator: equals
+                        values:
+                          - windows
+                          - linux
+                    createdBy: ams
+                    updatedBy: abc
+                    createdAt: "2024-06-18T08:55:19.891Z"
+                    updatedAt: "2024-06-26T11:08:57.209Z"
+                    status: pending
+                    pendingOperation: delete
+                    pendingData: null
+        "204":
+          description: Deleted successfully
+        "400":
+          description: Bad user input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 404
+                  message:
+                    type: string
+                    example: Invalid profile id
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+  /profiles/deviceintelligence/deploy:
+    x-netskope-params:
+      serviceConfig: ms-device-intel
+      version: 2
+      customerFacing: false
+      nsBeta: true
+      apiGroup: ms-device-intel
+    post:
+      summary: Deploy pending changes
+      operationId: ProfileController_applyAllPendingChanges
+      description: >-
+        This API endpoint is used to save the pending changes to the profile.
+        'All' param can be used to specify if all pending changes need to be
+        deployed or specific changes passed via body
+      parameters:
+        - name: all
+          required: true
+          in: query
+          schema:
+            type: boolean
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                changeNote:
+                  type: string
+                ids:
+                  type: array
+                  items:
+                    type: string
+            examples:
+              example1:
+                value:
+                  changeNote: ENG-123456
+                  ids:
+                    - 66714b77e139eee0754d453d
+                    - 66714ba9e139eee0754d453f
+                summary: Example request body
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                example:
+                  message: Pending changes applied successfully
+                  applied: true
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                    example: 500
+                  message:
+                    type: string
+                    example: Internal server error
+                  timestamp:
+                    type: string
+                    example: "2023-10-16T16:07:35.539Z"
+      tags:
+        - deviceintelligence
+info:
+  title: ms-device-intel open api
+  description: Device Intelligence api specification
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    PostProfileRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: HighRisk
+        description:
+          type: string
+          example: >-
+            This is to filer high risk devices which are running Windows or
+            Linux
+        condition:
+          example:
+            - attribute: os
+              operator: equals
+              values:
+                - windows
+                - linux
+            - attribute: risk
+              operator: equals
+              values:
+                - high
+          type: array
+          items:
+            type: string
+      required:
+        - name
+        - description
+        - condition
+    PatchProfileRequestDto:
+      type: object
+      properties: {}

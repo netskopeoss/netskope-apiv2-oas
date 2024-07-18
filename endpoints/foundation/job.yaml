@@ -1,0 +1,157 @@
+components:
+  schemas:
+    pdv_job_property:
+      properties:
+        application_name:
+          example: corefoundationservicespdv
+          type: string
+        concurrency_mode:
+          example: sequential
+          type: string
+        execution_group:
+          example: stage
+          type: string
+        pdv_execution_parameters:
+          properties:
+            dps_sign_off:
+              example: 123abc
+              type: string
+            mps_sign_off:
+              example: sjc1clone
+              type: string
+          type: object
+        pdv_poll_status_timeout:
+          example: 600
+          type: integer
+        pdv_trigger_id:
+          example: 123abc
+          type: string
+        pipeline_name:
+          example: sjc1clonePDV
+          type: string
+      required:
+        - pdv_trigger_id
+        - application_name
+        - pipeline_name
+      type: object
+    pdv_job_status:
+      properties:
+        pdv_job_status:
+          enum:
+            - REQUEST_RECEIVED
+            - SPIN_PIPELINE_TRIGGERED
+            - SPIN_PIPELINE_RUNNING
+            - SPIN_PIPELINE_TERMINAL
+            - SUCCEEDED
+            - PDV_EXECUTER_ERROR
+            - WEBHOOK_TRIGGER_ERROR
+            - FAILED
+            - TIME_OUT
+          type: string
+        pdv_trigger_id:
+          example: 123abc
+          type: string
+      type: object
+    post_status:
+      properties:
+        status:
+          enum:
+            - SUCCESS
+          type: string
+      type: object
+    response_error:
+      properties:
+        error:
+          example: error
+          type: string
+      type: object
+info:
+  description: core foundation validation service for PDV.
+  title: foundation validation service
+  version: "1"
+openapi: 3.0.0
+paths:
+  /foundation/job:
+    get:
+      description: Find PDV job status by PDVTriggerID
+      x-netskope-route-params:
+        allowedTenants:
+          - cfs-validation-qa01-mp-npe.qa.boomskope.com
+          - cfs-validation-us-sjc1.goskope.com
+          - cfs-validation-fed01-mp-preprod.betagovskope.us
+          - cfs-validation-pbmm01-mp-prod.govskope.ca
+          - cfs-validation-fed01-mp-prod.govskope.us
+      parameters:
+        - description: PDV job trigger ID
+          in: query
+          name: pdv_trigger_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pdv_job_status"
+          description: Successful operation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+          description: Bad request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+          description: Job not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+          description: Please report this error to Netskope or query again
+      summary: Find PDV job status
+    post:
+      description: Start a PDV job.
+      x-netskope-route-params:
+        allowedTenants:
+          - cfs-validation-qa01-mp-npe.qa.boomskope.com
+          - cfs-validation-us-sjc1.goskope.com
+          - cfs-validation-fed01-mp-preprod.betagovskope.us
+          - cfs-validation-pbmm01-mp-prod.govskope.ca
+          - cfs-validation-fed01-mp-prod.govskope.us
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/pdv_job_property"
+        description: PDV job parameter.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/post_status"
+          description: Successful operation.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+          description: Bad request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response_error"
+          description: Please report this error to Netskope or query again
+      summary: Start a PDV job
+    x-netskope-params:
+      apiGroup: foundation
+      customerFacing: true
+      serviceConfig: foundation
+      version: 2

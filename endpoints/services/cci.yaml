@@ -1,0 +1,2907 @@
+components:
+  examples:
+    200allTagResponse:
+      summary: Response
+      value:
+        data:
+          - applications_count: 2
+            description: ""
+            policies: 1
+            rules: []
+            rules_applicable: Not Applicable
+            tag_name: Sanctioned
+          - applications_count: 1
+            description: ""
+            policies: 1
+            rules: []
+            rules_applicable: Not Applicable
+            tag_name: Unsanctioned
+          - applications_count: 20
+            description: ""
+            policies: 0
+            rules: []
+            rules_applicable: Not Applicable
+            tag_name: Consumer
+          - applications_count: 10
+            description: ""
+            policies: 5
+            rules: []
+            rules_applicable: "Yes"
+            tag_name: custom_app1
+          - applications_count: 250
+            description: attr tags applied for attr_tag1
+            policies: 0
+            rules:
+              - atttribute: Data classification
+                condition: is not
+                value:
+                  - No published support
+              - atttribute: Compliance Certifications
+                condition: includes
+                value:
+                  - GAPP
+                  - HIPPA
+            rules_applicable: "Yes"
+            tag_name: attr_tag1
+        status: Success
+        status_code: 200
+    appTagExample:
+      summary: Request body for app tagging
+      value:
+        apps:
+          - Box
+          - Amazon Database
+        ids:
+          - 1
+          - 2
+        tag: ccl_high
+    attributeTagExample:
+      summary: Request body for attribute rule based tagging
+      value:
+        apps:
+          - box
+          - amazondb
+        description: tag description
+        rules:
+          - attribute: Data classification
+            condition: is
+            value:
+              - No published support
+          - attribute: Compliance Certifications
+            condition: includes
+            value:
+              - GAPP
+              - HIPPA
+          - attribute: Compliance Certifications
+            condition: includes
+            value:
+              - PCIDSS
+          - attribute: SSO/AD hooks
+            condition: does not include
+            value:
+              - Twitter
+              - OAuth
+        tag: attr_tag1
+    patchAppTagExample:
+      summary: Request body for patch app tagging
+      value:
+        action: append
+        apps:
+          - Box
+          - Amazon Database
+        ids:
+          - 1
+          - 2
+    patchAttributeTagExample:
+      summary: Request body for patch attribute rule based tagging
+      value:
+        apps:
+          - box
+        description: tag description
+        rules:
+          - atttribute: Data classification
+            condition: is not
+            value:
+              - No published support
+          - atttribute: Compliance Certifications
+            condition: includes
+            value:
+              - GAPP
+              - HIPPA
+  schemas:
+    200appResponse:
+      properties:
+        data:
+          example:
+            - app_name: Oracle Aconex
+              category_name: Business Process Management
+              cci: 87
+              ccl: high
+              id: 46
+              organisation: Oracle Corporation
+            - app_name: Adobe Sign
+              category_name: Collaboration
+              cci: 82
+              ccl: high
+              id: 81
+              organisation: Adobe Systems Incorporated
+          type: object
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "200"
+          type: integer
+        total_query_count:
+          example: "40"
+          type: integer
+      type: object
+    200tagPatchResponse:
+      properties:
+        action:
+          example: append/remove
+          type: string
+        apps:
+          example:
+            - Box
+            - Amazon Database
+          items:
+            type: string
+          type: array
+        message:
+          example: Tag updated/deleted successfully to/from the list of apps/ids.
+          type: string
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "200"
+          type: integer
+        tag:
+          example: ccl_high
+          type: string
+      type: object
+    200tagPostResponse:
+      properties:
+        apps:
+          example:
+            - Box
+            - Amazon Database
+          items:
+            type: string
+          type: array
+        message:
+          example: Tag created successfully and associated to the list of apps/ids.
+          type: string
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "200"
+          type: integer
+        tag:
+          example: ccl_high
+          type: string
+      type: object
+    200tagResponse:
+      properties:
+        data:
+          example:
+            24SevenOffice:
+              app_type: Departmental
+              id: 7
+              sanctioned: "No"
+              tags: []
+            HashRoot:
+              app_type: Departmental
+              id: 45747
+              sanctioned: "Yes"
+              tags:
+                - new_testing
+                - new
+          type: object
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "200"
+          type: integer
+      type: object
+    202DeleteResponse:
+      properties:
+        message:
+          example:
+            Deleting the tags request is accepted and it is getting processed
+            in the background.
+          type: string
+        status:
+          example: Request Accepted
+          type: string
+        status_code:
+          example: "202"
+          type: integer
+      type: object
+    202Response:
+      properties:
+        message:
+          example:
+            Rule based tagging request is accepted and it is getting processed
+            in the background.
+          type: string
+        status:
+          example: Request Accepted
+          type: string
+        status_code:
+          example: "202"
+          type: integer
+      type: object
+    204Response:
+      properties:
+        data:
+          example: []
+          type: object
+        message:
+          example: No records matched
+          type: string
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "204"
+          type: integer
+      type: object
+    204tagPostResponse:
+      properties:
+        message:
+          example: No records matched
+          type: string
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "204"
+          type: integer
+      type: object
+    204tagResponse:
+      properties:
+        data:
+          example: {}
+          type: object
+        message:
+          example: No records matched
+          type: string
+        status:
+          example: Success
+          type: string
+        status_code:
+          example: "204"
+          type: integer
+      type: object
+    400Response:
+      properties:
+        error:
+          example: "'Appropriate message for invalid request'"
+          type: string
+        status:
+          example: error
+          type: string
+        status_code:
+          example: "400"
+          type: integer
+      type: object
+    500Response:
+      properties:
+        error:
+          example: Internal Server Error
+          type: string
+        status:
+          example: error
+          type: string
+        status_code:
+          example: "500"
+          type: integer
+      type: object
+    503Response:
+      properties:
+        message:
+          example:
+            One CCI App tagging is already in progress. Please try again after
+            sometime.
+          type: string
+        status:
+          example: Request Declined
+          type: string
+        status_code:
+          example: "503"
+          type: integer
+      type: object
+    cciMarketplaceAppResponse:
+      properties:
+        data:
+          properties:
+            category:
+              type: string
+            connectedAppName:
+              type: string
+            description:
+              type: string
+            domain:
+              type: string
+            id:
+              type: integer
+            marketplaceName:
+              type: string
+            permissionData:
+              properties:
+                groupName:
+                  type: string
+                permissionId:
+                  type: integer
+                permissionLevel:
+                  type: string
+                permissionName:
+                  type: string
+              type: object
+            permissionLevel:
+              type: string
+            vcl:
+              type: string
+          type: object
+        status:
+          type: string
+        statusCode:
+          type: integer
+      type: object
+    cciMarketplaceInitCategoryAndMarketPlaceResponse:
+      properties:
+        appCategories:
+          $ref: "#/components/schemas/marketplaceCategoryResponse"
+        marketplaceNames:
+          $ref: "#/components/schemas/marketPlaceNamesResponse"
+      type: object
+    cciMarketplaceInitDefaultResponse:
+      properties:
+        appCategories:
+          $ref: "#/components/schemas/marketplaceCategoryResponse"
+        connectedAppNames:
+          $ref: "#/components/schemas/marketplaceConnectedAppNamesResponse"
+        marketplaceNames:
+          $ref: "#/components/schemas/marketPlaceNamesResponse"
+      type: object
+    cciMarketplaceInitResponse:
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/cciMarketplaceInitDefaultResponse"
+            - $ref: "#/components/schemas/cciMarketplaceInitCategoryAndMarketPlaceResponse"
+        status:
+          type: string
+        statusCode:
+          type: integer
+      type: object
+    cciMarketplaceTableRequest:
+      properties:
+        category:
+          items:
+            type: string
+          type: array
+        connected_app_name:
+          type: string
+        marketplace:
+          items:
+            type: string
+          type: array
+        offset:
+          type: integer
+        limit:
+          type: integer
+        permission_level:
+          items:
+            type: string
+          type: array
+        vcl:
+          items:
+            type: string
+          type: array
+      type: object
+    cciMarketplaceTableResponse:
+      properties:
+        data:
+          items:
+            properties:
+              category:
+                type: string
+              connectedAppName:
+                type: string
+              id:
+                type: integer
+              marketplaceName:
+                type: string
+              permissionLevel:
+                type: string
+              vcl:
+                type: string
+            type: object
+          type: array
+        status:
+          type: string
+        statusCode:
+          type: integer
+        totalQueryCount:
+          type: integer
+      type: object
+    marketPlaceNamesResponse:
+      items:
+        properties:
+          id:
+            type: integer
+          marketplaceName:
+            type: string
+        type: object
+      type: array
+    marketplaceCategoryResponse:
+      items:
+        properties:
+          categoryName:
+            type: string
+          id:
+            type: integer
+        type: object
+      type: array
+    marketplaceConnectedAppNamesResponse:
+      items:
+        properties:
+          connectedAppName:
+            type: string
+          id:
+            type: integer
+        type: object
+      type: array
+    tagPatchData:
+      properties:
+        action:
+          description: Tag action to be performed, 'append or remove'
+          enum:
+            - append
+            - remove
+          type: string
+        apps:
+          description: List of Application names.
+          example:
+            - Box
+            - Amazon Database
+          items:
+            type: string
+          type: array
+        ids:
+          description: List of Application ids.
+          example:
+            - 1
+            - 2
+          items:
+            type: string
+          type: array
+      type: object
+    200ccidataResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/200dataSingleResponse"
+            - $ref: "#/components/schemas/200dataMultipleResponse"
+        status:
+          type: string
+          example: Success
+        status_code:
+          type: integer
+          example: "200"
+    200dataSingleResponse:
+      type: object
+      properties:
+        category:
+          type: object
+    200dataMultipleResponse:
+      type: object
+      properties:
+        total_apps:
+          type: object
+        discovered_apps:
+          type: object
+        data_transferred:
+          type: object
+        category:
+          type: object
+        questiondatamodel:
+          type: object
+        osversions:
+          type: array
+          items:
+            type: object
+    cciAppSearchRequest:
+      type: object
+      properties:
+        page_size:
+          type: integer
+        page_number:
+          type: integer
+        dropdown_options:
+          type: string
+        tags:
+          type: object
+          properties:
+            sanctioned:
+              type: string
+            app_type:
+              type: string
+            custom:
+              type: string
+        search_term:
+          type: object
+          properties:
+            type:
+              type: string
+            text:
+              type: string
+            items:
+              type: array
+              items:
+                type: string
+        include_name_list:
+          type: string
+        app_class:
+          type: string
+        category:
+          type: array
+          items:
+            type: number
+        ccl:
+          type: string
+    200cciAppSearchResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            app_data:
+              type: array
+              items:
+                type: object
+                properties:
+                  app_name:
+                    type: string
+                  id:
+                    type: integer
+                  cci:
+                    type: integer
+                  ccl:
+                    type: string
+                  is_pending:
+                    type: boolean
+                  pending_cci:
+                    type: integer
+                  pending_ccl:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  category_name:
+                    type: string
+            dropdown_data:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  name:
+                    type: string
+        status:
+          type: string
+        status_code:
+          type: integer
+        total_query_count:
+          type: integer
+    cciAppPendingTenantRequest:
+      type: object
+      properties:
+        tags:
+          type: object
+          properties:
+            sanctioned:
+              type: string
+            app_type:
+              type: string
+            custom:
+              type: string
+        app_class:
+          type: string
+        category:
+          type: array
+          items:
+            type: number
+        include_app_data:
+          type: boolean
+    200cciAppPendingTenantResponse:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: "#/components/schemas/200cciAppPendingTenantWithDataResponse"
+            - $ref: "#/components/schemas/200cciAppPendingTenantWithoutDataResponse"
+        status:
+          type: string
+        status_code:
+          type: integer
+        total_query_count:
+          type: integer
+    200cciAppNotesResponse:
+      type: object
+      properties:
+        appid:
+          type: number
+        last_updated_user:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+        status_code:
+          type: integer
+    200cciAppPendingTenantWithDataResponse:
+      type: object
+      properties:
+        pending_data:
+          type: array
+          items:
+            type: object
+            properties:
+              app_name:
+                type: string
+              id:
+                type: integer
+              cci:
+                type: integer
+              ccl:
+                type: string
+              pending_cci:
+                type: integer
+              pending_ccl:
+                type: string
+        is_pending:
+          type: boolean
+    200cciAppPendingTenantWithoutDataResponse:
+      type: object
+      properties:
+        is_pending:
+          type: boolean
+    200cciRiskWeightDiffResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              pending:
+                type: number
+              applied:
+                type: number
+            anyOf:
+              - required:
+                  - pending
+              - required:
+                  - applied
+              - required:
+                  - pending
+                  - applied
+        status:
+          type: string
+        status_code:
+          type: integer
+    200cciAppCompareResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              attributes:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    is_different:
+                      type: number
+                    is_weak:
+                      type: number
+                    sel_choices:
+                      type: array
+                      items:
+                        type: string
+              basic_details:
+                type: object
+                properties:
+                  app_name:
+                    type: object
+                    properties:
+                      application_id:
+                        type: number
+                      application_name:
+                        type: string
+                      current_name:
+                        type: string
+                  app_type:
+                    type: string
+                  cci:
+                    type: number
+                  ccl:
+                    type: string
+                  sanctioned:
+                    type: string
+                  usage:
+                    type: object
+                    properties:
+                      client_bytes:
+                        type: string
+                      num_users:
+                        type: number
+                      server_bytes:
+                        type: string
+                      sessions:
+                        type: number
+        status:
+          type: string
+        status_code:
+          type: integer
+    200cciAppDetailsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            attributes:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  is_weak:
+                    type: number
+                  not_sel_choices:
+                    type: array
+                    items:
+                      type: string
+                  sel_choices:
+                    type: array
+                    items:
+                      type: string
+            basic_details:
+              type: object
+              properties:
+                activity:
+                  type: object
+                  properties:
+                    both:
+                      type: array
+                      items:
+                        type: string
+                    not_support_dlp_tss:
+                      type: array
+                      items:
+                        type: string
+                    only_dlp:
+                      type: array
+                      items:
+                        type: string
+                    universal_connector:
+                      type: number
+                app_instance:
+                  type: object
+                  properties:
+                    description:
+                      type: string
+                    count:
+                      type: number
+                discovery_only:
+                  type: number
+                app_name:
+                  type: object
+                  properties:
+                    application_id:
+                      type: number
+                    application_name:
+                      type: string
+                    current_name:
+                      type: string
+                category:
+                  type: string
+                cci:
+                  type: number
+                cci_history:
+                  type: array
+                  items:
+                    type: object
+                ccl:
+                  type: string
+                description:
+                  type: string
+                domains:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      type: string
+                gdpr:
+                  type: string
+                is_pending:
+                  type: number
+                notes:
+                  type: string
+                pending_cci:
+                  type: number
+                pending_ccl:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                top_user_by_session:
+                  type: array
+                  items:
+                    type: object
+                tos:
+                  type: string
+                usage:
+                  type: object
+                  properties:
+                    num_users:
+                      type: number
+                    sessions:
+                      type: number
+                    server_bytes:
+                      type: string
+                    client_bytes:
+                      type: string
+                    incident_count:
+                      type: number
+                    malware_count:
+                      type: number
+        status:
+          type: string
+        status_code:
+          type: integer
+info:
+  description: CCI service APi's
+  title: appinfoservice
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /services/cci/app:
+    get:
+      description:
+        Get the list of CCI related application details like app name,
+        CCI, CCL, category name & organisation for the supported query parameteres.
+        First 100 records will be returned by default (in case the records are more
+        than 100) and the result will be sorted by application ID in the ascending
+        order. `All the query parameters are mutually exclusive except limit & offset.`
+      parameters:
+        - description:
+            List of Application names separated by ; (semicolon). 100 is
+            the max allowed input size.
+          in: query
+          name: apps
+          required: false
+          schema:
+            type: string
+        - description:
+            Category name to retrieve the applications associated with the
+            category specified.
+          in: query
+          name: category
+          required: false
+          schema:
+            type: string
+        - description:
+            CCL value to retrieve the applications which has the ccl score
+            matched. Supported values are poor|low|medium|high|excellent
+          in: query
+          name: ccl
+          required: false
+          schema:
+            enum:
+              - poor
+              - low
+              - medium
+              - high
+              - excellent
+            type: string
+        - description:
+            Takes input as 1/true to retrieve the application details which
+            has the dedicated connectors.
+          in: query
+          name: connector
+          required: false
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+        - description:
+            Takes input as 1/true to retrieve the discovered application
+            details.
+          in: query
+          name: discovered
+          required: false
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+        - description:
+            Domain name to retrieve the application details belonging to
+            the domain specified.
+          in: query
+          name: domain
+          required: false
+          schema:
+            type: string
+        - description:
+            List of Application ids separated by ; (semicolon). 100 is the
+            max allowed input size.
+          in: query
+          name: ids
+          required: false
+          schema:
+            type: string
+        - description:
+            Tag to retrieve the application details which matches the  specified
+            tag.
+          in: query
+          name: tag
+          required: false
+          schema:
+            type: string
+        - description:
+            "'all' to retrieve the delta/updated applications compared to\
+            \ the last release.  \n**NOTE: To get the most recent updates, make this\
+            \ API call at a weekly interval. (e.g. every Tuesday)**"
+          in: query
+          name: updated
+          required: false
+          schema:
+            enum:
+              - all
+            type: string
+        - description:
+            The number of items to skip before starting to collect the result
+            set. Default is 0
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve. Default is 100.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200appResponse"
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get CCI related application information based on the apps/category/ccl/connector/discovered/domain/ids/tag.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/apps/all:
+    get:
+      description:
+        Get the list of all applications based on tag type of tagname.
+        Also helps to get the application metadata with appmetadata parameter. If
+        the parameters are not passed then returns the current name of all the applications
+        present in the tenant.
+      parameters:
+        - description: Tag name for which list of applications to be retrieved.
+          example: tagname1
+          in: query
+          name: tag
+          required: false
+          schema:
+            type: string
+        - description:
+            Tag type to retrive static / all apps associated with the tagname.
+            By default returns the list of all applications (static + dynamic) associated
+            with the tagname.
+          example: ""
+          in: query
+          name: tagtype
+          required: false
+          schema:
+            enum:
+              - static
+              - all
+            type: string
+        - description:
+            Takes input as 1/true to retrieve app metadata like appid, application_name
+            & current_name. Paramters 'tag' & 'appmetadata' are mutually exclusive.
+          in: query
+          name: appmetadata
+          required: false
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                "Sample1: Response without any parameter or tag parameter":
+                  description: Response without any parameter or tag parameter
+                  value:
+                    data:
+                      apps:
+                        - Amazon S3
+                        - Box
+                        - Dropbox
+                        - Salesforce
+                      apps_count: 65000
+                    status: Success
+                    status_code: 200
+                "Sample2: Response with appmetadata parameter set to 1":
+                  description: Response with appmetadata parameter set to 1
+                  value:
+                    data:
+                      apps:
+                        - app_id: 3
+                          application_name: 1010data
+                          current_name: 1010data
+                        - app_id: 7
+                          application_name: 24 Seven Office
+                          current_name: 24SevenOffice
+                        - app_id: 9
+                          application_name: 2CRisk
+                          current_name: My Workplace Health
+                      apps_count: 65000
+                    status: Success
+                    status_code: 200
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get the list of all current_name of the applications.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/domain:
+    get:
+      description:
+        Get the steering & discovery domains for the application/id specified.
+        It is mandatory to provide either app or id to fetch the domains `(app,id
+        & ids are mutually exclusive.)`
+      parameters:
+        - description: "Application name to retrieve the steering & discovery domains. "
+          in: query
+          name: app
+          schema:
+            type: string
+        - description:
+            "***TO BE DEPRECATED. Please use ids query parameter instead.***\
+            \  \nApplication ID to retrieve the steering & discovery domains.`(As we\
+            \ have enhanced this API by adding new query parameter called 'ids' to support\
+            \ one or more appids as input, we will be deprecating this option in release\
+            \ R-108 (09/2023). Please use ids parameter instead.)`"
+          in: query
+          name: id
+          schema:
+            type: string
+        - description:
+            List of Application ids separated by ; (semicolon). 100 is the
+            max allowed input size.
+          in: query
+          name: ids
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                "Sample1: Response with id / app option":
+                  description: Response with id / app option
+                  value:
+                    data:
+                      app_name: 1010data
+                      discovery_domains:
+                        - 1010data.com
+                        - 1010data.net
+                      id: 3
+                      steering_domains:
+                        - 1010data.com
+                    status: Success
+                    status_code: 200
+                "Sample2: Response with ids option":
+                  description: Response with ids option
+                  value:
+                    data:
+                      - app_name: 1010data
+                        discovery_domains:
+                          - 1010data.com
+                          - 1010data.net
+                        id: 3
+                        steering_domains:
+                          - 1010data.com
+                      - app_name: 10x Solutions
+                        discovery_domains:
+                          - 10x-solutions.com
+                        id: 4
+                        steering_domains: []
+                      - app_name: 24SevenOffice
+                        discovery_domains:
+                          - 24sevenoffice.com
+                        id: 7
+                        steering_domains:
+                          - 24sevenoffice.com
+                    status: Success
+                    status_code: 200
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204Response"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get the steering & discovery domains for the application/id.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/pdf:
+    get:
+      description:
+        Get the CCI pdf report data for the application/id specified. It
+        is mandatory to provide either app or id to fetch the CCI pdf report data
+        `(app & id are mutually exclusive.)`
+      parameters:
+        - description: Application name to retrieve the CCI pdf report data.
+          in: query
+          name: app
+          schema:
+            type: string
+        - description: Application id to retrieve the CCI pdf report data.
+          in: query
+          name: id
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Sample1:
+                  description: Response with encoded pdf data
+                  value:
+                    data: encoded pdf data
+                    message:
+                      Please do a base 64 decode of the data to get the pdf
+                      content
+                    status: Success
+                    status_code: 200
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              examples:
+                Sample1:
+                  description: No records matched
+                  value:
+                    data: ""
+                    message: No records matched
+                    status: Success
+                    status_code: 204
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get the CCI pdf report data for the application/id.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/tags:
+    delete:
+      description: Delete one or more tags that were associated with the applications.
+      parameters:
+        - description: One or more tags seprated by ,(comma) .
+          in: query
+          name: tags
+          required: true
+          schema:
+            example: tag1,tag2
+            type: string
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/202DeleteResponse"
+          description: Request Accepted for Deleting the tags (Async call)
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagPostResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/503Response"
+          description: Request Declined
+      summary: Delete one or more tags associated with the applications.
+    get:
+      description:
+        Get tags for the list of applications/ids specified. It is mandatory
+        to provide either apps or ids to fetch the tags `(apps and ids are mutually
+        exclusive.)`
+      parameters:
+        - description:
+            List of Application names separated by ; (semicolon). 100 is
+            the max allowed input size.
+          example: Box;Amazon Database
+          in: query
+          name: apps
+          schema:
+            type: string
+        - description:
+            List of Application ids separated by ; (semicolon). 100 is the
+            max allowed input size.
+          example: 4;7;11
+          in: query
+          name: ids
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200tagResponse"
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get tags for the list of applications/ids.
+      x-codegen-request-body-name: body
+    post:
+      description:
+        "Creates new tag and associate the same to the list of applications/ids\
+        \ specified. It is mandatory to provide either apps or ids with tag `(apps\
+        \ and ids are mutually exclusive and are the mandatory parameter if rules\
+        \ parameter is not specified)`\n\n<b>Note:</b> This is an early access API\
+        \ and subject to change\n| Request Body Params       | Description |\n |-----------------|-------------|\n\
+        \ |<b><i>tag</i></b> | Creates new tag for the list of apps/ids <b>OR</b>\
+        \ to the dynamically fetched apps based on the attribute rules matched (<b>Mandatory).|\n\
+        \ |<b><i>apps</i></b> | List of static Application names. 100 is the max allowed\
+        \ input size (<b>Optional if rules parameter is not specified).|\n | <b><i>ids</i></b>\
+        \ | List of Application ids. 100 is the max allowed input size (<b>Optional\
+        \ if rules parameter is not specified).|\n |<b><i>description</i></b> | Description\
+        \ for the new tag (<b>Optional & it is applicable only for attribute rule\
+        \ based tagging).|\n |<b><i>rules</i></b> | List of rules with attribute,\
+        \ condition & value (<b>Mandatory in case of attribute rule based tagging).|\
+        \ <br>"
+      requestBody:
+        content:
+          application/json:
+            examples:
+              appTag:
+                $ref: "#/components/examples/appTagExample"
+              attrTagExample:
+                $ref: "#/components/examples/attributeTagExample"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200tagPostResponse"
+          description: Successful Operation for App Tagging
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/202Response"
+          description: Request Accepted for Attribute Rule Based Tagging(Async call)
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagPostResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/503Response"
+          description: Request Declined
+      summary:
+        Creates new tag and associate the same to the list of applications/ids.
+        This API also helps to create the tag based on the attribute rules set for
+        the provided static apps/dynamically fetched apps those matching the rules
+        provided.
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/tags/all:
+    get:
+      description: Get the list of all tag name present in the tenant.
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  tags:
+                    - Tag1
+                    - Tag2
+                    - rule_tag1
+                    - tag3
+                    - custom_attr1
+                    - custom_tag1
+                  tags_count: 6
+                status: Success
+                status_code: 200
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get the list of all tag names assocaited with  the tenant.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/tags/rules:
+    get:
+      description:
+        Get the tag_rules related data like tag_name, rules, applications
+        count, description & policy count(assocaited with the respective tag) present
+        in the specific tenant. First 100 records will be returned by default (in
+        case the records are more than 100) and the result will be sorted by ascendeing
+        order of tagname. Limit & offset can be used in order to control the data
+        retrieval.
+      parameters:
+        - description: tag name for which rules data to be retrieved.
+          in: query
+          name: tag
+          required: false
+          schema:
+            example: custom_tag1
+        - description: Max number of items to retrieve. Default is 100.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            minimum: 0
+            type: integer
+        - description:
+            The number of items to skip before starting to collect the result
+            set. Default is 0
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  - applications_count: 19
+                    description: ""
+                    policies: 0
+                    rules: []
+                    rules_applicable: "Yes"
+                    tag_name: Tag1
+                  - applications_count: 1
+                    description: ""
+                    policies: 0
+                    rules: []
+                    rules_applicable: "Yes"
+                    tag_name: Tag2
+                  - applications_count: 250
+                    description: attr tags applied for attr_tag1
+                    policies: 0
+                    rules:
+                      - atttribute: Data classification
+                        condition: is not
+                        value:
+                          - No published support
+                      - atttribute: Compliance Certifications
+                        condition: includes
+                        value:
+                          - GAPP
+                          - HIPPA
+                    rules_applicable: "Yes"
+                    tag_name: attr_tag1
+                status: Success
+                status_code: 200
+                tags_count: 3
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary:
+        Get tag_rules assocaited with the tenant OR get the tag_rules related
+        data for the specific tagname.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/tags/supportedattributes:
+    get:
+      description:
+        Get all the supported CCI attributes data for creating/updating  the
+        rule based tags.
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  Compliance Certifications:
+                    condition:
+                      - includes
+                      - does not include
+                    multi_valued: 1
+                    value:
+                      - COBIT
+                      - GAPP
+                      - HIPAA
+                      - PCIDSS
+                      - No published support
+                      - Under Research
+                      - TrustArc
+                      - Privacy Shield
+                      - NIST / SP800-53
+                  Data classification:
+                    condition:
+                      - is
+                      - is not
+                    multi_valued: 0
+                    value:
+                      - No published support
+                      - "Yes"
+                      - Under Research
+                  Multi-factor authentication:
+                    condition:
+                      - is
+                      - is not
+                    multi_valued: 0
+                    value:
+                      - Supports 2-factor/multi-factor authentication
+                      - No published support
+                      - Under Research
+                  Role-based authorization:
+                    condition:
+                      - is
+                      - is not
+                    multi_valued: 0
+                    value:
+                      - User-role based access
+                      - No published support
+                      - Under Research
+                  SSO/AD hooks:
+                    condition:
+                      - includes
+                      - does not include
+                    multi_valued: 1
+                    value:
+                      - AD/LDAP
+                      - Facebook
+                      - Under Research
+                      - No published support
+                      - OAuth
+                      - OpenID
+                      - SAML
+                      - Twitter
+                status: Success
+                status_code: 200
+          description: Successful Operation
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagResponse"
+          description: No Content Found
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+      summary: Get the supported CCI attributes data used for the rule based tags.
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/tags/{tag}:
+    patch:
+      description:
+        "**append / remove** existing tag to the list of applications/ids\
+        \ specified. It is mandatory to provide either apps or ids with tag. `(apps\
+        \ and ids are mutually exclusive and are the mandatory parameter if rules\
+        \ parameter is not specified)`\n\n<b>Note:</b> This is an early access API\
+        \ and subject to change\n| Request Body Params      | Description |\n |-----------------|-------------|\n\
+        \ |<b><i>action</i></b> | Tag action to be performed, 'append or remove'.\
+        \ Default is 'append' ( Should not be used with predefined tags like Sanctioned,\
+        \ Unsanctioned, Departmental, Enterprise and Consumer ) (<b>Mandatory in case\
+        \ of app tagging & not required in case of attribute rule based tagging).\n\
+        |<b><i>apps</i></b> | List of static Application names. 100 is the max allowed\
+        \ input size (<b>Optional if rules parameter is not specified).|\n | <b><i>ids</i></b>\
+        \ | List of Application ids. 100 is the max allowed input size (<b>Optional\
+        \ if rules parameter is not specified).|\n |<b><i>description</i></b> | Description\
+        \ of the tag (<b>Optional & it is applicable only for attribute rule based\
+        \ tagging).|\n |<b><i>rules</i></b> | List of rules with attribute, condition\
+        \ & value (<b>Mandatory in case of attribute rule based tagging).| <br>"
+      parameters:
+        - description: Existing tag to be added to the list of applications/ids.
+          example: attr_tag1
+          in: path
+          name: tag
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            examples:
+              appTag:
+                $ref: "#/components/examples/patchAppTagExample"
+              attrTagExample:
+                $ref: "#/components/examples/patchAttributeTagExample"
+            schema:
+              $ref: "#/components/schemas/tagPatchData"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200tagPatchResponse"
+          description: Successful Operation for App Tagging
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/202Response"
+          description: Request Accepted for Attribute Rule Based Tagging (Async call)
+        "204":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/204tagPostResponse"
+          description: No Records Matched
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/503Response"
+          description: Request Declined
+      summary:
+        Update existing tag to the list of applications/ids. This API also
+        helps in updating/adding the attribute rules to the static / dynamically fetched
+        apps based on the rules provided.
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/marketplace/app/{id}:
+    get:
+      description:
+        "Get the full details of a connected app based on the app id provided.\
+        \ \n\n Details such as **category**, **connected app name**, **description**,\
+        \ **id**, **domain**, **marketplace name**, **permission data**, **permission\
+        \ level**, and **vcl** are provided."
+      parameters:
+        - description: The id of the connected app.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                cciMarketplaceAppResponse:
+                  value:
+                    data:
+                      category: IaaS/PaaS
+                      connectedAppName: Zabbix webhook
+                      description:
+                        Zabbix helps identify potential problems in IT
+                        environment faster and react to them more efficiently. Get
+                        monitoring notifications directly to the channel and Keep
+                        the team updated with the latest event statuses from Zabbix
+                        enterpriseclass open source solution for network monitoring
+                        and application monitoring. Determine which notifications
+                        should be sent based on an event type, severity, duration
+                        or other conditions specified according to your monitoring
+                        needs. This integration allows for easy set up and configuration
+                        of your Zabbix media type.
+                      domain: https://www.zabbix.com/
+                      id: 355
+                      marketplaceName: Microsoft
+                      permissionData:
+                        chat or meeting.: null
+                        groupName: Teams
+                        permissionId: 105
+                        permissionLevel: Medium
+                        permissionName: Send messages and notifications in a channel
+                      permissionLevel: Medium
+                      vcl: Unknown
+                    status: Success
+                    statusCode: 200
+              schema:
+                $ref: "#/components/schemas/cciMarketplaceAppResponse"
+          description: Successful Operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+              example:
+                error: "'Appropriate message for invalid request'"
+                status: error
+                statusCode: 400
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+              example:
+                error: Internal Server Error
+                status: error
+                statusCode: 500
+          description: Internal Server Error
+      summary: Get full details of a marketplace connected app.
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/marketplace/init:
+    get:
+      description:
+        "Get the list of marketplace initial data with optional query parameters.\n\
+        \n**Default response will contain all the data for categories, connected app\
+        \ names and marketpalce names.**\n\n If specific params are provided, only\
+        \ those data will be returned.\n"
+      parameters:
+        - description: If value is 1/true then returns the complete list of app categories
+          in: query
+          name: category
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+        - description:
+            If value is 1/true then returns the complete list of marketplaces
+            available
+          in: query
+          name: marketplace
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+        - description:
+            If value is 1/true then returns the complete list of connected
+            apps.
+          in: query
+          name: connectedapp
+          schema:
+            enum:
+              - "1"
+              - "true"
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Category & Marketplace Response:
+                  description: Response with category list and marketplace list
+                  value:
+                    data:
+                      appCategories:
+                        - categoryName: Arts
+                          id: 509
+                        - categoryName: Business
+                          id: 511
+                      marketplaceNames:
+                        - id: 1
+                          marketplaceName: Google
+                        - id: 251
+                          marketplaceName: Microsoft
+                    status: Success
+                    statusCode: 200
+                Default Response:
+                  description: Response with all 3 lists.
+                  value:
+                    data:
+                      appCategories:
+                        - categoryName: Arts
+                          id: 509
+                        - categoryName: Business
+                          id: 511
+                      connectedAppNames:
+                        - connectedAppName: 15Five
+                          id: 402
+                        - connectedAppName: 1Page
+                          id: 747
+                      marketplaceNames:
+                        - id: 1
+                          marketplaceName: Google
+                        - id: 251
+                          marketplaceName: Microsoft
+                    status: Success
+                    statusCode: 200
+              schema:
+                $ref: "#/components/schemas/cciMarketplaceInitResponse"
+          description: Successful Operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+              example:
+                error: "'Appropriate message for invalid request'"
+                status: error
+                statusCode: 400
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+              example:
+                error: Internal Server Error
+                status: error
+                statusCode: 500
+          description: Internal Server Error
+      summary:
+        Get the list of marketplace details such as app categories, connected
+        app names and marketplace names based on the input params.
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/marketplace/table:
+    post:
+      description:
+        "Get the list of applications and its basic details based on the\
+        \ following request body param options.\n\n Details provided in the response\
+        \ are **category**, **connected app name**, **id**, **marketplace name**,\
+        \ **permission level**, and **vcl** values. \n\n **Default response will contain\
+        \ data limited to 300 (i.e., limit = 300 and offset = 0).**\n\n `All\
+        \ request body params are non mutually exclusive and optional.`\n\n| Request\
+        \ body Params | Description |\n|----------------------|-------------|\n| **limit**\
+        \           | The number of items in a page (number) **[Optional]** |\n| **offset**\
+        \         | The offset of pages (number) **[Optional]** |\n| **connected_app_name**\
+        \  | One or more names of the connected app (string) **[Optional]** |\n| **permission_level**\
+        \    | One or more permission levels (list) (Available Options: low, medium,\
+        \ high) **[Optional]** |\n| **marketplace**         | One or more names of\
+        \ the marketplaces (list) **[Optional]** |\n| **category**            | One\
+        \ or more category names (list) (All valid categories + unknown option) **[Optional]**\
+        \ |\n| **vcl**                | One or more vcl values (list) (Available Options:\
+        \ unknown, poor, low, medium, high, excellent) **[Optional]** |\n"
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Request body with multiple conditions:
+                description: Request body with multiple conditions.,
+                value:
+                  category:
+                    - Cloud Storage
+                  connected_app_name: Box
+                  marketplace:
+                    - Google
+                  offset: 2
+                  limit: 10
+                  permission_level:
+                    - High
+                  vcl:
+                    - high
+                    - low
+                    - medium
+                    - excellent
+            schema:
+              $ref: "#/components/schemas/cciMarketplaceTableRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                cciMarketplaceTableResponse:
+                  value:
+                    data:
+                      - category: Cloud Storage
+                        connectedAppName: Box
+                        id: 134
+                        marketplaceName: Google
+                        permissionLevel: High
+                        vcl: High
+                    status: Success
+                    statusCode: 200
+                    totalQueryCount: 1
+              schema:
+                $ref: "#/components/schemas/cciMarketplaceTableResponse"
+          description: Successful Operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+              example:
+                error: "'Appropriate message for invalid request'"
+                status: error
+                statusCode: 400
+          description: Invalid Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+              example:
+                error: Internal Server Error
+                status: error
+                statusCode: 500
+          description: Internal Server Error
+      summary:
+        Get the basic details of the list of apps which fall under the specified
+        options
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+  /services/cci/data:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Get list of CCI related data
+      description: |-
+        Returns the complete list of cci related data based on the query parameters provided. 
+
+         `Max 3 query parameters can be provided at a time`
+      parameters:
+        - name: category
+          in: query
+          description: If value is app/web/all then returns the complete list of categories based on the input
+          required: false
+          schema:
+            type: string
+            enum:
+              - "app"
+              - "web"
+              - "all"
+        - name: domains
+          in: query
+          description: If value is 1/true then returns the complete list of domains
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: totalapps
+          in: query
+          description: If value is 1/true then returns the apps with and without ccl count.
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: discoveredapps
+          in: query
+          description: If value is 1/true then returns the discovered apps data.
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: datatransferred
+          in: query
+          description: If value is 1/true then returns the data transferred data.
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: questiondatamodel
+          in: query
+          description: If value is 1/true then returns the questiondatamodel.
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: osversions
+          in: query
+          description: If value is 1/true then returns the os name, versions and version names.
+          required: false
+          schema:
+            type: string
+            enum:
+              - "1"
+              - "true"
+        - name: suiteid
+          in: query
+          description: If suiteid is provided, then returns the list of appids for the suite.
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200ccidataResponse"
+              examples:
+                Single Query Response - Example 1:
+                  description: Response with only 1 query param.
+                  value:
+                    data:
+                      category:
+                        - category_name: Arts
+                          category_id: 509
+                        - category_name: Business
+                          category_id: 511
+                    status: Success
+                    status_code: 200
+                Multiple Query Response - Example 1:
+                  description: Response with multiple query params
+                  value:
+                    data:
+                      datatransferred:
+                        excellent: 0
+                        high: 278208000
+                        low: 0
+                        medium: 0
+                        poor: 280381500
+                        unknown: 0
+                      discoveredapps:
+                        high: 1
+                        medium: 1
+                        poor: 1
+                        unknown: 17
+                      totalapps:
+                        with_ccl: 42125
+                        without_ccl: 21360
+                    status: Success
+                    status_code: 200
+                Multiple Query Response - Example 2:
+                  description: Response with multiple query params
+                  value:
+                    data:
+                      osversions:
+                        - os_name: Android
+                          version: 1-4
+                          version_name: Android10
+                        - os_name: Android
+                          version: 1-4
+                          version_name: Pie
+                        - os_name: BSD
+                          version: 1-4
+                          version_name: null
+                      suite_appids:
+                        - 81
+                        - 4383
+                        - 4998
+                        - 45132
+                    status: Success
+                    status_code: 200
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body
+  /services/cci/app/getapps:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    post:
+      x-netskope-route-params:
+        hiddenFromUI: true
+        enableAuditLogging: false
+      summary: Get the basic details of the list of apps which fall under the specified options
+      description: |
+        Get the list of applications and its basic details based on the following request body param options.
+
+         Details provided in the response are **app_name**, **id**, **cci**, **ccl**, **is_pending**, **pending_ccl**, **pending_ccl**, **tags** and **category_name** values. 
+
+         **Default response will contain data limited to 300 (i.e., page_size = 300 and page_number = 1).**
+
+         `All request body params are non mutually exclusive and optional.` 
+
+         `Only one param among [ sanctioned | app_type ] can exist at a time.`  
+
+         `If dropdown_options [ app | domain ] are provided only the results for that will be provided` 
+
+         | Request body Params | Description |
+        |----------------------|-------------|
+        | **page_size**           | The size of page (number) **[Optional]** |
+        | **page_number**         | The number of page (number) **[Optional]** |
+        | **tags**    | Object with the following keys. **[Optional]**
+        || **sanctioned** (value can contain one of Yes/No), 
+         || **app_type** (value can contain one of Enterprise/Consumer/Departmental), 
+         || **custom** (value can contain a string) 
+         |
+        | **app_class**         | One of the following values (all / discovered / customized) **[Optional]** |
+        | **dropdown_options**         | One dropdown option (string) (Available Options: domain, app) **[Optional]** |
+        | **search_term**| Object with the following keys **[Optional]** 
+        || **type** (value can contain one of domain/app/query), 
+         || **text** (value can contain the search string) 
+         || **items** (value can contain an array of one or more items selected) 
+         || 
+         || If **type==query**, then **items** are not needed 
+         || If **type==domain / type==app**, then either **items** or **text** has to be provided
+         ||| 
+         |
+        | **category**            | One or more category ids (list) **[Optional]** |
+        | **ccl**                | One ccl value (string) (Available Options: unknown, poor, low, medium, high, excellent) **[Optional]** |
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/cciAppSearchRequest"
+            examples:
+              Example 1:
+                description: search apps with sanctioned
+                value:
+                  data:
+                    page_size: 10
+                    page_number: 2
+                    tags:
+                      sanctioned: "yes"
+                      custom: test1
+                    search_term:
+                      type: app
+                      text: ""
+                      items:
+                        - Box
+                    app_class: discovered
+                    category:
+                      - 56
+                    ccl: high
+              Example 2:
+                description: search apps with app_type
+                value:
+                  data:
+                    page_size: 10
+                    page_number: 2
+                    tags:
+                      app_type: consumer
+                      custom: test1
+                    search_term:
+                      type: app
+                      text: ""
+                      items:
+                        - Box
+                    category:
+                      - 56
+                    ccl: high
+              Example 3:
+                description: search apps with dropdown options
+                value:
+                  data:
+                    dropdown_options: app
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200cciAppSearchResponse"
+              examples:
+                Example 1 - Table Data:
+                  description: search response for table data
+                  value:
+                    data:
+                      app_data:
+                        - app_name: Box
+                          id: 355
+                          cci: 97
+                          ccl: excellent
+                          is_pending: true
+                          pending_cci: 82
+                          pending_ccl: high
+                          tags:
+                            - Tag1
+                            - Tag2
+                            - rule_tag1
+                            - tag3
+                            - custom_attr1
+                            - custom_tag1
+                          category_name: Cloud Storage
+                        - app_name: Adobe Sign
+                          id: 81
+                          cci: 82
+                          ccl: high
+                          is_pending: false
+                          pending_cci: null
+                          pending_ccl: null
+                          tags:
+                            - Tag1
+                            - Tag2
+                            - rule_tag1
+                            - tag3
+                            - custom_attr1
+                            - custom_tag1
+                          category_name: Cloud Storage
+                    status: Success
+                    status_code: 200
+                    total_query_count: 3021
+                Example 2 - Dropdown Options:
+                  description: search response with app as dropdown_option
+                  value:
+                    data:
+                      dropdown_data:
+                        - id: 355
+                          name: Box
+                        - id: 87050
+                          name: Grandstream
+                    status: Success
+                    status_code: 200
+        "204":
+          description: No Content
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body
+
+  /services/cci/app/getpendingapps:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    post:
+      x-netskope-route-params:
+        hiddenFromUI: true
+        enableAuditLogging: false
+      summary: Get the list of apps which are in pending customization
+      description: |-
+        Get the list of applications and its basic details which are in pending customizations based on the following request body param options.
+
+         Details provided in the response are **app_name**, **id**, **cci**, **ccl**, **pending_ccl** and **pending_ccl** values. 
+
+         `All request body params are non mutually exclusive and optional.`
+
+        | Request body Params | Description |
+        |----------------------|-------------|
+        | **page_size**           | The size of page (number) **[Optional]** |
+        | **page_number**         | The number of page (number) **[Optional]** |
+        | **tags**    | Object with the following keys. **[Optional]**
+        || **sanctioned** (value can contain one of yes/no), 
+         || **app_type** (value can contain one of enterprise/consumer/departmental), 
+         || **custom** (value can contain a string) 
+         |
+        | **app_class**         | One of the following values (all / discovered / customized) **[Optional]** |
+        | **category**            | One or more category ids (list) **[Optional] |
+        | **include_app_data**            | Option to include the details of the app in addition to the "is_pending" information (boolean) **[Optional]**
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/cciAppPendingTenantRequest"
+            example:
+              page_size: 10
+              page_number: 2
+              tags:
+                sanctioned: "yes"
+                app_type: consumer
+                custom: test1
+              app_class: discovered
+              category:
+                - 56
+              include_app_data: true
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200cciAppPendingTenantResponse"
+              examples:
+                With Pending Apps Data:
+                  description: is_pending value along with the pending apps data
+                  value:
+                    data:
+                      pending_data:
+                        - app_name: Box
+                          id: 355
+                          cci: 97
+                          ccl: excellent
+                          pending_cci: 82
+                          pending_ccl: high
+                        - app_name: Adobe Sign
+                          id: 81
+                          cci: 82
+                          ccl: high
+                          pending_cci: 97
+                          pending_ccl: excellent
+                      is_pending: true
+                    status: Success
+                    status_code: 200
+                    total_query_count: 2
+                Without Pending Apps Data:
+                  description: is_pending value without the pending apps data
+                  value:
+                    data:
+                      is_pending: true
+                    status: Success
+                    status_code: 200
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body
+  /services/cci/app/riskweight/{appid}:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Get the applied and pending changes for an application
+      description: |-
+        Get the applied and pending details of all the attributes for an application 
+
+         `Only attributes which have pending/applied changes will be part of the output`
+      parameters:
+        - name: appid
+          in: path
+          description: The id of the app.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200cciRiskWeightDiffResponse"
+              examples:
+                App with both applied and pending:
+                  value:
+                    data:
+                      EncryptTenantKey:
+                        applied: 4
+                        pending: 4
+                      SSOADhooks:
+                        applied: 5
+                        pending: 5
+                      datacenterCert:
+                        applied: 2
+                        pending: 5
+                      hostinggeoback:
+                        pending: 4
+                      vulnerable:
+                        applied: 1
+                    status: Success
+                    status_code: 200
+                App with only applied:
+                  value:
+                    data:
+                      EncryptTenantKey:
+                        applied: 4
+                      SSOADhooks:
+                        applied: 5
+                      datacenterCert:
+                        applied: 2
+                      hostinggeoback:
+                        applied: 4
+                      vulnerable:
+                        applied: 1
+                    status: Success
+                    status_code: 200
+                App with only pending:
+                  value:
+                    data:
+                      EnforcePassword:
+                        pending: 4
+                      devicerestrictions:
+                        pending: 4
+                      roleAuthBased:
+                        pending: 4
+                    status: Success
+                    status_code: 200
+        "204":
+          description: No Content
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body
+  /services/cci/app/compare:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Get the attributes and other basic info for applications to compare
+      description: |-
+        Get the complete list of attributes and other info like users, sessions, bytes_downloaded, bytes_uploaded and tag_type for the list of apps provided for comparison. 
+         
+         `Max appids allowed is 3. First appid is compared with the subsequent appids.`
+      parameters:
+        - name: appids
+          in: query
+          description: The ids of the apps separated with a comma. Max appids allowed is 3.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200cciAppCompareResponse"
+              example:
+                data:
+                  "39192":
+                    attributes:
+                      accounts:
+                        is_different: 1
+                        is_weak: 0
+                        sel_choices:
+                          - Under Research
+                      adminauditlogs:
+                        is_different: 1
+                        is_weak: 0
+                        sel_choices:
+                          - Under Research
+                      anonymousFileSharing:
+                        is_different: 1
+                        is_weak: 0
+                        sel_choices:
+                          - Under Research
+                      app_can_be_proxied:
+                        is_different: 1
+                        is_weak: 0
+                        sel_choices:
+                          - Under Research
+                      apphosting:
+                        is_different: 1
+                        is_weak: 0
+                        sel_choices:
+                          - Under Research
+                    basic_details:
+                      app_name:
+                        application_id: 57622
+                        application_name: Amazon EC2 Instance Connect
+                        current_name: Amazon EC2 Instance Connect
+                      app_type: Enterprise
+                      cci: 96
+                      ccl: excellent
+                      sanctioned: "No"
+                      usage:
+                        client_bytes: 47.68 MB
+                        num_users: 1867
+                        server_bytes: 342.84 MB
+                        sessions: 1
+                  "57622":
+                    attribute:
+                      classificationCapabilities:
+                        is_different: 0
+                        is_weak: 0
+                        sel_choices:
+                          - "Yes"
+                      vulnerable:
+                        is_different: 0
+                        is_weak: 1
+                        sel_choices:
+                          - Absence of Anti-CSRF Tokens:Medium
+                          - Content Security Policy (CSP) Header Not Set:Medium
+                          - Cookie No HttpOnly Flag:Low
+                          - Cookie without SameSite Attribute:Low
+                          - Cookie Without Secure Flag:Low
+                          - Cross-Domain JavaScript Source File Inclusion:Low
+                          - CSP:Medium
+                          - Information Disclosure - Suspicious Comments:Informational
+                          - Loosely Scoped Cookie:Informational
+                          - Modern Web Application:Informational
+                          - Permissions Policy Header Not Set:Low
+                          - Re-examine Cache-control Directives:Informational
+                          - Content Cacheability:Informational
+                          - Strict-Transport-Security Header:Low
+                          - Sub Resource Integrity Attribute Missing:Medium
+                          - Timestamp Disclosure:Low
+                          - User Controllable HTML Element Attribute (Potential XSS):Informational
+                      weak_algorithm_keysize:
+                        is_different: 0
+                        is_weak: 0
+                        sel_choices:
+                          - "Does not support weak Algorithm "
+                      weak_cipher_suites:
+                        is_different: 0
+                        is_weak: 0
+                        sel_choices: []
+                    basic_details:
+                      app_name:
+                        application_id: 57622
+                        application_name: Amazon EC2 Instance Connect
+                        current_name: Amazon EC2 Instance Connect
+                      app_type: Enterprise
+                      cci: 96
+                      ccl: excellent
+                      sanctioned: "No"
+                      usage:
+                        client_bytes: 47.68 MB
+                        num_users: 1867
+                        server_bytes: 342.84 MB
+                        sessions: 1
+                status: Success
+                status_code: 200
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body
+  /services/cci/app/details/{appid}:
+    x-netskope-params:
+      apiGroup: cci
+      customerFacing: true
+      serviceConfig: appinfoservice
+      version: 2
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Get the attributes and all the detailed info for an application
+      description: |
+        Get the complete list of attributes and the complete information of an application based on the appid.
+      parameters:
+        - name: appid
+          in: path
+          description: The id of the app.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/200cciAppDetailsResponse"
+              example:
+                data:
+                  attribute:
+                    system_operations:
+                      is_weak: 0
+                      not_sel_choices: []
+                      sel_choices:
+                        - Under Research
+                    userauditlogs:
+                      is_weak: 0
+                      not_sel_choices: []
+                      sel_choices:
+                        - "Yes"
+                    vulnerable:
+                      is_weak: 1
+                      not_sel_choices:
+                        - Big Redirect Detected (Potential Sensitive Information Leak):Low
+                        - Charset Mismatch:Informational
+                        - Content-Type Header Missing:Informational
+                        - Cookie Poisoning:Informational
+                        - Cross-Domain Misconfiguration:Medium
+                        - Dangerous JS Functions:Low
+                        - Directory Browsing:Medium
+                        - Hash Disclosure:High
+                        - Heartbleed OpenSSL Vulnerability (Indicative):Low
+                        - HTTP Parameter Override:Medium
+                        - HTTP Server Response Header:Low
+                        - HTTP to HTTPS Insecure Transition in Form Post:Medium
+                        - HTTPS to HTTP Insecure Transition in Form Post:Medium
+                        - In Page Banner Information Leak:Low
+                        - Information Disclosure - Debug Error Messages:Low
+                        - Information Disclosure - Sensitive Information in HTTP Referrer Header:Informational
+                        - Information Disclosure - Sensitive Information in URL:Informational
+                        - Insecure JSF ViewState:Medium
+                        - Java Serialization Object:Medium
+                        - Open Redirect:High
+                        - PII Disclosure:High
+                        - Reverse Tabnabbing:Medium
+                        - Script Passive Scan Rules:Low
+                        - Secure Pages Include Mixed Content:Low
+                        - Server Leaks Information via X-Powered-By HTTP Response Header Field(s):Low
+                        - Session ID in URL Rewrite:Medium
+                        - Stats Passive Scan Rule:Low
+                        - User Controllable Charset:Informational
+                        - User Controllable JavaScript Event (XSS):Informational
+                        - Username Hash Found:Informational
+                        - Viewstate:Medium
+                        - Vulnerable JS Library:Medium
+                        - Weak Authentication Method:Low
+                        - WSDL File Detection:Low
+                        - X-AspNet-Version Response Header:Low
+                        - X-Backend-Server Header Information Leak:Low
+                        - X-ChromeLogger-Data (XCOLD) Header Information Leak:Low
+                        - X-Content-Type-Options Header Missing:Low
+                        - X-Debug-Token Information Leak:Low
+                        - None
+                      sel_choices:
+                        - Absence of Anti-CSRF Tokens:Medium
+                        - Anti-clickjacking Header:Medium
+                        - Application Error Disclosure:Medium
+                        - Content Security Policy (CSP) Header Not Set:Medium
+                        - Cookie No HttpOnly Flag:Low
+                        - Cookie without SameSite Attribute:Low
+                        - Cookie Without Secure Flag:Low
+                        - Cross-Domain JavaScript Source File Inclusion:Low
+                        - CSP:Medium
+                        - Information Disclosure - Suspicious Comments:Informational
+                        - Loosely Scoped Cookie:Informational
+                        - Modern Web Application:Informational
+                        - Permissions Policy Header Not Set:Low
+                        - Private IP Disclosure:Low
+                        - Re-examine Cache-control Directives:Informational
+                        - Retrieved from Cache:Informational
+                        - Content Cacheability:Informational
+                        - Strict-Transport-Security Header:Low
+                        - Sub Resource Integrity Attribute Missing:Medium
+                        - Timestamp Disclosure:Low
+                        - User Controllable HTML Element Attribute (Potential XSS):Informational
+                    weak_algorithm_keysize:
+                      is_weak: 0
+                      not_sel_choices: []
+                      sel_choices:
+                        - "Does not support weak Algorithm "
+                    weak_cipher_suites:
+                      is_weak: 0
+                      not_sel_choices: []
+                      sel_choices:
+                        - Under Research
+                  basic_detail:
+                    activity:
+                      both: []
+                      not_support_dlp_tss:
+                        - Approve
+                        - Create
+                        - Delete
+                        - Edit
+                        - Reject
+                        - Start
+                        - View
+                        - Send
+                        - Search
+                        - Register
+                      only_dlp: []
+                      universal_connector: 0
+                    app_instance:
+                      count: 1
+                      description: null
+                    app_name:
+                      application_id: 57651
+                      application_name: Amazon Alexa For Business
+                      current_name: Amazon Alexa For Business
+                    category: Business Process Management
+                    cci: 100
+                    cci_history:
+                      - cci: 84
+                        date: Jun 06 2024
+                        pre_cci: 84
+                        reason:
+                          - No Score Change
+                      - cci: 87
+                        date: Apr 30 2024
+                        pre_cci: 87
+                        reason:
+                          - No Score Change
+                    ccl: excellent
+                    description: Amazon Alexa For Business is a service that enables organisations and employees to use Alexa to get work done. Employees can use Alexa as an assistant in meeting rooms, at desks, and with the alexa devices used at home. IT and facilities managers can also use it to check and manage the utilisation of the existing meeting rooms in the workplace.
+                    domains:
+                      a4b.us-gov-west-1.amazonaws.com:
+                        - android
+                        - chromeos
+                        - ios
+                        - desktop
+                        - sfdr
+                        - discovery
+                      a4b.us-west-1.amazonaws.com:
+                        - android
+                        - chromeos
+                        - ios
+                        - desktop
+                        - sfdr
+                        - discovery
+                      a4b.us-west-2.amazonaws.com:
+                        - android
+                        - chromeos
+                        - ios
+                        - desktop
+                        - sfdr
+                        - discovery
+                    gdpr: High
+                    is_pending: 1
+                    notes: ""
+                    pending_cci: 100
+                    pending_ccl: excellent
+                    tags:
+                      - Unsanctioned
+                      - Departmental
+                      - ccltest
+                      - rule13 OR SLEEP(3)#
+                      - rule13) OR SLEEP(3)#
+                    top_user_by_session:
+                      - username: orwbXyROpbHopFnp
+                        totalvalue: 1
+                      - username: jBlMBNZSSvDSueLa
+                        totalvalue: 1
+                    tos: https://aws.amazon.com/terms/?nc1=f_pr
+                    usage: {}
+                status: Success
+                status_code: 200
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/400Response"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/500Response"
+      x-codegen-request-body-name: body

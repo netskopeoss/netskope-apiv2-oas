@@ -1,0 +1,909 @@
+components:
+  schemas:
+    policies_delete_request_items:
+      items:
+        example: 1
+        type: integer
+      type: array
+    policies_get_request_item:
+      properties:
+        filters:
+          properties:
+            has_warnings:
+              properties:
+                value:
+                  example: "true"
+                  type: boolean
+              type: object
+            last_edit:
+              properties:
+                value:
+                  properties:
+                    endtime:
+                      example: "2023-01-30 07:01:01"
+                      type: string
+                    starttime:
+                      example: "2023-01-30 06:01:01"
+                      type: string
+                  type: object
+              type: object
+            link:
+              properties:
+                value:
+                  items:
+                    example: Link1
+                    type: string
+                  type: array
+              type: object
+            name:
+              properties:
+                operator:
+                  example: like
+                  type: string
+                value:
+                  example: policy_name
+                  type: string
+              type: object
+            traffic_class:
+              properties:
+                value:
+                  items:
+                    example: Class1
+                    type: string
+                  type: array
+              type: object
+          type: object
+      type: object
+    policies_get_response_200_item:
+      properties:
+        all_links:
+          example: false
+          type: boolean
+        applied:
+          example: false
+          type: boolean
+        bandwidth_limits:
+          items:
+            properties:
+              max_bandwidth:
+                example: 100 mbps
+                type: string
+              traffic_class:
+                example: traffic_class1
+                type: string
+              type:
+                example: exact
+                type: string
+            type: object
+          type: array
+        create_ts:
+          example: create_timestamp
+          type: string
+        enabled:
+          example: true
+          type: boolean
+        id:
+          example: 1
+          type: integer
+        links:
+          items:
+            example: link1
+            type: string
+          type: array
+        modified_by:
+          example: user
+          type: string
+        modified_ts:
+          example: modified_timestamp
+          type: string
+        modified_type:
+          example: created
+          type: string
+        name:
+          example: policy1
+          type: string
+        order:
+          example: 1
+          type: integer
+        warning:
+          properties:
+            links_already_in_use:
+              items:
+                example: Link1
+                type: string
+              type: array
+            links_with_lesser_size:
+              items:
+                properties:
+                  name:
+                    example: Link1
+                    type: string
+                  size:
+                    example: 50 mbps
+                    type: string
+                type: object
+              type: array
+            max_bandwidth_expected:
+              example: 50 mbps
+              type: string
+          type: object
+      type: object
+    policies_get_response_200_items:
+      properties:
+        count:
+          example: 1
+          type: integer
+        data:
+          items:
+            $ref: "#/components/schemas/policies_get_response_200_item"
+          type: array
+        status:
+          example: 200
+          type: integer
+      type: object
+    policies_patch_request_item:
+      properties:
+        all_links:
+          example: false
+          type: boolean
+        bandwidth_limits:
+          items:
+            properties:
+              max_bandwidth:
+                example: 100 mbps
+                type: string
+              traffic_class:
+                example: traffic_class1
+                type: string
+              type:
+                example: exact
+                type: string
+            type: object
+          type: array
+        enabled:
+          example: true
+          type: boolean
+        id:
+          example: 1
+          type: integer
+        links:
+          items:
+            example: link1
+            type: string
+          type: array
+        name:
+          example: policy1
+          type: string
+      type: object
+    policies_patch_request_items:
+      items:
+        $ref: "#/components/schemas/policies_patch_request_item"
+      type: array
+    policies_patch_response_200:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/policies_post_patch_response_200_item"
+          type: array
+        status:
+          example: 200
+          type: integer
+        warnings:
+          items:
+            $ref: "#/components/schemas/policies_post_patch_warning_200_item"
+          type: array
+      type: object
+    policies_post_patch_response_200_item:
+      properties:
+        all_links:
+          example: false
+          type: boolean
+        applied:
+          example: false
+          type: boolean
+        bandwidth_limits:
+          items:
+            properties:
+              max_bandwidth:
+                example: 100 mbps
+                type: string
+              traffic_class:
+                example: traffic_class1
+                type: string
+              type:
+                example: exact
+                type: string
+            type: object
+          type: array
+        create_ts:
+          example: create_timestamp
+          type: string
+        enabled:
+          example: true
+          type: boolean
+        id:
+          example: 1
+          type: integer
+        links:
+          items:
+            example: link1
+            type: string
+          type: array
+        modified_by:
+          example: user
+          type: string
+        modified_ts:
+          example: modified_timestamp
+          type: string
+        modified_type:
+          example: created
+          type: string
+        name:
+          example: policy1
+          type: string
+        order:
+          example: 1
+          type: integer
+      type: object
+    policies_post_patch_warning_200_item:
+      properties:
+        all_links_incorrect_order:
+          example: "false"
+          type: boolean
+        links_already_in_use:
+          items:
+            example: link1
+            type: string
+          type: array
+        links_with_lesser_size:
+          items:
+            properties:
+              name:
+                example: link1
+                type: string
+              size:
+                example: 50 mbps
+                type: string
+            type: object
+          type: array
+        max_bandwidth_expected:
+          example: 50 mbps
+          type: string
+        name:
+          example: policy1
+          type: string
+      type: object
+    policies_post_request_item:
+      properties:
+        all_links:
+          example: false
+          type: boolean
+        bandwidth_limits:
+          items:
+            properties:
+              max_bandwidth:
+                example: 100 mbps
+                type: string
+              traffic_class:
+                example: traffic_class1
+                type: string
+              type:
+                example: exact
+                type: string
+            type: object
+          type: array
+        enabled:
+          example: true
+          type: boolean
+        links:
+          items:
+            example: link1
+            type: string
+          type: array
+        name:
+          example: policy1
+          type: string
+        order:
+          example: 1
+          type: integer
+      type: object
+    policies_post_request_items:
+      items:
+        $ref: "#/components/schemas/policies_post_request_item"
+      type: array
+    policies_post_response_200:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/policies_post_patch_response_200_item"
+          type: array
+        status:
+          example: 200
+          type: integer
+        warnings:
+          items:
+            $ref: "#/components/schemas/policies_post_patch_warning_200_item"
+          type: array
+      type: object
+    policies_response_200:
+      properties:
+        data:
+          example: success_200
+          type: string
+        status:
+          example: 200
+          type: integer
+      type: object
+    policies_response_400:
+      properties:
+        data:
+          example: error_400
+          type: string
+        status:
+          example: 400
+          type: integer
+      type: object
+    policies_response_403:
+      properties:
+        data:
+          example: error_403
+          type: string
+        status:
+          example: 403
+          type: integer
+      type: object
+    policies_response_404:
+      properties:
+        data:
+          example: error_404
+          type: string
+        status:
+          example: 404
+          type: integer
+      type: object
+    policies_response_405:
+      properties:
+        data:
+          example: error_405
+          type: string
+        status:
+          example: 405
+          type: integer
+      type: object
+    policies_response_409:
+      properties:
+        data:
+          example: error_409
+          type: string
+        status:
+          example: 409
+          type: integer
+      type: object
+    policies_response_429:
+      properties:
+        data:
+          example: error_429
+          type: string
+        status:
+          example: 429
+          type: integer
+      type: object
+    policies_response_500:
+      properties:
+        data:
+          example: error_500
+          type: string
+        status:
+          example: 500
+          type: integer
+      type: object
+info:
+  description: bandwidth control service policies related CRUD operations.
+  title: bandwidthcontrol-service
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /services/bandwidthcontrol/policies:
+    patch:
+      description:
+        API to update bandwidth control policies using id. You can pass
+        json body with fields that needs to be updated.
+      parameters:
+        - description: Value must be true or false. Defaults to false.
+          in: query
+          name: interactive
+          required: false
+          schema:
+            example: false
+            type: boolean
+        - description:
+            Value must be true or false. Defaults to false. We just check
+            for error/warning. We do not update the record.
+          in: query
+          name: validate
+          required: false
+          schema:
+            example: false
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/policies_patch_request_items"
+        description: bandwidth control policy objects
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_patch_response_200"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_404"
+          description: Not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Update bandwidth control policies
+    post:
+      description:
+        API to create new bandwidth control policies. You can pass json
+        body with details.
+      parameters:
+        - description: Value must be true or false. Defaults to false.
+          in: query
+          name: interactive
+          required: false
+          schema:
+            example: false
+            type: boolean
+        - description:
+            Value must be true or false. Defaults to false. We just check
+            for error/warning. We do not save the record.
+          in: query
+          name: validate
+          required: false
+          schema:
+            example: false
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/policies_post_request_items"
+        description: bandwidth control policy object
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_post_response_200"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_409"
+          description: Already exists
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Create bandwidth control policies
+    x-netskope-params:
+      apiGroup: policies
+      customerFacing: true
+      serviceConfig: qos
+      version: 2
+  /services/bandwidthcontrol/policies/deletepolicies:
+    post:
+      description: API to delete bandwidth control policies
+      parameters:
+        - description: Value must be true or false. Defaults to false.
+          in: query
+          name: interactive
+          required: false
+          schema:
+            example: false
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/policies_delete_request_items"
+        description: bandwidth control policy id list
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_200"
+          description: Successful operation
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_404"
+          description: Not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Delete bandwidth control policies
+    x-netskope-params:
+      apiGroup: policies
+      customerFacing: true
+      serviceConfig: qos
+      version: 2
+  /services/bandwidthcontrol/policies/getpolicies:
+    post:
+      description: API to get list of bandwidth control policies.
+      parameters:
+        - description: Offset to read from
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: integer
+        - description: Limit on the result
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            maximum: 100
+            minimum: 0
+            type: integer
+        - description: Sort column
+          in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: sort order - asc or desc. Default is asc
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            type: string
+        - description: Value must be true or false. Defaults to true.
+          in: query
+          name: getwarning
+          required: false
+          schema:
+            example: true
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/policies_get_request_item"
+        description: bandwidth control policy object
+        required: false
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_get_response_200_items"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Get bandwidth control policies list
+    x-netskope-params:
+      apiGroup: policies
+      customerFacing: true
+      serviceConfig: qos
+      version: 2
+  /services/bandwidthcontrol/policies/{id}:
+    delete:
+      description: API to delete bandwidth control policies
+      parameters:
+        - description: policy id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - description: Value must be true or false. Defaults to false.
+          in: query
+          name: interactive
+          required: false
+          schema:
+            example: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_200"
+          description: Successful operation
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_404"
+          description: Not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Delete bandwidth control policies
+    get:
+      description: API to get bandwidth control policy using id.
+      parameters:
+        - description: policy id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - description: Value must be true or false. Defaults to true.
+          in: query
+          name: getwarning
+          required: false
+          schema:
+            example: true
+            type: boolean
+        - description: Provide comma separated list of fields to be displayed
+          in: query
+          name: fields
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_get_response_200_items"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_404"
+          description: Not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Get bandwidth control policy
+    patch:
+      description:
+        API to update bandwidth control policies using id. You can pass
+        json body with fields that needs to be updated.
+      parameters:
+        - description: policy id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - description: Value must be true or false. Defaults to false.
+          in: query
+          name: interactive
+          required: false
+          schema:
+            example: false
+            type: boolean
+        - description:
+            Value must be true or false. Defaults to false. We just check
+            for error/warning. We do not update the record.
+          in: query
+          name: validate
+          required: false
+          schema:
+            example: false
+            type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/policies_post_request_item"
+        description: bandwidth control policy objects
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_patch_response_200"
+          description: Successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_403"
+          description: Access forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_404"
+          description: Not found
+        "405":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_405"
+          description: Method not allowed
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_429"
+          description: Too many requests
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/policies_response_500"
+          description: Internal server error
+      summary: Update a bandwidth control policy
+    x-netskope-params:
+      apiGroup: policies
+      customerFacing: true
+      serviceConfig: qos
+      version: 2

@@ -1,0 +1,67 @@
+components:
+  schemas: {}
+info:
+  description: ms-platform api specification
+  title: ms-platform open api
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /ui/platform/controlflags/{flagName}:
+    get:
+      description: Get single control flag toggle enabled/disabled information.
+      operationId: ControlFlagsController_getSingleFlag
+      parameters:
+        - in: path
+          name: flagName
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                var_name: ENABLE_NEW_UI
+                var_value: "0"
+          description: Successful response
+        "400":
+          description: flagName is required
+      summary: Get single control flag information
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: ms-platform
+      version: 2
+  /ui/platform/featureflags/{flagName}:
+    get:
+      description: Get single feature flag toggle enabled/disabled information.
+      operationId: FeatureFlagsController_getSingleFlag
+      parameters:
+        - in: path
+          name: flagName
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                var_name: checkCiscoVpn
+                var_value: "0"
+          description: Successful response
+        "400":
+          description: flagName is required
+      summary: Get single feature flag information
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: ms-platform
+      version: 2
+servers:
+  - url: http://localhost:3000/api/v2/ui
+tags:
+  - description: " "
+    name: ms-platform

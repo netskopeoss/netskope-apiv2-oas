@@ -1,0 +1,310 @@
+components:
+  schemas:
+    ApiTokenBaseResponse:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    ApiTokenCreateRequest:
+      properties:
+        endpoints:
+          items:
+            $ref: "#/components/schemas/ApiTokenEndpoint"
+          type: array
+        expires:
+          description: Seconds since unix epoch
+          example: 2147384600
+          type: number
+        name:
+          type: string
+      required:
+        - name
+        - expires
+        - endpoints
+      type: object
+    ApiTokenCreateResponse:
+      properties:
+        endpoints:
+          items:
+            $ref: "#/components/schemas/ApiTokenEndpoint"
+          type: array
+        expires:
+          example: 2147384600
+          type: number
+        id:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+      type: object
+    ApiTokenEndpoint:
+      properties:
+        endpoint:
+          type: string
+        permissions:
+          enum:
+            - r
+            - rw
+          type: string
+      required:
+        - endpoint
+        - permissions
+      type: object
+    ApiTokenReadResponse:
+      properties:
+        endpoints:
+          items:
+            $ref: "#/components/schemas/ApiTokenEndpoint"
+          type: array
+        expires:
+          example: 2147384600
+          type: number
+        id:
+          type: string
+        name:
+          type: string
+      type: object
+    ApiTokenUpdateRequest:
+      properties:
+        endpoints:
+          description: Required if operation is not specified.
+          items:
+            $ref: "#/components/schemas/ApiTokenEndpoint"
+          type: array
+        expires:
+          description:
+            Seconds since unix epoch. This is required if operation is
+            not specified
+          example: 2147384600
+          type: number
+        name:
+          description: Required if operation is not specified.
+          type: string
+        operation:
+          description:
+            "If the operation is specified,\n        other fields(\"name\"\
+            ,\"expires\" and \"endpoints\")\n        are not allowed in the request\
+            \ body."
+          enum:
+            - reissue
+            - revoke
+          type: string
+      type: object
+    ApiTokenUpdateResponse:
+      properties:
+        endpoints:
+          items:
+            $ref: "#/components/schemas/ApiTokenEndpoint"
+          type: array
+        expires:
+          example: 2147384600
+          type: number
+        id:
+          type: string
+        name:
+          type: string
+        token:
+          description: Only returned if operation in the request equals to "reissue"
+          type: string
+      type: object
+    ErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      type: object
+info:
+  contact: {}
+  description: API Token Management API Specification
+  title: API Token Management APIs
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /auth/tokens:
+    get:
+      operationId: ApiTokenController_readAllApiTokens
+      parameters:
+        - example: id,name,expires,endpoints
+          in: query
+          name: fields
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ApiTokenReadResponse"
+                type: array
+          description: The Api Tokens have been fetched successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Read All Api Tokens
+      tags:
+        - api-tokens
+    post:
+      operationId: ApiTokenController_createApiToken
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiTokenCreateRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTokenCreateResponse"
+          description: The Api Token has been successfully created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Create Api Token
+      tags:
+        - api-tokens
+    x-netskope-params:
+      apiGroup: api-tokens
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /auth/tokens/{id}:
+    delete:
+      operationId: ApiTokenController_deleteApiTokenById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTokenBaseResponse"
+          description: The Api Token has been deleted successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Delete Api Token By Id
+      tags:
+        - api-tokens
+    get:
+      operationId: ApiTokenController_getApiTokenById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTokenReadResponse"
+          description: The Api Token has been fetched successfully
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Get Api Token By Id
+      tags:
+        - api-tokens
+    patch:
+      operationId: ApiTokenController_updateApiTokenById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApiTokenUpdateRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTokenUpdateResponse"
+          description: The Api Token has been updated successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Update Api Token By Id
+      tags:
+        - api-tokens
+    x-netskope-params:
+      apiGroup: api-tokens
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+servers: []
+tags: []

@@ -1,0 +1,563 @@
+components:
+  schemas:
+    AnomalyAdditionalProperty:
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+      type: object
+    CategoricalModeling:
+      properties:
+        binCount:
+          format: int32
+          type: integer
+        convergenceFactor:
+          format: double
+          type: number
+        featureValue:
+          type: string
+        histo:
+          items:
+            $ref: "#/components/schemas/DataPoint"
+          type: array
+        modelId:
+          type: string
+        observationCount:
+          format: int32
+          type: integer
+        percentileThresholdCount:
+          format: int32
+          type: integer
+        probability:
+          format: double
+          type: number
+        sampleCount:
+          format: int32
+          type: integer
+        scope:
+          type: string
+      required:
+        - featureValue
+        - modelId
+        - scope
+        - sampleCount
+        - binCount
+        - observationCount
+        - probability
+        - convergenceFactor
+        - percentileThresholdCount
+        - histo
+      type: object
+    Confidence:
+      properties:
+        confidenceScore:
+          format: int32
+          type: integer
+        start:
+          format: int64
+          type: integer
+      type: object
+    ConfidenceTimeSeries:
+      properties:
+        confidences:
+          items:
+            $ref: "#/components/schemas/Confidence"
+          type: array
+        userId:
+          type: string
+      type: object
+    DataPoint:
+      properties:
+        bin:
+          type: string
+        count:
+          format: int32
+          type: integer
+      type: object
+    ErrorResponse:
+      properties:
+        errorMsg:
+          type: string
+        parameters:
+          additionalProperties: true
+          type: object
+      required:
+        - errorMsg
+      type: object
+    FactData:
+      properties:
+        featureValue:
+          type: string
+      required:
+        - featureValue
+      type: object
+    NumericalModeling:
+      properties:
+        featureValue:
+          type: string
+        histo:
+          items:
+            $ref: "#/components/schemas/DataPoint"
+          type: array
+        modelId:
+          type: string
+        pValue:
+          format: double
+          type: number
+        scope:
+          type: string
+      required:
+        - featureValue
+        - modelId
+        - scope
+        - pValue
+        - histo
+      type: object
+    PdvAnomaliesSearchFilters:
+      properties:
+        user:
+          type: string
+        windowId:
+          format: int64
+          type: integer
+      required:
+        - user
+        - windowId
+      type: object
+    PdvEventDripperRequest:
+      properties:
+        async:
+          type: boolean
+        eventData:
+          format: binary
+          type: string
+        intervalInMs:
+          format: int32
+          type: integer
+        loops:
+          format: int32
+          type: integer
+        numOfEvents:
+          format: int32
+          type: integer
+        shiftTimeInMinutes:
+          format: int32
+          type: integer
+        topic:
+          type: string
+        userId:
+          type: string
+      required:
+        - userId
+        - topic
+        - shiftTimeInMinutes
+        - eventData
+      type: object
+    PdvEventDripperResponse:
+      properties:
+        result:
+          type: string
+      type: object
+    RepeatableDemoRequest:
+      properties:
+        userReplacements:
+          items:
+            $ref: "#/components/schemas/UserReplacement"
+          type: array
+      type: object
+    RepeatableDemoResponse:
+      properties:
+        message:
+          type: string
+        status:
+          enum:
+            - SUCCESS
+            - BAD_REQUEST
+            - INTERNAL_ERROR
+            - EXTERNAL_ERROR
+          type: string
+      type: object
+    TriggeredAnomalies:
+      properties:
+        results:
+          items:
+            $ref: "#/components/schemas/TriggeredAnomaly"
+          type: array
+        totalCount:
+          example: 4
+          format: int32
+          type: integer
+      required:
+        - totalCount
+        - results
+      type: object
+    TriggeredAnomaly:
+      properties:
+        accessMethod:
+          type: string
+        activity:
+          type: string
+        additionalProperties:
+          items:
+            $ref: "#/components/schemas/AnomalyAdditionalProperty"
+          type: array
+        alertId:
+          type: string
+        alertType:
+          type: string
+        anomalyData:
+          oneOf:
+            - $ref: "#/components/schemas/CategoricalModeling"
+            - $ref: "#/components/schemas/FactData"
+            - $ref: "#/components/schemas/NumericalModeling"
+        anomalyId:
+          type: string
+        app:
+          type: string
+        createdTime:
+          format: date-time
+          type: string
+        eventId:
+          type: string
+        eventSource:
+          type: string
+        instance:
+          type: string
+        internalScore:
+          format: int32
+          type: integer
+        isAlertRaised:
+          type: boolean
+        isAllowed:
+          type: boolean
+        isFromAlert:
+          type: boolean
+        isSilent:
+          type: boolean
+        lastUpdatedTime:
+          format: date-time
+          type: string
+        peerId:
+          type: string
+        reasonForAllowed:
+          type: string
+        ruleId:
+          type: string
+        scenario:
+          type: string
+        score:
+          format: int32
+          type: integer
+        severity:
+          type: string
+        sourceIp:
+          type: string
+        subScenario:
+          type: string
+        time:
+          format: int64
+          type: integer
+        user:
+          type: string
+        windowId:
+          format: int64
+          type: integer
+      required:
+        - anomalyId
+        - user
+        - windowId
+        - eventId
+        - ruleId
+        - time
+        - score
+        - severity
+        - activity
+        - isFromAlert
+        - isAlertRaised
+        - anomalyData
+        - app
+        - instance
+        - createdTime
+        - lastUpdatedTime
+      type: object
+    UserReplacement:
+      properties:
+        baselineUser:
+          type: string
+        demoUser:
+          type: string
+      type: object
+    UserUciRequest:
+      properties:
+        fromTime:
+          format: int64
+          type: integer
+        user:
+          type: string
+      type: object
+info:
+  description:
+    The UEBA's DataSvc application is intended to house various support
+    services related to the function of the UEBA Analytics engine.
+  title: UbaDataSvc
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /ubadatasvc/pdv/eventDripper:
+    post:
+      description:
+        Drip events into specific topic. This API is for PDV purpose ONLY,
+        not exposed to end-user
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/PdvEventDripperRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PdvEventDripperResponse"
+          description: successful request
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: tenantId is not in allowed list
+      summary:
+        Drip events into specific topic. This API is for PDV purpose ONLY,
+        not exposed to end-user
+      x-netskope-route-params:
+        enableAuditLogging: false
+        allowedTenants:
+          - nsmtp.mtp.nc1.iad0.nsscloud.net
+          - uba01.mtp.nc1.iad0.nsscloud.net
+          - uba02.mtp.nc1.iad0.nsscloud.net
+          - uba03.mtp.nc1.iad0.nsscloud.net
+          - uba04.mtp.nc1.iad0.nsscloud.net
+          - uba05.mtp.nc1.iad0.nsscloud.net
+          - uba10.mtp.nc1.iad0.nsscloud.net
+          - nsmtp.sjc1clone.local
+          - mpas_sjc1clone.sjc1clone.local
+          - nsmtp-qa01-mp-npe.qa.boomskope.com
+          - mpas01-qa01-mp-npe.qa.boomskope.com
+          - nsmtp-stg01-mp.stg.boomskope.com
+          - mpas01-stg01-mp.stg.boomskope.com
+          - nsmtp-stg01-mplegacy.stg.boomskope.com
+          - mpas01-stg01-mplegacy.stg.boomskope.com
+          - nsmtp-devint-automation.devint.boomskope.com
+          - mpas01-devint-automation.devint.boomskope.com
+          - nsmtp-fed1mp.fed.boomskope.com
+          - mpas01-fed1mp.fed.boomskope.com
+          - nsmtp-fed01-mp-preprod.betagovskope.us
+          - mpas01-fed01-mp-preprod.betagovskope.us
+          - nsmtp.govskope.us
+          - mpas01.govskope.us
+          - nsmtp.govskope.ca
+          - mpas01.govskope.ca
+          - uebademo.goskope.com
+          - qadp01.goskope.com
+          - nsmtp.goskope.com
+          - dcv-ops.goskope.com
+          - nsmtp.de.goskope.com
+          - dcv-ops.de.goskope.com
+          - nsmtp.eu.goskope.com
+          - dcv-ops.eu.goskope.com
+          - nsmtp.au.goskope.com
+          - provisioner01.au.goskope.com
+          - mpas01-mel2-mp-prod.au.goskope.com
+          - nsmtp-sjc2-mp-prod.goskope.com
+          - mpas01-sjc2-mp-prod.goskope.com
+          - nsmtp-zur2-mp-prod.goskope.com
+          - mpas01-zur2-mp-prod.goskope.com
+          - nsmtp-ruh1-mp-prod.goskope.com
+          - mpas01-ruh1-mp-prod.goskope.com
+          - nsmtp-lon3-mp-prod.goskope.com
+          - mpas01-lon3-mp-prod.goskope.com
+          - nsmtp-dfw3-mp-prod.goskope.com
+          - mpas01-dfw3-mp-prod.goskope.com
+          - nsmtp-fra2-mp-prod.goskope.com
+          - mpas01-fra2-mp-prod.goskope.com
+          - nsmtp-sin2-mp-prod.goskope.com
+          - mpas01-sin2-mp-prod.goskope.com
+    x-netskope-params:
+      apiGroup: ubadatasvc
+      customerFacing: true
+      serviceConfig: ubadatasvc
+      version: 2
+  /ubadatasvc/pdv/getanomalies:
+    post:
+      description: Get a list of anomalies for the specific window
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PdvAnomaliesSearchFilters"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TriggeredAnomalies"
+          description: successful request
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: forbidden request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get a list of anomalies
+      x-netskope-route-params:
+        enableAuditLogging: false
+        allowedTenants:
+          - nsmtp.mtp.nc1.iad0.nsscloud.net
+          - uba01.mtp.nc1.iad0.nsscloud.net
+          - uba02.mtp.nc1.iad0.nsscloud.net
+          - uba03.mtp.nc1.iad0.nsscloud.net
+          - uba04.mtp.nc1.iad0.nsscloud.net
+          - uba05.mtp.nc1.iad0.nsscloud.net
+          - uba10.mtp.nc1.iad0.nsscloud.net
+          - nsmtp.sjc1clone.local
+          - mpas_sjc1clone.sjc1clone.local
+          - nsmtp-qa01-mp-npe.qa.boomskope.com
+          - mpas01-qa01-mp-npe.qa.boomskope.com
+          - nsmtp-stg01-mp.stg.boomskope.com
+          - mpas01-stg01-mp.stg.boomskope.com
+          - nsmtp-stg01-mplegacy.stg.boomskope.com
+          - mpas01-stg01-mplegacy.stg.boomskope.com
+          - nsmtp-devint-automation.devint.boomskope.com
+          - mpas01-devint-automation.devint.boomskope.com
+          - nsmtp-fed1mp.fed.boomskope.com
+          - mpas01-fed1mp.fed.boomskope.com
+          - nsmtp-fed01-mp-preprod.betagovskope.us
+          - mpas01-fed01-mp-preprod.betagovskope.us
+          - nsmtp.govskope.us
+          - mpas01.govskope.us
+          - nsmtp.govskope.ca
+          - mpas01.govskope.ca
+          - uebademo.goskope.com
+          - qadp01.goskope.com
+          - nsmtp.goskope.com
+          - dcv-ops.goskope.com
+          - nsmtp.de.goskope.com
+          - dcv-ops.de.goskope.com
+          - nsmtp.eu.goskope.com
+          - dcv-ops.eu.goskope.com
+          - nsmtp.au.goskope.com
+          - provisioner01.au.goskope.com
+          - mpas01-mel2-mp-prod.au.goskope.com
+          - nsmtp-sjc2-mp-prod.goskope.com
+          - mpas01-sjc2-mp-prod.goskope.com
+          - nsmtp-zur2-mp-prod.goskope.com
+          - mpas01-zur2-mp-prod.goskope.com
+          - nsmtp-ruh1-mp-prod.goskope.com
+          - mpas01-ruh1-mp-prod.goskope.com
+          - nsmtp-lon3-mp-prod.goskope.com
+          - mpas01-lon3-mp-prod.goskope.com
+          - nsmtp-dfw3-mp-prod.goskope.com
+          - mpas01-dfw3-mp-prod.goskope.com
+          - nsmtp-fra2-mp-prod.goskope.com
+          - mpas01-fra2-mp-prod.goskope.com
+          - nsmtp-sin2-mp-prod.goskope.com
+          - mpas01-sin2-mp-prod.goskope.com
+    x-netskope-params:
+      apiGroup: ubadatasvc
+      customerFacing: true
+      serviceConfig: ubadatasvc
+      version: 2
+  /ubadatasvc/repeatableDemo:
+    post:
+      description:
+        Commands the repeatable demo app to populate the UEBA system with
+        demo data and notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RepeatableDemoRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepeatableDemoResponse"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepeatableDemoResponse"
+          description: invalid request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepeatableDemoResponse"
+          description: internal error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RepeatableDemoResponse"
+          description: external dependency error
+      summary: Repeatable Demo trigger operation
+      x-codegen-request-body-name: body
+    x-netskope-params:
+      apiGroup: ubadatasvc
+      customerFacing: true
+      serviceConfig: ubadatasvc
+      version: 2
+  /ubadatasvc/user/uci:
+    post:
+      description: Get single user's confidence index
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUciRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfidenceTimeSeries"
+          description: successful request
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: invalid request
+      summary: Get single user's confidence index
+      x-netskope-route-params:
+        enableAuditLogging: false
+    x-netskope-params:
+      apiGroup: ubadatasvc
+      customerFacing: true
+      serviceConfig: ubadatasvc
+      version: 2

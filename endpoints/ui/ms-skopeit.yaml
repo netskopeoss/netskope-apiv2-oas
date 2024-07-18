@@ -1,0 +1,1056 @@
+components:
+  schemas:
+    AppCCI:
+      properties:
+        app_id:
+          description: application_id
+          type: integer
+        cci:
+          description: cci.
+          type: integer
+        ccl:
+          $ref: "#/components/schemas/CCL"
+      type: object
+    AppDomainsList:
+      allOf:
+        - properties:
+            domain_name:
+              type: string
+          type: object
+    AppUrlsList:
+      allOf:
+        - properties:
+            url:
+              type: string
+          type: object
+    Application:
+      allOf:
+        - properties:
+            AppDomainsList:
+              items:
+                $ref: "#/components/schemas/AppDomainsList"
+              type: array
+            AppUrlsList:
+              items:
+                $ref: "#/components/schemas/AppUrlsList"
+              type: array
+            ApplicationCategories:
+              items:
+                $ref: "#/components/schemas/ApplicationCategories"
+              type: array
+            application_id:
+              description: The user ID.
+              type: integer
+            cci:
+              description: The user ID.
+              type: integer
+            ccl:
+              $ref: "#/components/schemas/CCL"
+            current_name:
+              type: string
+            description:
+              type: string
+            tag_data:
+              items:
+                $ref: "#/components/schemas/Tag"
+              type: array
+          type: object
+    ApplicationCategories:
+      allOf:
+        - properties:
+            category_id:
+              type: integer
+            category_name:
+              type: string
+          type: object
+    Asset:
+      allOf:
+        - properties:
+            answer:
+              type: string
+            asset_id:
+              description: this is the application_id.
+              type: integer
+            asset_type_id:
+              description: asset_type_id
+              type: integer
+          type: object
+    BadRequest:
+      allOf:
+        - properties:
+            msg:
+              default: Bad request error
+              type: string
+            success:
+              default: false
+              type: boolean
+          type: object
+    CCL:
+      enum:
+        - excellent
+        - high
+        - medium
+        - low
+        - poor
+      type: string
+    QuestionCategories:
+      allOf:
+        - properties:
+            app_index_questions:
+              items:
+                $ref: "#/components/schemas/Questions"
+              type: array
+            category_name:
+              description: Category name.
+              type: string
+            category_text:
+              description: Category text.
+              type: string
+            display_order:
+              description: display order of question category.
+              type: integer
+            id:
+              description: The Question Categoriy ID.
+              type: integer
+            tool_tips:
+              description: Question category tooltips.
+              type: string
+          type: object
+    QuestionChoices:
+      allOf:
+        - properties:
+            choice_text:
+              description: choice_text.
+              type: string
+            choice_value:
+              description: choice_value.
+              type: string
+            id:
+              description: The Question Categoriy ID.
+              type: integer
+          type: object
+    QuestionImportance:
+      allOf:
+        - properties:
+            id:
+              description: application_id
+              type: integer
+            pending_question_importance:
+              description: pending_question_importance.
+              type: integer
+            question_col_name:
+              description: question_col_name.
+              type: string
+            question_importance:
+              description: question_importance
+              type: integer
+          type: object
+    QuestionImportancePending:
+      allOf:
+        - properties:
+            id:
+              description: application_id
+              type: integer
+            question_col_name:
+              description: question_col_name.
+              type: string
+            question_importance:
+              description: question_importance
+              type: integer
+          type: object
+    Questions:
+      allOf:
+        - properties:
+            app_index_question_choices:
+              items:
+                $ref: "#/components/schemas/QuestionChoices"
+              type: array
+            display_order:
+              description: display order of question category.
+              type: integer
+            id:
+              description: The Question Categoriy ID.
+              type: integer
+            instructions:
+              description: instructions.
+              type: string
+            question_col_name:
+              description: question_col_name.
+              type: string
+            question_text:
+              description: question_text.
+              type: string
+          type: object
+    ServerError:
+      allOf:
+        - properties:
+            msg:
+              default: Backend error occurred
+              type: string
+            success:
+              default: false
+              type: boolean
+          type: object
+    Tag:
+      allOf:
+        - properties:
+            answer:
+              type: string
+            question_id:
+              description: application_id
+              type: integer
+          type: object
+    TagAssets:
+      allOf:
+        - $ref: "#/components/schemas/Tag"
+        - $ref: "#/components/schemas/Asset"
+    Unauthorized:
+      allOf:
+        - properties:
+            msg:
+              default: Unauthorized
+              type: string
+            success:
+              default: false
+              type: boolean
+          type: object
+    limit:
+      maximum: 100
+      minimum: 1
+      type: integer
+    offset:
+      maximum: 10000000
+      minimum: 0
+      type: integer
+    orderby:
+      default: desc
+      enum:
+        - asc
+        - desc
+      type: string
+info:
+  contact:
+    name: ""
+  description: MS SkopeIT
+  title: ms-skopeit
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /ui/skopeit/application:
+    get:
+      description: Gets a list of applications.
+      parameters:
+        - description: default is 10. upper bound is 100.
+          in: query
+          name: limit
+          schema:
+            $ref: "#/components/schemas/limit"
+        - description: default is 0.
+          in: query
+          name: offset
+          schema:
+            $ref: "#/components/schemas/offset"
+        - description: Query by application_name. An example is 'Glassdoor'.
+          in: query
+          name: app_name
+          schema:
+            type: string
+        - description: cloud confidence index
+          in: query
+          name: ccl
+          schema:
+            $ref: "#/components/schemas/CCL"
+        - description: default is asc
+          in: query
+          name: orderby
+          schema:
+            $ref: "#/components/schemas/orderby"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      count:
+                        type: integer
+                      rows:
+                        items:
+                          $ref: "#/components/schemas/Application"
+                        type: array
+                    type: object
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Applications.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Gets a list of applications.
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/application/{application_id}:
+    get:
+      description: Get application details.
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    $ref: "#/components/schemas/Application"
+                    type: object
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: Get an application
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get application details.
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/applications/category:
+    get:
+      description: Gets a list of application categories.
+      parameters:
+        - description: default is 10. upper bound is 100.
+          in: query
+          name: limit
+          schema:
+            $ref: "#/components/schemas/limit"
+        - description: default is 0.
+          in: query
+          name: offset
+          schema:
+            $ref: "#/components/schemas/offset"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/ApplicationCategories"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Applications.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Gets a list of application categories.
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/applications/cci:
+    get:
+      description: List of all possible CCL Values
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/CCL"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    type: boolean
+                type: object
+          description: Get CCL Values
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: List of all possible CCL Values
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/domain:
+    get:
+      description: Gets a list of domains.
+      parameters:
+        - description: default is 10. upper bound is 100.
+          in: query
+          name: limit
+          schema:
+            $ref: "#/components/schemas/limit"
+        - description: default is 0.
+          in: query
+          name: offset
+          schema:
+            $ref: "#/components/schemas/offset"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      rows:
+                        items:
+                          $ref: "#/components/schemas/AppDomainsList"
+                        type: array
+                    type: object
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Domains.
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    type: string
+                  success:
+                    default: false
+                    type: boolean
+                type: object
+          description: Bad Request Error.
+      summary: Gets a list of domains.
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/domain/{application_id}:
+    get:
+      description: Gets a list of domains for an application_id.
+      parameters:
+        - description: application_id. Sample 33560.
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+        - description: default is 10. upper bound is 100.
+          in: query
+          name: limit
+          schema:
+            $ref: "#/components/schemas/limit"
+        - description: default is 0.
+          in: query
+          name: offset
+          schema:
+            $ref: "#/components/schemas/offset"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      rows:
+                        items:
+                          $ref: "#/components/schemas/AppDomainsList"
+                        type: array
+                    type: object
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Domains for an application_id.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Gets a list of domains for an application_id.
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/graphql:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                query:
+                  '{ ApplicationsList(limit: 2000, offset: 0, sort: "application_name"
+                  ) { application_name }}'
+      responses:
+        "200":
+          description:
+            GraphQL Response. Schema could be anything. Impossible to define
+            here.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: " "
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/question:
+    get:
+      description: Get Application Questions
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/QuestionCategories"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    type: string
+                  success:
+                    default: false
+                    type: boolean
+                type: object
+          description: Bad Request Error.
+      summary: Get Application Questions
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/question/cci/custom/{application_id}:
+    get:
+      description: Get all customized CCI for a given application_id
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/AppCCI"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all customized CCI for a given application_id
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/question/cci/pending/{application_id}:
+    get:
+      description: Get all CCI in pending state for an application_id
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/AppCCI"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all CCI in pending state for an application_id
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/question/importance/custom/{application_id}:
+    get:
+      description: Get Application Questions
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/QuestionImportance"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    type: string
+                  success:
+                    default: false
+                    type: boolean
+                type: object
+          description: Bad Request Error.
+      summary: Get Application Questions
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/question/importance/pending/{application_id}:
+    get:
+      description: Get Application Questions
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/QuestionImportancePending"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    type: string
+                  success:
+                    default: false
+                    type: boolean
+                type: object
+          description: Bad Request Error.
+      summary: Get Application Questions
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/tag/custom:
+    get:
+      description: Get all custom defined tags
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/Tag"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all custom defined tags
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/tag/custom/{application_id}:
+    get:
+      description: Get all custom defined tags per application_id
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/TagAssets"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all custom defined tags per application_id
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/tag/predefined:
+    get:
+      description: Get all predefined tags
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/Tag"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all predefined tags
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+  /ui/skopeit/tag/predefined/{application_id}:
+    get:
+      description: Get all predefined defined tags per application_id
+      parameters:
+        - description: The application_id. Example application_id 33560
+          in: path
+          name: application_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    items:
+                      $ref: "#/components/schemas/TagAssets"
+                    type: array
+                  msg:
+                    type: string
+                  success:
+                    default: true
+                    type: boolean
+                type: object
+          description: A list of Questions (within Categories).
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+          description: Unauthorized.
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+          description: Bad Request Error.
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerError"
+          description: Backend error.
+      summary: Get all predefined defined tags per application_id
+    x-netskope-params:
+      apiGroup: ms-skopeit
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-skopeit
+      version: 2
+servers:
+  - description: Development server
+    url: http://localhost:3000/api/v2/ui
+tags: []

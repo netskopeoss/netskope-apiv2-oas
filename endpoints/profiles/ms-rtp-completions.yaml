@@ -1,0 +1,270 @@
+components:
+  schemas:
+    ApplicationObject:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+    CategoryObject:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+    Error:
+      properties:
+        message:
+          type: string
+info:
+  title: Completions End Points
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /profiles/applications:
+    get:
+      operationId: getApplicationsRTP
+      parameters:
+        - description: Type of applications
+          in: query
+          name: type
+          required: true
+          schema:
+            enum:
+              - predefined
+            type: string
+        - description:
+            If provided, the applications are filtered based on the service
+            relevance.
+          in: query
+          name: service
+          required: false
+          schema:
+            enum:
+              - threat
+              - dlp
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/ApplicationObject"
+                  type: object
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get list of applications
+    x-netskope-params:
+      apiGroup: rtp-completions
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /profiles/applications/getactivities:
+    post:
+      operationId: getAppActivities
+      parameters:
+        - description:
+            If provided, the activities are filtered based on the service
+            relevance.
+          in: query
+          name: service
+          required: false
+          schema:
+            enum:
+              - threat
+              - dlp
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                applicationIds:
+                  description: list of application ids
+                  items:
+                    type: string
+                  type: array
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get list of application activites
+    x-netskope-params:
+      apiGroup: rtp-completions
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /profiles/browsers:
+    get:
+      operationId: getBrowsers
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get list of browsers
+    x-netskope-params:
+      apiGroup: rtp-completions
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /profiles/web/categories:
+    get:
+      operationId: getWebCategories
+      parameters:
+        - description: Type of categories
+          in: query
+          name: type
+          required: true
+          schema:
+            enum:
+              - predefined
+            type: string
+        - description:
+            If provided, the categories are filtered based on the service
+            relevance.
+          in: query
+          name: service
+          required: false
+          schema:
+            enum:
+              - threat
+              - dlp
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/CategoryObject"
+                  type: object
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get list of web categories
+    x-netskope-params:
+      apiGroup: rtp-completions
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /profiles/web/categories/getactivities:
+    post:
+      operationId: getCategoryActivities
+      parameters:
+        - description:
+            If provided, the activities are filtered based on the service
+            relevance.
+          in: query
+          name: service
+          required: false
+          schema:
+            enum:
+              - threat
+              - dlp
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                categoryIds:
+                  description: list of category ids
+                  items:
+                    type: string
+                  type: array
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Validation Error
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Internal Error
+      summary: Get list of category activites
+    x-netskope-params:
+      apiGroup: rtp-completions
+      customerFacing: true
+      nsPartner: true
+      serviceConfig: ms-rtp-shim
+      version: 2

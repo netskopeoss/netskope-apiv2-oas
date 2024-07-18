@@ -1,0 +1,172 @@
+components:
+  schemas:
+    AdvancedFileScanObject:
+      minProperties: 1
+      properties:
+        contentScanConfig:
+          minProperties: 1
+          properties:
+            dataLossPrevention:
+              properties:
+                fileSize:
+                  description: File size is in MB.
+                  enum:
+                    - 16
+                    - 32
+                    - 64
+                    - 128
+                  type: integer
+                timeout:
+                  description: Timeout is in seconds. Maximum 300 seconds allowed.
+                  maximum: 300
+                  type: integer
+              required:
+                - fileSize
+                - timeout
+              type: object
+            fileProfile:
+              properties:
+                fileSize:
+                  description:
+                    File size is in MB. The default file size limit for
+                    File Profile is 256MB. File Profile fileSize should be equal or
+                    larger than DLP and Threat Protection fileSize limits.
+                  enum:
+                    - 256
+                    - 400
+                  type: integer
+              required:
+                - fileSize
+              type: object
+            threatProtection:
+              properties:
+                fileSize:
+                  description: File size is in MB.
+                  enum:
+                    - 16
+                    - 400
+                  type: integer
+              required:
+                - fileSize
+              type: object
+          type: object
+        largeFileSupport:
+          description:
+            'Enable large file support by setting "enabled" = true. large
+            file support must be enabled, if you want to modify contentScanConfig.fileSize
+            limits for "Data Loss Prevention", "Threat Protection" and "File Profile".
+            NOTE: if large file support is disabled, it will reset "fileSize" settings
+            back to default (minimum) size.'
+          minProperties: 1
+          properties:
+            dataTrickling:
+              default: false
+              description:
+                largeFileSupport.enabled must be true in order to enable
+                data trickling.
+              type: boolean
+            enabled:
+              default: false
+              type: boolean
+          type: object
+        scanFailureFallbackAction:
+          description:
+            Specify a fallback action that takes place when content inspection
+            cannot be performed because of the file size being too large and system
+            error. This option can be specified irrespective of the largeFileSupport
+            enablement.
+          minProperties: 1
+          properties:
+            dataLossPrevention:
+              enum:
+                - allow
+                - alert
+                - block
+              type: string
+            fileProfile:
+              enum:
+                - allow
+                - alert
+                - block
+              type: string
+            threatProtection:
+              enum:
+                - alert
+                - block
+              type: string
+          type: object
+      type: object
+    ErrorResponseObject:
+      properties:
+        message:
+          type: string
+      type: object
+info:
+  description:
+    Manage advanced file scan config for real-time protection policies.You
+    can enable Advanced File Scanning, also known as Large File Support (LFS), for
+    files exceeding the default size when analyzed by DLP, Threat Protection, or File
+    Profile. These endpoints will allow you to review and modify file size limitations
+    and timeout values.
+  title: Advanced File Scan Configuration for Real Time Protection.
+  version: 0.0.1
+openapi: 3.0.0
+paths:
+  /platform/advancedfilescanconfig:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancedFileScanObject"
+          description: The record is retrieved successfully.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseObject"
+          description: Internal server error.
+      summary: Get advanced file scan configuration.
+      tags:
+        - real-time-policy
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdvancedFileScanObject"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdvancedFileScanObject"
+          description: The record has been successfully updated.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseObject"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponseObject"
+          description: Internal server error.
+      summary: Update advanced file scan configuration.
+      tags:
+        - real-time-policy
+    x-netskope-params:
+      apiGroup: real-time-policy
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 4
+        writeRoutes:
+          minute: 1
+      serviceConfig: ms-rtp-shim
+      version: 2
