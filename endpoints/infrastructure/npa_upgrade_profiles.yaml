@@ -715,7 +715,6 @@ paths:
         - description: publisher upgrade profile external_id
           in: path
           name: external_id
-          x-speakeasy-match: external_id
           required: true
           schema:
             format: int32
