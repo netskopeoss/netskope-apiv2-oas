@@ -19,58 +19,146 @@ components:
           type: integer
       type: object
     publisher_response:
+      x-speakeasy-entity: NPAPublisherBulkUpdates
       properties:
+        apps_count:
+          type: integer
+          format: int32
         assessment:
           type: object
+          properties:
+            ca_certs_status:
+              type: object
+              properties:
+                hashes:
+                  type: array
+                  items:
+                    type: string
+                last_modified:
+                  type: number
+            eee_support:
+              type: boolean
+            hdd_free:
+              type: string
+            hdd_total:
+              type: string
+            ip_address:
+              type: string
+            latency:
+              type: number
+            version:
+              type: string
+        capabilities:
+          type: object
+          properties:
+            DTLS:
+              type: boolean
+            EEE:
+              type: boolean
+            auto_upgrade:
+              type: boolean
+            nwa_ba:
+              type: boolean
+            pull_nsconfig:
+              type: object
+              properties:
+                orgkey_exist:
+                  type: boolean
+                orguri_exist:
+                  type: boolean 
         common_name:
           type: string
+        connected_apps:
+          type: array
+          items:
+            type: string
+        id:
+          x-speakeasy-name-override: publisher_id
+          type: integer
+          format: int32
         lbrokerconnect:
           type: boolean
-        publisher_id:
-          format: int32
-          type: integer
-        publisher_name:
+        name:
           type: string
-        publisher_upgrade_profile_id:
-          format: int32
+        publisher_upgrade_profiles_id:
           type: integer
+          format: int32
         registered:
           type: boolean
         status:
-          enum:
-            - connected
-            - not registered
           type: string
         stitcher_id:
-          format: int32
           type: integer
+          format: int32
+        sticher_pop:
+          type: string
         tags:
+          x-speakeasy-terraform-ignore: true
+          type: array
           items:
             $ref: "#/components/schemas/tag_item"
-          type: array
-      type: object
+        upgrade_failed_reason:
+          type: object
+          properties:
+            detail:
+              type: string
+            error_code:
+              type: number
+            timestamp:
+              type: number
+            version:
+              type: string           
+        upgrade_request:
+          type: boolean
+        upgrade_status:
+          type: object
+          properties:
+            upstat:
+              type: string
     publisher_upgrade_profile_bulk_request:
+      x-speakeasy-entity-operation: NPAPublisherBulkUpdates#update
+      x-speakeasy-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource updates bulk updates publishers to an upgrade profile.
       properties:
         publishers:
           properties:
             apply:
               properties:
                 publisher_upgrade_profiles_id:
+                  description: |
+                    Please use the `external_id` of the upgrade profile for this value.
                   type: string
+                  example: 1
               type: object
             id:
+              description: |
+                This is an array of publisher `id` values.
               items:
                 type: string
               type: array
+              example: [
+                "10",
+                "20",
+                "30"
+              ]
           type: object
       type: object
     publisher_upgrade_profile_bulk_response:
       properties:
         data:
-          items:
-            $ref: "#/components/schemas/publisher_response"
-          type: array
+          type: object
+          properties:
+            publishers:
+              type: array
+              items:
+                $ref: "#/components/schemas/publisher_response"
         status:
+          x-speakeasy-terraform-ignore: true
           enum:
             - success
             - not found
@@ -80,27 +168,60 @@ components:
           type: integer
       type: object
     publisher_upgrade_profile_get_response:
+      x-speakeasy-entity: 
+        - NPAPublisherUpgradeProfiles
+        - NPAPublisherUpgradeProfilesList
+      x-speakeasy-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This data object queries and returns all publisher upgrade profiles.
       properties:
         data:
           properties:
-            docker_tag:
-              type: string
-            enabled:
-              format: int32
-              type: integer
-            frequency:
-              type: string
-            id:
-              format: int32
-              type: integer
-            name:
-              type: string
-            release_type:
-              type: string
-            timezone:
-              type: string
+            upgrade_profiles:
+              type: array
+              items:
+                type: object
+                properties:
+                  created_at:
+                    type: string
+                  docker_tag:
+                    type: string
+                  enabled:
+                    format: boolean
+                  external_id: 
+                    type: integer
+                    format: int32
+                  frequency:
+                    type: string
+                  id:
+                    format: int32
+                    type: integer
+                  name:
+                    type: string
+                  next_update_time: 
+                    type: integer
+                    format: int32
+                  num_associated_publisher:
+                    type: integer
+                    format: int32
+                  release_type:
+                    type: string
+                  timezone:
+                    type: string
+                  updated_at:
+                    type: string
+                  upgrading_stage:
+                    type: integer
+                    format: int32
+                  will_start:
+                    type: boolean
           type: object
         status:
+          x-speakeasy-terraform-ignore: true
           enum:
             - success
             - not found
@@ -110,44 +231,291 @@ components:
           type: integer
       type: object
     publisher_upgrade_profile_post_request:
+      x-speakeasy-entity: NPAPublisherUpgradeProfiles
+      x-speakeasy-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource creates a publisher upgrade profile.    
+      required:
+        - docker_tag
+        - name
+        - enabled
+        - frequency
+        - timezone
+        - release_type
       properties:
         docker_tag:
+          description: |
+            Docker Tag of the release version you wish to install. \
+            Docker Tag for releases can be optained from: \
+            `api/v2/infrastructure/publishers/releases`
           type: string
+          example: 8690
         enabled:
+          description: |
+            Is this updgrade profile enabled.
+            * `1` - Enabled
+            * `0` - Disabled
           format: int32
           type: integer
+          example: 0
         frequency:
+          description: |
+            Frequency of updates. This frequency is in a CRON format. \
+            ┌───────────── minute (0–59) \
+            │ ┌───────────── hour (0–23) \
+            │ │ ┌───────────── day of the month (1–31) \
+            │ │ │ ┌───────────── month (1–12) (Leave as *) \
+            │ │ │ │ ┌───────────── day of the week (MON, TUES, WED, THUR, FRI, SAT, SUN) \
+            0 0 0 * TUES => (Midnight, Weekly, Tuesday)
           type: string
+          example: 0 0 0 * * TUES
         name:
           type: string
+          example: Weekly Upgrade
         release_type:
+          description: |
+            This is the Release Type that is to be installed. \
+            Release Type for releases can be optained from: \
+            `api/v2/infrastructure/publishers/releases`
           type: string
+          enum:
+            - Beta
+            - Latest
+            - Latest-1
+            - Latest-2
+          example: Latest
         timezone:
+          description: | 
+            The timezone for which the upgrade triggers. \
+            Please see enum for accepted values.
           type: string
+          enum:
+            - Africa/Cairo
+            - Africa/Casablanca
+            - Africa/Johannesburg
+            - Africa/Nairobi
+            - America/Argentina/Buenos_Aires
+            - America/Caracas
+            - America/Godthab
+            - America/Lima
+            - America/Mazatlan
+            - America/Santiago
+            - America/Tijuana
+            - Asia/Almaty
+            - Asia/Baghdad
+            - Asia/Baku
+            - Asia/Calcutta
+            - Asia/Dhaka
+            - Asia/Harbin
+            - Asia/Jakarta
+            - Asia/Jerusalem
+            - Asia/Kabul
+            - Asia/Karachi
+            - Asia/Kathmandu
+            - Asia/Krasnoyarsk
+            - Asia/Kuala_Lumpur
+            - Asia/Muscat
+            - Asia/Rangoon
+            - Asia/Taipei
+            - Asia/Tehran
+            - Asia/Vladivostok
+            - Asia/Yakutsk
+            - Asia/Yerevan
+            - Atlantic/Azores
+            - Atlantic/Cape_Verde
+            - Australia/Adelaide
+            - Australia/Brisbane
+            - Australia/Darwin
+            - Australia/Hobart
+            - Australia/Perth
+            - Australia/Sydney
+            - Brazil/East
+            - Canada/Atlantic
+            - Canada/Central
+            - Canada/Newfoundland
+            - Canada/Saskatchewan
+            - Europe/Amsterdam
+            - Europe/Athens
+            - Europe/Copenhagen
+            - Europe/Helsinki
+            - Europe/London
+            - Europe/Minsk
+            - Europe/Moscow
+            - Europe/Paris
+            - Europe/Prague
+            - Europe/Sarajevo
+            - Japan
+            - Mexico/General
+            - Pacific/Auckland
+            - Pacific/Fiji
+            - Pacific/Guadalcanal
+            - Pacific/Guam
+            - Pacific/Samoa
+            - Pacific/Tongatapu
+            - US/Alaska
+            - US/Arizona
+            - US/East-Indiana
+            - US/Eastern
+            - US/Hawaii
+            - US/Mountain
+            - US/Pacific
+          example: US/Eastern
       type: object
     publisher_upgrade_profile_put_request:
+      x-speakeasy-entity: NPAPublisherUpgradeProfiles
+      x-speakeasy-description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This resource updates a publisher upgrade profile.    
+      required:
+        - docker_tag
+        - name
+        - enabled
+        - id
+        - frequency
+        - timezone
+        - release_type
       properties:
         docker_tag:
+          description: |
+            Docker Tag of the release version you wish to install. \
+            Docker Tag for releases can be optained from: \
+            `api/v2/infrastructure/publishers/releases`
           type: string
+          example: 8690
         enabled:
+          description: |
+            Is this updgrade profile enabled.
+            * `1` - Enabled
+            * `0` - Disabled
           format: int32
           type: integer
+          example: 0
         frequency:
+          description: |
+            Frequency of updates. This frequency is in a CRON format. \
+            ┌───────────── minute (0–59) \
+            │ ┌───────────── hour (0–23) \
+            │ │ ┌───────────── day of the month (1–31) \
+            │ │ │ ┌───────────── month (1–12) (Leave as *) \
+            │ │ │ │ ┌───────────── day of the week (MON, TUE, WED, THU, FRI, SAT, SUN) \
+            0 0 * * TUE => (Midnight, Weekly, Tuesday)
           type: string
+          example: 0 0 * * TUE
         id:
-          format: int32
+          description: |
+            Please supply the `external_id` value for this attribute requirement.
+            This value should match the upgrade_profile_id parameter.
           type: integer
+          format: int32
+          example: 1
         name:
           type: string
+          example: Weekly Upgrade
         release_type:
+          description: |
+            This is the Release Type that is to be installed. \
+            Release Type for releases can be optained from: \
+            `api/v2/infrastructure/publishers/releases`
           type: string
+          enum:
+            - Beta
+            - Latest
+            - Latest-1
+            - Latest-2
+          example: Latest
         timezone:
+          description: | 
+            The timezone for which the upgrade triggers. \
+            Please vew enum values for acceptable values.
           type: string
+          enum:
+            - Africa/Cairo
+            - Africa/Casablanca
+            - Africa/Johannesburg
+            - Africa/Nairobi
+            - America/Argentina/Buenos_Aires
+            - America/Caracas
+            - America/Godthab
+            - America/Lima
+            - America/Mazatlan
+            - America/Santiago
+            - America/Tijuana
+            - Asia/Almaty
+            - Asia/Baghdad
+            - Asia/Baku
+            - Asia/Calcutta
+            - Asia/Dhaka
+            - Asia/Harbin
+            - Asia/Jakarta
+            - Asia/Jerusalem
+            - Asia/Kabul
+            - Asia/Karachi
+            - Asia/Kathmandu
+            - Asia/Krasnoyarsk
+            - Asia/Kuala_Lumpur
+            - Asia/Muscat
+            - Asia/Rangoon
+            - Asia/Taipei
+            - Asia/Tehran
+            - Asia/Vladivostok
+            - Asia/Yakutsk
+            - Asia/Yerevan
+            - Atlantic/Azores
+            - Atlantic/Cape_Verde
+            - Australia/Adelaide
+            - Australia/Brisbane
+            - Australia/Darwin
+            - Australia/Hobart
+            - Australia/Perth
+            - Australia/Sydney
+            - Brazil/East
+            - Canada/Atlantic
+            - Canada/Central
+            - Canada/Newfoundland
+            - Canada/Saskatchewan
+            - Europe/Amsterdam
+            - Europe/Athens
+            - Europe/Copenhagen
+            - Europe/Helsinki
+            - Europe/London
+            - Europe/Minsk
+            - Europe/Moscow
+            - Europe/Paris
+            - Europe/Prague
+            - Europe/Sarajevo
+            - Japan
+            - Mexico/General
+            - Pacific/Auckland
+            - Pacific/Fiji
+            - Pacific/Guadalcanal
+            - Pacific/Guam
+            - Pacific/Samoa
+            - Pacific/Tongatapu
+            - US/Alaska
+            - US/Arizona
+            - US/East-Indiana
+            - US/Eastern
+            - US/Hawaii
+            - US/Mountain
+            - US/Pacific
+          example: US/Eastern
       type: object
     publisher_upgrade_profile_response:
+      x-speakeasy-entity: NPAPublisherUpgradeProfiles
+      type: object
       properties:
         data:
           properties:
+            created_at:
+              type: string
             docker_tag:
               type: string
             enabled:
@@ -156,22 +524,31 @@ components:
             frequency:
               type: string
             id:
+              x-speakeasy-name-override: external_id
               format: int32
               type: integer
             name:
               type: string
+            next_update_time: 
+              type: integer
+              format: int32
             release_type:
               type: string
             timezone:
               type: string
-          type: object
+            updated_at:
+              type: string
+            upgrading_stage:
+              type: integer
+              format: int32
         status:
+          x-speakeasy-terraform-ignore: true
           enum:
             - success
             - not found
           type: string
-      type: object
     tag_item:
+      x-speakeasy-terraform-ignore: true
       properties:
         tag_id:
           format: int32
@@ -187,14 +564,25 @@ openapi: 3.0.0
 paths:
   /infrastructure/publisherupgradeprofiles:
     get:
-      description: Get list of publisher upgrade profile objects
-      parameters:
-        - description: Return values only from specified fields
-          in: query
-          name: fields
-          required: false
-          schema:
-            type: string
+      operationId: listNPAPublisherUpgradeProfiles
+      x-speakeasy-name-override: list_objects
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfilesList#read
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint queries and returns all publisher upgrade profiles.
+### Removing fields query parameter as it does not currently function.
+#      parameters:
+#        - description: Return values only from specified fields
+#          in: query
+#          name: fields
+#          required: false
+#          schema:
+#            type: string
       responses:
         "200":
           content:
@@ -210,9 +598,23 @@ paths:
           description: Invalid request
       summary: Get list of publisher upgrade profile objects
     post:
-      description: Create a publisher upgrade profile
+      operationId: createNPAPublisherUpgradeProfiles
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#create
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint creates a publisher upgrade profiles. \
+        Please view schema for attribute descriptions.   
       parameters:
-        - description: flag to skip output except status code
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
+          x-speakeasy-ignore: true
           in: query
           name: silent
           required: false
@@ -246,14 +648,25 @@ paths:
       serviceConfig: provisioner-pycore-ws
       version: 2
   /infrastructure/publisherupgradeprofiles/bulk:
-    description: Update the profile of multiple publishers
     put:
+      operationId: BulkupdateNPAPublishers
+      x-speakeasy-entity-operation: NPAPublisherBulkUpdates#update
+      description: |
+          The NPA Publisher is a software package that enables private application
+          connectivity between your data center and the Netskope cloud. It is a crucial
+          component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+          network access (ZTNA) to private applications and data in hybrid IT environments.
+
+          This endpoint bulk updates publishers to an upgrade profile.\
+          Please use the profile `external_id` value for the profile `id` requirement.
       parameters:
-        - description:
-            "flag to skip output except status code: \n * `1` - Skip response\
-            \ data \n * `0` - Do not skip response data"
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           in: query
           name: silent
+          x-speakeasy-ignore: true
           required: false
           schema:
             enum:
@@ -285,13 +698,24 @@ paths:
       customerFacing: true
       serviceConfig: provisioner-pycore-ws
       version: 2
-  /infrastructure/publisherupgradeprofiles/{upgrade_profile_id}:
+  /infrastructure/publisherupgradeprofiles/{external_id}:
     delete:
-      description: Delete a publisher upgrade profile based on profile id
+      operationId: deleteNPAPublisherUpgradeProfiles
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#delete
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint deletes a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.\
+        Please use the `external_id` value for the upgrade_profile_id attribute requirements.
       parameters:
-        - description: publisher upgrade profile id
+        - description: publisher upgrade profile external_id
           in: path
-          name: upgrade_profile_id
+          name: external_id
+          x-speakeasy-match: external_id
           required: true
           schema:
             format: int32
@@ -303,6 +727,7 @@ paths:
               schema:
                 properties:
                   status:
+                    x-speakeasy-terraform-ignore: true
                     enum:
                       - success
                       - error
@@ -317,13 +742,21 @@ paths:
           description: Invalid request
       summary: Delete a publisher
     get:
-      description:
-        get a publisher upgrade profile based on publisher upgrade profile
-        id
+      operationId: getNPAPublisherUpgradeProfiles
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#read
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint returns a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile.
+        Please use the `external_id` value for the upgrade_profile_id attribute requirements.
       parameters:
-        - description: publisher upgrade profile id
+        - description: publisher upgrade profile external_id
           in: path
-          name: upgrade_profile_id
+          name: external_id
           required: true
           schema:
             format: int32
@@ -343,20 +776,32 @@ paths:
           description: Invalid request
       summary: "Get a publisher upgrade profile "
     put:
-      description:
-        update a publisher upgrade profile based on publisher upgrade profile
-        id
+      operationId: updateNPAPublisherUpgradeProfiles
+      x-speakeasy-entity-operation: NPAPublisherUpgradeProfiles#update
+      x-speakeasy-group: NPAPublisherUpgradeProfiles
+      description: |
+        The NPA Publisher is a software package that enables private application
+        connectivity between your data center and the Netskope cloud. It is a crucial
+        component of Netskope’s Private Access (NPA) solution, which provides zero-trust
+        network access (ZTNA) to private applications and data in hybrid IT environments.
+
+        This endpoint updates a publisher upgrade profile by supplying the `upgrade_profile_id` attribute of the profile and the updated paramters.\
+        Please use the `external_id` value for the upgrade_profile_id attribute requirements.
       parameters:
-        - description: publisher upgrade profile id
+        - description: publisher upgrade profile external_id
           in: path
-          name: upgrade_profile_id
+          name: external_id
           required: true
           schema:
             format: int32
             type: integer
-        - description: flag to skip output except status code
+        - description: |
+            Flag to skip output except status code:
+             * `1` - Skip response data
+             * `0` - Do not skip response data
           in: query
           name: silent
+          x-speakeasy-ignore: true
           required: false
           schema:
             enum:
