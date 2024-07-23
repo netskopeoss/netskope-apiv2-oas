@@ -410,6 +410,7 @@ components:
           type: string
           example: 0 0 * * TUE
         id:
+          x-speakeasy-name-override: external_id
           description: |
             Please supply the `external_id` value for this attribute requirement.
             This value should match the upgrade_profile_id parameter.
@@ -509,10 +510,10 @@ components:
           example: US/Eastern
       type: object
     publisher_upgrade_profile_response:
-      x-speakeasy-entity: NPAPublisherUpgradeProfiles
       type: object
       properties:
         data:
+          x-speakeasy-entity: NPAPublisherUpgradeProfiles
           properties:
             created_at:
               type: string
