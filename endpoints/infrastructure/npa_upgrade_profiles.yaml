@@ -1,15 +1,5 @@
 components:
   schemas:
-    "200":
-      properties:
-        result:
-          items:
-            type: object
-          type: array
-        status:
-          example: 200
-          type: integer
-      type: object
     "400":
       properties:
         message:
@@ -19,7 +9,6 @@ components:
           type: integer
       type: object
     publisher_response:
-      x-speakeasy-entity: NPAPublisherBulkUpdates
       properties:
         apps_count:
           type: integer
@@ -151,6 +140,7 @@ components:
     publisher_upgrade_profile_bulk_response:
       properties:
         data:
+          x-speakeasy-entity: NPAPublisherBulkUpdates
           type: object
           properties:
             publishers:
@@ -168,9 +158,6 @@ components:
           type: integer
       type: object
     publisher_upgrade_profile_get_response:
-      x-speakeasy-entity: 
-        - NPAPublisherUpgradeProfiles
-        - NPAPublisherUpgradeProfilesList
       x-speakeasy-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial
@@ -178,58 +165,56 @@ components:
         network access (ZTNA) to private applications and data in hybrid IT environments.
 
         This data object queries and returns all publisher upgrade profiles.
+      type: object
       properties:
-        data:
-          properties:
-            upgrade_profiles:
-              type: array
-              items:
-                type: object
-                properties:
-                  created_at:
-                    type: string
-                  docker_tag:
-                    type: string
-                  enabled:
-                    format: boolean
-                  external_id: 
-                    type: integer
-                    format: int32
-                  frequency:
-                    type: string
-                  id:
-                    format: int32
-                    type: integer
-                  name:
-                    type: string
-                  next_update_time: 
-                    type: integer
-                    format: int32
-                  num_associated_publisher:
-                    type: integer
-                    format: int32
-                  release_type:
-                    type: string
-                  timezone:
-                    type: string
-                  updated_at:
-                    type: string
-                  upgrading_stage:
-                    type: integer
-                    format: int32
-                  will_start:
-                    type: boolean
-          type: object
-        status:
-          x-speakeasy-terraform-ignore: true
-          enum:
-            - success
-            - not found
+        created_at:
           type: string
-        total:
+          example: 2024-07-23T14:06:32.070Z
+        docker_tag:
+          type: string
+          example: 8691
+        enabled:
+          type: boolean
+          example: true
+        external_id: 
+          type: integer
+          format: int32
+          example: 1
+        frequency:
+          type: string
+          example: 0 0 1 * SAT
+        id:
+          x-speakeasy-terraform-ignore: true
           format: int32
           type: integer
-      type: object
+          example: 1
+        name:
+          type: string
+          example: My Upgrade Profile
+        next_update_time: 
+          type: integer
+          format: int32
+          example: 1722052800
+        num_associated_publisher:
+          type: integer
+          format: int32
+          example: 20
+        release_type:
+          type: string
+          example: Latest
+        timezone:
+          type: string
+          example: US/Eastern
+        updated_at:
+          type: string
+          example: 2024-07-23T14:06:32.070Z
+        upgrading_stage:
+          type: integer
+          format: int32
+          example: 1
+        will_start:
+          type: boolean
+          example: false
     publisher_upgrade_profile_post_request:
       x-speakeasy-entity: NPAPublisherUpgradeProfiles
       x-speakeasy-description: |
@@ -259,8 +244,8 @@ components:
             Is this updgrade profile enabled.
             * `true` - Enabled
             * `false` - Disabled
-          format: boolean
-          example: 0
+          type: boolean
+          example: true
         frequency:
           description: |
             Frequency of updates. This frequency is in a CRON format. \
@@ -274,7 +259,7 @@ components:
           example: 0 0 1 * TUE
         name:
           type: string
-          example: Weekly Upgrade
+          example: My Upgrade Profile
         release_type:
           description: |
             This is the Release Type that is to be installed. \
@@ -393,8 +378,8 @@ components:
           description: |
             Is this updgrade profile enabled.
             * `true` - Enabled
-            * 'false` - Disabled
-          format: boolean
+            * `false` - Disabled
+          type: boolean
           example: true
         frequency:
           description: |
@@ -414,10 +399,10 @@ components:
             This value should match the upgrade_profile_id parameter.
           type: integer
           format: int32
-          example: 1
+          example: 10
         name:
           type: string
-          example: Weekly Upgrade
+          example: My Upgrade Profile
         release_type:
           description: |
             This is the Release Type that is to be installed. \
@@ -515,32 +500,44 @@ components:
           properties:
             created_at:
               type: string
+              example: 2024-07-23T14:00:22.731Z
             docker_tag:
               type: string
+              example: 8690
             enabled:
-              format: boolean
+              type: boolean
+              example: true
             frequency:
               type: string
+              example: 0 0 1 * TUE
             id:
               x-speakeasy-name-override: external_id
               format: int32
               type: integer
+              example: 10
             name:
               type: string
+              example: My Upgrade Profile
             next_update_time: 
               type: integer
               format: int32
+              example: 1722312000
             release_type:
               type: string
+              example: Latest
             timezone:
               type: string
+              example: US/Eastern
             updated_at:
               type: string
+              example: 2024-07-23T14:00:22.731Z
             upgrading_stage:
               type: integer
               format: int32
+              example: 1
             will_start: 
               type: boolean
+              example: false
         status:
           x-speakeasy-ignore: true
           enum:
@@ -548,6 +545,9 @@ components:
             - not found
           type: string
     tag_item:
+      description: | 
+        Tags are not currently supported by Netskope.\
+        Please do not use!
       x-speakeasy-terraform-ignore: true
       properties:
         tag_id:
@@ -588,7 +588,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/publisher_upgrade_profile_get_response"
+                type: object
+                x-speakeasy-entity: NPAPublisherUpgradeProfilesList
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      upgrade_profiles:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/publisher_upgrade_profile_get_response"
+                  status:
+                    type: string
+                    enum: 
+                      - success
+                      - error
+                    x-speakeasy-terraform-ignore: true
+                  total: 
+                    type: integer
+                    format: int32
+                    example: 1
           description: successful operation
         "400":
           content:
@@ -765,7 +784,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/publisher_upgrade_profile_response"
+                properties:
+                  data:
+                    x-speakeasy-entity: NPAPublisherUpgradeProfiles
+                    $ref: "#/components/schemas/publisher_upgrade_profile_get_response"
+                  status:
+                    x-speakeasy-terraform-ignore: true
+                    enum:
+                      - success
+                      - not found
+                    type: string                
           description: successful operation
         "400":
           content:
@@ -794,6 +822,7 @@ paths:
           schema:
             format: int32
             type: integer
+            example: 10
         - description: |
             Flag to skip output except status code:
              * `1` - Skip response data
