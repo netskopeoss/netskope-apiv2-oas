@@ -257,10 +257,9 @@ components:
         enabled:
           description: |
             Is this updgrade profile enabled.
-            * `1` - Enabled
-            * `0` - Disabled
-          format: int32
-          type: integer
+            * `true` - Enabled
+            * `false` - Disabled
+          format: boolean
           example: 0
         frequency:
           description: |
@@ -393,11 +392,10 @@ components:
         enabled:
           description: |
             Is this updgrade profile enabled.
-            * `1` - Enabled
-            * `0` - Disabled
-          format: int32
-          type: integer
-          example: 0
+            * `true` - Enabled
+            * 'false` - Disabled
+          format: boolean
+          example: true
         frequency:
           description: |
             Frequency of updates. This frequency is in a CRON format. \
@@ -520,8 +518,7 @@ components:
             docker_tag:
               type: string
             enabled:
-              format: int32
-              type: integer
+              format: boolean
             frequency:
               type: string
             id:
@@ -542,8 +539,10 @@ components:
             upgrading_stage:
               type: integer
               format: int32
+            will_start: 
+              type: boolean
         status:
-          x-speakeasy-terraform-ignore: true
+          x-speakeasy-ignore: true
           enum:
             - success
             - not found
@@ -819,7 +818,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/200"
+                $ref: "#/components/schemas/publisher_upgrade_profile_response"
           description: successful operation
         "400":
           content:
