@@ -11,41 +11,61 @@ components:
         This data source supports the list of applications associated with a publisher.
       properties:
         data:
+          type: array
           items:
+            type: object
             properties:
               allow_unauthenticated_cors:
                 type: boolean
+                example: false
               app_option:
                 type: object
               clientless_access:
                 type: boolean
+                example: false
               external_id:
                 type: integer
                 format: int32
+                example: 193
               host:
                 type: string
+                example: 192.168.1.1
               id:
                 format: int32
                 type: integer
+                example: 3
               is_user_portal_app:
                 type: boolean
+                example: false
               name:
                 type: string
+                example: "[Web-Management]"
               private_app_protocol:
                 type: string
+                example: ""
               protocols:
                 items:
                   $ref: "#/components/schemas/protocol_response_item"
                 type: array
               public_host:
                 type: string
+                example: ""
               reachability:
                 type: object
                 properties:
+                  error_code: 
+                    type: integer
+                    format: int32
+                    example: 0
+                  error_string:
+                    type: string
+                    example: ""
                   reachable:
                     type: boolean
+                    example: true
               real_host:
                 type: string
+                example: null
               service_publisher_assignments:
                 items:
                   $ref: "#/components/schemas/service_publisher_assignment_item"
@@ -55,33 +75,44 @@ components:
                 items:
                   $ref: "#/components/schemas/tag_item"
                 type: array
+                example: []
               suppliment_dns_for_osx:
                 type: boolean
+                example: false
               trust_self_signed_certs:
                 type: boolean
+                example: true
               use_publisher_dns:
                 type: boolean
-            type: object
-          type: array
+                example: false
         status:
           x-speakeasy-terraform-ignore: true
           enum:
             - success
             - not found
           type: string
-      type: object
     protocol_response_item:
       properties:
+        created_at: 
+          type: string
+          example: 2022-05-19T21:03:07.125Z
         id:
           format: int32
           type: integer
+          example: 1
         port:
           type: string
+          example: 22
         service_id:
           format: int32
           type: integer
+          example: 53
         transport:
           type: string
+          example: tcp
+        updated_at: 
+          type: string
+          example: 2022-05-19T21:03:07.125Z
       type: object
     publisher_bulk_item:
       type: object
@@ -89,6 +120,7 @@ components:
         apps_count:
           type: integer
           format: int32
+          example: 3
         assessment:
           type: object
           properties:
@@ -97,66 +129,101 @@ components:
               properties:
                 hashes:
                   type: array
+                  example: 
+                    - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+                    - "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"
                   items:
                     type: string
                 last_modified:
-                  type: number
+                  type: integer
+                  format: int32
+                  example: 0
             eee_support:
               type: boolean
+              example: true
             hdd_free:
               type: string
+              example: 7459254272Kb
             hdd_total:
               type: string
+              example: 15745441792Kb
             ip_address:
               type: string
+              example: 192.168.0.1
             latency:
               type: integer
               format: int32
+              example: 21
             version:
               type: string
+              example: 117.0.0.8690
         capabilities:
           type: object
           properties:
             DTLS:
               type: boolean
+              example: false 
             EEE:
               type: boolean
+              example: true 
             auto_upgrade:
               type: boolean
+              example: true
             nwa_ba:
               type: boolean
+              example: false
             pull_nsconfig:
               type: object
               properties:
                 orgkey_exist:
                   type: boolean
+                  example: true 
                 orguri_exist:
                   type: boolean
+                  example: true
         common_name:
           type: string
+          example: e2eabac9e9f715ff
         connected_apps:
           type: array
+          example: 
+            - "[Cloud Exchange]"
+            - "[WebServer]"
           items:
             type: string
         id:
           type: integer
           format: int32
+          example: 6
         lbrokerconnect:
           type: boolean
+          example: false
         name:
           type: string
+          example: pub01.local
         publisher_upgrade_profiles_id:
-          type: number
+          type: integer
+          format: int32
+          example: 6
         registered:
           type: boolean
+          example: true
         status:
           type: string
+          enum:
+            - connected
+            - not registered
+          example: connected
         stitcher_id:
           type: integer
           format: int32
+          example: 319
         stitcher_pop:
           type: string
+          example: US-SEA1
         tags:
+          description: |
+            Not used at this time - please ignore
           x-speakeasy-terraform-ignore: true
           items:
             $ref: "#/components/schemas/tag_item"
@@ -168,17 +235,22 @@ components:
               type: string
             error_code:
               type: number
+              example: 0
             timestamp:
               type: number
+              example: 1720591660
             version:
-              type: string         
+              type: string
+              example: 8690   
         upgrade_request:
           type: boolean
+          example: true
         upgrade_status:
           type: object
           properties:
             upstat:
               type: string
+              example: done
     publisher_bulk_request:
       type: object
       x-speakeasy-entity: NPAPublishersBulkUpgrade
@@ -292,6 +364,7 @@ components:
             apps_count:
               type: integer
               format: int32
+              example: 3
             assessment:
               type: object
               properties:
@@ -300,67 +373,100 @@ components:
                   properties:
                     hashes:
                       type: array
+                      example: 
+                        - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+                        - "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"
                       items:
                         type: string
                     last_modified:
                       type: number
+                      example: 0
                 eee_support:
                   type: boolean
+                  example: true
                 hdd_free:
                   type: string
+                  example: 7459254272Kb
                 hdd_total:
                   type: string
+                  example: 15745441792Kb
                 ip_address:
                   type: string
+                  example: 192.168.0.1
                 latency:
                   type: number
+                  example: 21
                 version:
                   type: string
+                  example: 117.0.0.8690
             capabilities:
               type: object
               properties:
                 DTLS:
                   type: boolean
+                  example: false
                 EEE:
                   type: boolean
+                  example: true
                 auto_upgrade:
                   type: boolean
+                  example: true
                 nwa_ba:
                   type: boolean
+                  example: false
                 pull_nsconfig:
                   type: object
                   properties:
                     orgkey_exist:
                       type: boolean
+                      example: true 
                     orguri_exist:
                       type: boolean 
+                      example: true 
             common_name:
               type: string
+              example: e2eabac9e9f715ff
             connected_apps:
               type: array
+              example:
+                - "[Cloud Exchange]"
+                - "[WebServer]"
               items:
                 type: string
             id:
               x-speakeasy-name-override: publisher_id
               type: integer
               format: int32
+              example: 6
             lbrokerconnect:
               type: boolean
+              example: false
             name:
               type: string
+              example: pub01.local
             publisher_upgrade_profiles_id:
               type: integer
               format: int32
+              example: 1
             registered:
               type: boolean
+              example: true 
             status:
               type: string
+              enum:
+                - connected
+                - not registered
+              example: connected
             stitcher_id:
               type: integer
               format: int32
+              example: 319
             sticher_pop:
               type: string
+              example: US-SEA1
             tags:
+              description: |
+                Not used at this time - please ignore
               x-speakeasy-terraform-ignore: true
               type: array
               items:
@@ -372,23 +478,28 @@ components:
                   type: string
                 error_code:
                   type: number
+                  example: 0
                 timestamp:
                   type: number
+                  example: 1720591660
                 version:
-                  type: string           
+                  type: string
+                  example: 8690
             upgrade_request:
               type: boolean
+              example: true 
             upgrade_status:
               type: object
               properties:
                 upstat:
                   type: string
+                  example: done
     publishers_alert_get_response:
       type: object
       properties:
         data:
           type: object
-          x-speakeasy-entity: NPAPublishersAlertsConfigurationList
+          x-speakeasy-entity: NPAPublishersAlertsConfiguration
           x-speakeasy-entity-description: |
             The NPA Publisher is a software package that enables private application
             connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -428,8 +539,12 @@ components:
           type: string
     publishers_alert_put_request:
       type: object
+      required:
+        - adminUsers
+        - eventTypes
+        - selectedUsers
       x-speakeasy-entity:
-        - NPAPublishersAlertsConfigurationUpdate
+        - NPAPublishersAlertsConfiguration
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -444,6 +559,7 @@ components:
             - admin2@abc.com
           items:
             type: string
+            example: admin1@abc.com
           type: array
         eventTypes:
           example:
@@ -481,6 +597,67 @@ components:
           properties:
             publishers:
               type: array
+              example: 
+                - {
+                  status: success,
+                  data: {
+                    apps_count: 3,
+                    assessment: {
+                      ca_certs_status: {
+                        hashes: [
+                          "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00",
+                          "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"
+                        ],
+                        last_modified: 0
+                      },
+                      eee_support: true,
+                      hdd_free: 7459254272Kb,
+                      hdd_total: 15745441792Kb,
+                      ip_address: 192.168.0.1,
+                      latency: 21,
+                      version: 117.0.0.8690
+                    },
+                    capabilities: {
+                      DTLS: false,
+                      EEE: true,
+                      auto_upgrade: true,
+                      nwa_ba: false,
+                      pull_nsconfig: {
+                        orgkey_exist: true,
+                        orguri_exist: true
+                      }
+                    },
+                    common_name: e2eabac9e9f715ff,
+                    connected_apps: [
+                      "[Cloud Exchange]",
+                      "[WebServer]"
+                    ],
+                    id: 6,
+                    lbrokerconnect: false,
+                    name: pub01.local,
+                    publisher_upgrade_profiles_id: 1,
+                    registered: true,
+                    status: connected,
+                    stitcher_id: 319,
+                    sticher_pop: US-SEA1,
+                    tags: [
+                      {
+                        tag_id: 0,
+                        tag_name: ""
+                      }
+                    ],
+                    upgrade_failed_reason: {
+                      detail: "",
+                      error_code: 0,
+                      timestamp: 1720591660,
+                      version: 8690
+                    },
+                    upgrade_request: true,
+                    upgrade_status: {
+                      upstat: done
+                    }
+                  }
+                }
               items:
                 $ref: "#/components/schemas/publisher_bulk_item"
         status:
@@ -513,6 +690,7 @@ components:
                   apps_count:
                     type: integer
                     format: int32
+                    example: 3
                   assessment:
                     type: object
                     properties:
@@ -521,68 +699,102 @@ components:
                         properties:
                           hashes:
                             type: array
+                            example: 
+                              - "00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00"
+                              - "ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff:ff"
                             items:
                               type: string
                           last_modified:
                             type: integer
                             format: int32
+                            example: 0
                       eee_support:
                         type: boolean
+                        example: true
                       hdd_free:
                         type: string
+                        example: 7459254272Kb
                       hdd_total:
                         type: string
+                        example: 15745441792Kb
                       ip_address:
                         type: string
+                        example: 192.168.0.1
                       latency:
                         type: integer
                         format: int32
+                        example: 21
                       version:
                         type: string
+                        example: 117.0.0.8690
                   capabilities:
                     type: object
                     properties:
                       DTLS:
                         type: boolean
+                        example: false
                       EEE:
                         type: boolean
+                        example: true
                       auto_upgrade:
                         type: boolean
+                        example: true 
                       nwa_ba:
                         type: boolean
+                        example: false
                       pull_nsconfig:
                         type: object
                         properties:
                           orgkey_exist:
                             type: boolean
+                            example: true
                           orguri_exist:
                             type: boolean
+                            example: true
                   common_name:
                     type: string
+                    example: e2eabac9e9f715ff
                   connected_apps:
                     type: array
+                    example: 
+                      - "[Cloud Exchange]"
+                      - "[WebServer]"
                     items:
                       type: string
                   lbrokerconnect:
                     type: boolean
+                    example: false
                   publisher_id:
                     type: integer
                     format: int32
+                    example: 6
                   publisher_name:
                     type: string
+                    example: pub01.local
                   publisher_upgrade_profiles_external_id:
+                    x-speakeasy-name-override: publisher_upgrade_profile_id
                     type: integer
                     format: int32
+                    example: 1
                   registered:
                     type: boolean
+                    example: true 
                   status:
                     type: string
+                    enum:
+                      - connected
+                      - not registered
+                    example: connected
                   stitcher_id:
                     type: integer
                     format: int32
+                    example: 319
                   stitcher_pop:
                     type: string
+                    example: US-SEA1
                   tags:
+                    description: | 
+                      Not used at this time - please ignore
                     x-speakeasy-terraform-ignore: true
                     type: array
                     items:
@@ -595,18 +807,23 @@ components:
                       error_code:
                         type: integer
                         format: int32
+                        example: 0
                       timestamp:
                         type: integer
                         format: int32
+                        example: 1720591660
                       version:
                         type: string
+                        example: 8690
                   upgrade_request:
                     type: boolean
+                    example: true
                   upgrade_status:
                     type: object
                     properties:
                       upstat:
                         type: string
+                        example: done
         status:
           x-speakeasy-terraform-ignore: true
           enum:
@@ -649,33 +866,43 @@ components:
       properties:
         docker_tag:
           type: string
+          example: 8690
         name:
           type: string
+          example: Latest
         version:
           type: string
+          example: 117.0.0.8690
       type: object
     service_publisher_assignment_item:
       properties:
         primary:
           type: boolean
+          example: null
         publisher_external_id:
           format: int32
           type: integer
+          example: 1
         publisher_name:
           type: string
+          example: pub01.local
         reachability:
           properties:
             error_code:
               format: int32
               type: integer
+              example: 0
             error_string:
               type: string
+              example: ""
             reachable:
               type: boolean
+              example: true
           type: object
         service_external_id:
           format: int32
           type: integer
+          example: 194
       type: object
     tag_item:
       type: object
@@ -759,12 +986,12 @@ paths:
              * `0` - Do not skip response data
           in: query
           name: silent
-          x-speakeasy-terraform-ignore: true
+          x-speakeasy-ignore: true
           required: false
           schema:
             enum:
-              - "1"
               - "0"
+              - "1"
             type: string
       requestBody:
         content:
@@ -808,7 +1035,7 @@ paths:
       version: 2
   /infrastructure/publishers/alertsconfiguration:
     get:
-      x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationList#get
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#get
       description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial
@@ -842,7 +1069,7 @@ paths:
         This endpoint supports the ability to configure publisher alert configurations.
 
         Please see the examples for how to use this endpoint.
-      x-speakeasy-entity-operation: NPAPublishersAlertsConfigurationUpdate#create,update
+      x-speakeasy-entity-operation: NPAPublishersAlertsConfiguration#create,update
       parameters:
         - description: |
             Flag to skip output except status code:
@@ -1297,6 +1524,7 @@ paths:
             example: 1
       responses:
         "200":
+          description: successful operation
           content:
             application/json:
               schema:
@@ -1315,6 +1543,7 @@ paths:
                     properties:
                       token:
                         type: string
+                        example: aaJhbGciOiJSUzI1Ni99.eyJpc3MiOiJucy03MzA2LnVzLXN2NS5ucGEuZ29za29wZS5jb20iLCJzdWIiOiJiNDRmMjk4MWE2NjAyNWFmIiwiZXhwIjoxNzIxOTk3Njc5LCJqdGkiOiI3M2U1M2M5Yi04NzU1LTQ3ZGEtOTE3MC05ODE4MDM5ZDAwYTQifQ.hP-8RI4Unp9iUnQcXEt0d3nRKeJ5OHRZ5H5RbMUt3YLfeUQeISC2ZDepaZygABAvFRRNpdhG-7VUJPQ9Rht3sV2Kli3lvQEjQNRL8WgmcrYsgpFs_4WFEhozxPY7NViMRDKehJTcoMA4vZnGKLZC3Qdne7VBO3OKzYd1EbBiEiez5OKxK3jcPk4mOR7ReyN6kkM_KFPyjFd2XToxfbxwoV5n6NA6KBjrZdSJ_Jk3AA4C5Pn3X0Nwq_K22zHCT_zXk9gFoQfxQfgMlkwvArvlyTWquYeJfUiaCJvJeGTaa5qBynf8Z3fLY_3wYs02sFxXQNRyg7TkN7Yk--shm7Ho-w
                     required:
                       - token
                   status:
