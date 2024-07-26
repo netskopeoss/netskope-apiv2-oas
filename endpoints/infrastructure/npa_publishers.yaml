@@ -192,6 +192,7 @@ components:
           items:
             type: string
         id:
+          x-speakeasy-name-override: publisher_id
           type: integer
           format: int32
           example: 6
@@ -256,7 +257,7 @@ components:
       required:
         - publisher_upgrade_profiles_id
         - id
-      x-speakeasy-entity: NPAPublishersBulkUpgrade
+      x-speakeasy-entity: NPAPublishersBulkUpgradeRequest
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -273,12 +274,13 @@ components:
             apply:
               type: object
               required:
-                - publisher_upgrade_profiles_id
+                - upgrade_request
               properties:
-                publisher_upgrade_profiles_id:
-                  type: integer
-                  format: int32
+                upgrade_request:
+                  type: boolean
+                  example: true
             id:
+              x-speakeasy-name-override: publisher_id
               type: array
               items:
                 type: string
@@ -600,7 +602,7 @@ components:
       type: object
     publishers_bulk_response:
       type: object
-      x-speakeasy-entity: NPAPublishersBulkUpgrade
+      x-speakeasy-entity: NPAPublishersBulkUpgradeRequest
       properties:
         data:
           type: object
@@ -1131,7 +1133,7 @@ paths:
         This endpoint supports the ability to trigger bulk update actions.
 
         Please see examples for how to use this endpoint.
-      x-speakeasy-entity-operation: NPAPublishersBulkUpgrade#create
+      x-speakeasy-entity-operation: NPAPublishersBulkUpgradeRequest#create
       parameters:
         - description: |
             Flag to skip output except status code:
@@ -1156,7 +1158,7 @@ paths:
                 value:
                   publishers:
                     apply:
-                      publisher_upgrade_profiles_id: 3
+                      upgrade_request: true
                     id: [
                       "12"
                     ]              
@@ -1164,7 +1166,7 @@ paths:
                 value:
                   publishers:
                     apply:
-                      publisher_upgrade_profiles_id: 3
+                      upgrade_request: true
                     id: [
                       "12","15","30"
                     ]
