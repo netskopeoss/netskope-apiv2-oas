@@ -253,6 +253,9 @@ components:
               example: done
     publisher_bulk_request:
       type: object
+      required:
+        - publisher_upgrade_profiles_id
+        - id
       x-speakeasy-entity: NPAPublishersBulkUpgrade
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
@@ -264,13 +267,17 @@ components:
       properties:
         publishers:
           type: object
+          required:
+            - id
           properties:
             apply:
               type: object
+              required:
+                - publisher_upgrade_profiles_id
               properties:
-                upgrade_request:
-                  default: true
-                  type: boolean
+                publisher_upgrade_profiles_id:
+                  type: integer
+                  format: int32
             id:
               type: array
               items:
@@ -341,6 +348,9 @@ components:
             $ref: "#/components/schemas/tag_item"
           type: array
       type: object
+      required:
+        - id
+        - name
     publisher_response:
       type: object
       properties:
