@@ -8,7 +8,8 @@ components:
           example: 400
           type: integer
       type: object
-    publisher_response:
+    upgrade_publisher_response:
+    # renamed to upgrade_publisher_response to avoid OAS merge conflicts
       properties:
         apps_count:
           type: integer
@@ -105,7 +106,7 @@ components:
             upstat:
               type: string
     publisher_upgrade_profile_bulk_request:
-      x-speakeasy-entity-operation: NPAPublisherBulkUpdates#update
+      x-speakeasy-entity: NPAPublisherBulkProfileUpdates
       x-speakeasy-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial
@@ -140,13 +141,14 @@ components:
     publisher_upgrade_profile_bulk_response:
       properties:
         data:
-          x-speakeasy-entity: NPAPublisherBulkUpdates
+          x-speakeasy-entity: NPAPublisherBulkProfileUpdate
           type: object
           properties:
             publishers:
               type: array
               items:
-                $ref: "#/components/schemas/publisher_response"
+                # updated reference to upgrade_publisher_response to avoid OAS merge conflicts
+                $ref: "#/components/schemas/upgrade_publisher_response"
         status:
           x-speakeasy-terraform-ignore: true
           enum:
@@ -180,6 +182,7 @@ components:
               type: boolean
               example: true
             external_id: 
+              x-speakeasy-name-override: publisher_upgrade_profile_id
               type: integer
               format: int32
               example: 1
@@ -254,6 +257,7 @@ components:
                     type: boolean
                     example: true
                   external_id: 
+                    x-speakeasy-name-override: publisher_upgrade_profile_id
                     type: integer
                     format: int32
                     example: 1
@@ -481,7 +485,7 @@ components:
           type: string
           example: 0 0 1 * TUE
         id:
-          x-speakeasy-name-override: external_id
+          x-speakeasy-name-override: publisher_upgrade_profile_id
           description: |
             Please supply the `external_id` value for this attribute requirement.
             This value should match the upgrade_profile_id parameter.
@@ -599,7 +603,7 @@ components:
               type: string
               example: 0 0 1 * TUE
             id:
-              x-speakeasy-name-override: external_id
+              x-speakeasy-name-override: publisher_upgrade_profile_id
               format: int32
               type: integer
               example: 10
@@ -743,7 +747,7 @@ paths:
   /infrastructure/publisherupgradeprofiles/bulk:
     put:
       operationId: BulkupdateNPAPublishers
-      x-speakeasy-entity-operation: NPAPublisherBulkUpdates#update
+      x-speakeasy-entity-operation: NPAPublisherBulkProfileUpdates#create
       description: |
           The NPA Publisher is a software package that enables private application
           connectivity between your data center and the Netskope cloud. It is a crucial
@@ -808,6 +812,7 @@ paths:
         - description: publisher upgrade profile external_id
           in: path
           name: external_id
+          x-speakeasy-name-override: publisher_upgrade_profile_id
           required: true
           schema:
             format: int32
@@ -849,6 +854,7 @@ paths:
         - description: publisher upgrade profile external_id
           in: path
           name: external_id
+          x-speakeasy-name-override: publisher_upgrade_profile_id
           required: true
           schema:
             format: int32
@@ -883,6 +889,7 @@ paths:
         - description: publisher upgrade profile external_id
           in: path
           name: external_id
+          x-speakeasy-name-override: publisher_upgrade_profile_id
           required: true
           schema:
             format: int32
