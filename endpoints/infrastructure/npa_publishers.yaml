@@ -38,6 +38,7 @@ components:
                 type: boolean
                 example: false
               name:
+                x-speakeasy-name-override: private_app_name
                 type: string
                 example: "[Web-Management]"
               private_app_protocol:
@@ -200,6 +201,7 @@ components:
           type: boolean
           example: false
         name:
+          x-speakeasy-name-override: publisher_name
           type: string
           example: pub01.local
         publisher_upgrade_profiles_id:
@@ -301,6 +303,7 @@ components:
         Features may require additional licensing, please work with account team to enable.
       properties:
         name:
+          x-speakeasy-name-override: publisher_name
           description: The name of the Publisher as seen in the UI
           type: string
           example: npa_publisher_1
@@ -326,6 +329,7 @@ components:
       x-speakeasy-entity: NPAPublisher
       properties:
         name:
+          x-speakeasy-name-override: publisher_name
           type: string
         id:
           type: integer
@@ -343,6 +347,7 @@ components:
         lbrokerconnect:
           type: boolean
         name:
+          x-speakeasy-name-override: publisher_name
           type: string
         tags:
           x-speakeasy-terraform-ignore: true
@@ -454,6 +459,7 @@ components:
               type: boolean
               example: false
             name:
+              x-speakeasy-name-override: publisher_name
               type: string
               example: pub01.local
             publisher_upgrade_profiles_id:
