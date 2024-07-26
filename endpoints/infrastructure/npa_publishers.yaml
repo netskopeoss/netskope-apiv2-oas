@@ -1,7 +1,7 @@
 components:
   schemas:
     private_apps_response:
-      x-speakeasy-entity: NPAPublishersAppsList
+      x-speakeasy-entity: NPAPublisherAppsList
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -289,7 +289,7 @@ components:
       type: object
       required:
         - name
-      x-speakeasy-entity: NPAPublishers
+      x-speakeasy-entity: NPAPublisher
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -323,7 +323,7 @@ components:
       type: object
       required:
         - name
-      x-speakeasy-entity: NPAPublishers
+      x-speakeasy-entity: NPAPublisher
       properties:
         name:
           type: string
@@ -364,7 +364,7 @@ components:
             - not found
         data:
           type: object
-          x-speakeasy-entity: NPAPublishers
+          x-speakeasy-entity: NPAPublisher
           x-speakeasy-entity-description: |
             The NPA Publisher is a software package that enables private application
             connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -555,8 +555,7 @@ components:
         - adminUsers
         - eventTypes
         - selectedUsers
-      x-speakeasy-entity:
-        - NPAPublishersAlertsConfiguration
+      x-speakeasy-entity: NPAPublishersAlertsConfiguration
       x-speakeasy-entity-description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -978,8 +977,8 @@ paths:
       summary: Create a Netskope NPA Publisher
       operationId: createNPAPublishers
       x-speakeasy-name-override: create
-      x-speakeasy-entity-operation: NPAPublishers#create
-      x-speakeasy-group: NPAPublishers
+      x-speakeasy-entity-operation: NPAPublisher#create
+      x-speakeasy-group: NPAPublisher
       description: |
         The NPA Publisher is a software package that enables private application
         connectivity between your data center and the Netskope cloud. It is a crucial 
@@ -1248,8 +1247,8 @@ paths:
         This endpoint supports deletion of Publishers by supplying the `publisher_id` attribute.
       operationId: deleteNPAPublishers
       x-speakeasy-name-override: delete
-      x-speakeasy-entity-operation: NPAPublishers#delete
-      x-speakeasy-group: NPAPublishers
+      x-speakeasy-entity-operation: NPAPublisher#delete
+      x-speakeasy-group: NPAPublisher
       parameters:
         - description: publisher id
           in: path
@@ -1290,8 +1289,8 @@ paths:
         Supply `publisher_id` in the path of the request.
       operationId: getNPAPublisherById
       x-speakeasy-name-override: read
-      x-speakeasy-entity-operation: NPAPublishers#read
-      x-speakeasy-group: NPAPublishers
+      x-speakeasy-entity-operation: NPAPublisher#read
+      x-speakeasy-group: NPAPublisher
       parameters:
         - description: publisher id
           in: path
@@ -1331,8 +1330,8 @@ paths:
         See examples on how to use this endpoint.
       operationId: updateNPAPublisherById
       x-speakeasy-name-override: update
-      x-speakeasy-entity-operation: NPAPublishers#update
-      x-speakeasy-group: NPAPublishers
+      x-speakeasy-entity-operation: NPAPublisher#update
+      x-speakeasy-group: NPAPublisher
       parameters:
         - description: publisher id
           in: path
@@ -1477,8 +1476,8 @@ paths:
         associated with the publisher.
       operationId: getNPAPublisherApps
       x-speakeasy-name-override: list_objects
-      x-speakeasy-entity-operation: NPAPublishersAppsList#read
-      x-speakeasy-group: NPAPublishersApps
+      x-speakeasy-entity-operation: NPAPublisherAppsList#read
+      x-speakeasy-group: NPAPublisherApps
       parameters:
         - description: publisher id
           in: path
