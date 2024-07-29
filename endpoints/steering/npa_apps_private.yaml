@@ -75,9 +75,6 @@ components:
           items:
             type: string
           type: array
-        app_name:
-          x-speakeasy-name-override: private_app_name
-          type: string
         app_option:
           type: object
         clientless_access:
@@ -160,11 +157,18 @@ components:
         host:
           x-speakeasy-name-override: private_app_hostname
           type: string
+          example: webserver.local
         is_user_portal_app:
           type: boolean
           example: false
         protocols:
           type: array
+          example: [
+            {
+              port: 80,
+              type: tcp
+            }
+          ]
           items:
             type: object
             required:
@@ -179,13 +183,19 @@ components:
                 type: string
                 example: tcp
         publisher_tags:
-          description: not currently supported, please do not use.
+          description: Not currently supported, please do not use.
           x-speakeasy-ignore: true
           items:
             $ref: "#/components/schemas/tag_item_no_id"
           type: array
         publishers:
           type: array
+          example: [
+            {
+              publisher_id: 10,
+              publisher_name: webservers
+            }
+          ]
           items: 
             type: object
             required:
@@ -197,12 +207,17 @@ components:
                 example: 10
               publisher_name:
                 type: string
-                example: webserver  
+                example: webservers 
         real_host:
           type: string
           example: ""
         tags:
           type: array
+          example: [
+            {
+              tag_name: tag01
+            }
+          ]
           items:
             type: object
             required:
@@ -224,8 +239,10 @@ components:
             properties:
               allow_unauthenticated_cors:
                 type: boolean
+                example: true
               allow_uri_bypass:
                 type: boolean
+                example: 
               uribypass_header_value:
                 type: string
               bypass_uris:
@@ -515,6 +532,9 @@ paths:
         zero-trust network access (ZTNA) to private applications and data in hybrid IT environments.
 
         This endpoint supports creation of a NPA Private Application.
+
+        Features may require additional licensing, please work with account team to enable.
+
         Please see *examples* of required attributes based on the type of Application you are creating.
       parameters:
         - description: flag to skip output except status code
@@ -534,6 +554,8 @@ paths:
               $ref: "#/components/schemas/private_apps_request"
             examples:
               minimum_client_app:
+                #description: |
+                #  This example defines the minimum requirements to support a private application.
                 value:
                   app_name: my_private_app
                   host: webserver.local
@@ -550,6 +572,12 @@ paths:
                     }
                   ]
               minimum_clientless_app:
+                #description: |
+                #  This example defines the minimum requirements to support a Browser Access Application.\
+#
+#                  *Note:* When clientless_access = true, private_app_protocal is required! 
+#
+#                  This feature may require additional licensing, please work with account team to enable. 
                 value:
                   app_name: my_private_app
                   host: webserver.local
