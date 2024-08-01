@@ -1,0 +1,100 @@
+components:
+  schemas:
+    ErrorResponse:
+      description: API error response
+      properties:
+        body:
+          properties:
+            errors:
+              items:
+                example:
+                  - We encountered a backend error. Please try again.
+                type: string
+              type: array
+          type: object
+        status:
+          example: 400
+          type: integer
+      type: object
+    FilterRequest:
+      properties:
+        cursor:
+          type: string
+        filter_key:
+          type: string
+        keyword:
+          type: string
+        limit:
+          maximum: 50
+          minimum: 1
+          type: integer
+        timestamp:
+          type: integer
+      required:
+        - limit
+      type: object
+    FilterResponse:
+      properties:
+        data:
+          items:
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+            type: object
+          type: array
+        next_cursor:
+          type: string
+      type: object
+info:
+  title: CSPM Evaluation API Service
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /spm/results/filters/getvalues:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FilterResponse"
+          description: ok
+        4XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        5XX:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: " "
+      tags:
+        - Filters
+    x-netskope-params:
+      apiGroup: result_filters
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+servers:
+  - url: https://cspm-<tenant>-<app>.netskope.com
+tags:
+  - description: " "
+    name: Filters

@@ -1,0 +1,1228 @@
+components:
+  schemas:
+    AggregatedStatsRequest:
+      example:
+        filters:
+          app_name:
+            - Github
+          instance_name: []
+        groupby: app_name
+        sortby: asc
+      properties:
+        filters:
+          $ref: "#/components/schemas/FilterRequest"
+        groupby:
+          description: Group by type to be applied for grouping aggregated stats.
+          enum:
+            - app_name
+            - instance_name
+          type: string
+        sortby:
+          default: asc
+          description: Sort either ascending or desending by the posture score.
+          enum:
+            - asc
+            - desc
+          type: string
+      type: object
+    AggregatedStatsResponseByApp:
+      items:
+        properties:
+          failed_findings:
+            $ref: "#/components/schemas/SeverityData"
+          instance_count:
+            description: Count of instances for the entity.
+            type: integer
+          name:
+            description: Description of the entity.
+            type: string
+          posture_score:
+            description: Posture score of the entity.
+            type: integer
+          posture_score_delta:
+            properties:
+              change_in_num:
+                description:
+                  Difference between current entities count and current
+                  week's average entities count for posture score.
+                type: integer
+              notation:
+                description: The type of change_in_num value for posture score.
+                enum:
+                  - percent
+                type: string
+              trajectory:
+                description:
+                  Showing the change in the trend from the current week's
+                  average entities count for posture score.
+                enum:
+                  - up
+                  - down
+                  - unchanged
+                type: string
+            type: object
+          posture_score_level:
+            description: Posture score level of the entity.
+            type: string
+          posture_score_trends:
+            items:
+              properties:
+                count:
+                  description: Posture Score of the entity.
+                  type: integer
+                timestamp:
+                  description: Date and time value for the stat.
+                  type: integer
+              type: object
+            type: array
+          thirdpartyapps_count:
+            $ref: "#/components/schemas/SeverityData"
+          users_count:
+            description: Count of users for the entity.
+            type: integer
+        type: object
+      type: array
+    AggregatedStatsResponseByInstance:
+      items:
+        properties:
+          failed_findings:
+            $ref: "#/components/schemas/SeverityData"
+          instance_details:
+            description: Details of the instance
+            properties:
+              last_scan_time:
+                description:
+                  Timestamp when the lastest listing/polling was successfully
+                  completed for the instance
+                type: integer
+              state:
+                description: Status of the instance
+                type: string
+              status_msg:
+                description:
+                  Status message of the instance. Populated if the instance
+                  is in error state
+                type: string
+            type: object
+          name:
+            description: Description of the entity.
+            type: string
+          posture_score:
+            description: Posture score of the entity.
+            type: integer
+          posture_score_delta:
+            properties:
+              change_in_num:
+                description:
+                  Difference between current entities count and current
+                  week's average entities count for posture score.
+                type: integer
+              notation:
+                description: The type of change_in_num value for posture score.
+                enum:
+                  - percent
+                type: string
+              trajectory:
+                description:
+                  Showing the change in the trend from the current week's
+                  average entities count for posture score.
+                enum:
+                  - up
+                  - down
+                  - unchanged
+                type: string
+            type: object
+          posture_score_level:
+            description: Posture score level of the entity.
+            type: string
+          posture_score_trends:
+            items:
+              properties:
+                count:
+                  description: Posture Score of the entity.
+                  type: integer
+                timestamp:
+                  description: Date and time value for the stat.
+                  type: integer
+              type: object
+            type: array
+          thirdpartyapps_count:
+            $ref: "#/components/schemas/SeverityData"
+          users_count:
+            description: Count of users for the entity.
+            type: integer
+        type: object
+      type: array
+    AppMappingResponse:
+      properties:
+        AzureAD & Microsoft355:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Exchange
+                  - SharePoint
+                  - Microsoft365
+                  - Defender
+                  - AzureAD
+                  - Intune
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - AzureAD
+                  - Microsoft365
+                type: string
+              type: array
+          type: object
+        Confluence:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Confluence
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Atlassian
+                type: string
+              type: array
+          type: object
+        GitHub:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - GitHub
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - GitHub
+                type: string
+              type: array
+          type: object
+        Jira:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Jira
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Atlassian
+                type: string
+              type: array
+          type: object
+        Okta:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Okta
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Okta
+                type: string
+              type: array
+          type: object
+        Salesforce:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Salesforce
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Salesforce
+                type: string
+              type: array
+          type: object
+        ServiceNow:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - ServiceNow
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - ServiceNow
+                type: string
+              type: array
+          type: object
+        Workday:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Workday
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Workday
+                type: string
+              type: array
+          type: object
+        Zoom:
+          properties:
+            app_names:
+              items:
+                enum:
+                  - Zoom
+                type: string
+              type: array
+            app_suites:
+              items:
+                enum:
+                  - Zoom
+                type: string
+              type: array
+          type: object
+      type: object
+    DeltaData:
+      properties:
+        change_in_num:
+          description:
+            Difference between current entities count and current week's
+            average entities count.
+          type: integer
+        notation:
+          description: The type of change_in_num value.
+          enum:
+            - percent
+          type: string
+        trajectory:
+          description:
+            Showing the change in the trend from the current week's average
+            entities count.
+          enum:
+            - up
+            - down
+            - unchanged
+          type: string
+      type: object
+    EntityStatsData:
+      properties:
+        as_of_date_stats:
+          properties:
+            severity:
+              $ref: "#/components/schemas/SeverityData"
+            total_count:
+              description: Count of total entities.
+              type: integer
+          type: object
+        delta:
+          $ref: "#/components/schemas/DeltaData"
+        name:
+          description: Name of the entity.
+          type: string
+        trends:
+          $ref: "#/components/schemas/TrendsData"
+      type: object
+    EntityStatsResponse:
+      items:
+        $ref: "#/components/schemas/EntityStatsData"
+      type: array
+    ErrorResponse:
+      properties:
+        body:
+          properties:
+            errors:
+              items:
+                type: string
+              type: array
+          type: object
+        status:
+          type: integer
+      type: object
+    FilterRequest:
+      description: Different filters to be applied to the request.
+      properties:
+        app_names:
+          description:
+            List of all SaaS app names to be used for filtering. If the
+            list is empty, data is fetched for all the app_names.
+          items:
+            enum:
+              - AzureAD & Microsoft365
+              - SalesForce
+              - Zoom
+              - Github
+              - ServiceNow
+              - Okta
+              - Workday
+              - Jira
+              - Confluence
+              - GoogleWorkspace
+            type: string
+          type: array
+        instance_names:
+          description:
+            List of all instance names to be used for filtering. If the
+            list is empty, data is fetched for all the instances.
+          items:
+            type: string
+          type: array
+      type: object
+    ResultsStatsData:
+      properties:
+        as_of_date_stats:
+          properties:
+            category:
+              type: object
+            severity:
+              $ref: "#/components/schemas/SeverityData"
+            total_count:
+              description: Count of total entities.
+              type: integer
+          type: object
+        delta:
+          $ref: "#/components/schemas/DeltaData"
+        name:
+          description: Name of the entity.
+          type: string
+        trends:
+          $ref: "#/components/schemas/TrendsData"
+      type: object
+    ResultsStatsRequest:
+      example:
+        category: Compliance Standard
+        groupby:
+          - severity
+      properties:
+        category:
+          description: Rule category used for grouping results stats.
+          enum:
+            - Compliance Standard
+            - Domain
+            - MITRE ATT&CK
+          type: string
+        filters:
+          $ref: "#/components/schemas/FilterRequest"
+        groupby:
+          description:
+            Group by types to be applied for grouping results stats.If
+            no groupby is specified, aggregation happens that tenant level.
+          items:
+            enum:
+              - app_name
+              - instance_name
+            type: string
+          type: array
+      type: object
+    ResultsStatsResponse:
+      items:
+        $ref: "#/components/schemas/ResultsStatsData"
+      type: array
+    SeverityData:
+      description: Distribution of the entity based severity.
+      properties:
+        critical:
+          description: count of the entity with severity critical.
+          type: integer
+        high:
+          description: count of the entity with severity high.
+          type: integer
+        low:
+          description: count of the entity with severity low.
+          type: integer
+        medium:
+          description: count of the entity with severity medium.
+          type: integer
+        unknown:
+          description: count of the entity with severity unknown.
+          type: integer
+      type: object
+    ThirdPartyStatsRequest:
+      example:
+        filters:
+          app_names:
+            - Github
+          instance_names:
+            - Instance1
+        groupby:
+          - instance_name
+          - risk_level
+      properties:
+        filters:
+          $ref: "#/components/schemas/FilterRequest"
+        groupby:
+          description:
+            Group by types to be applied for grouping results stats. If
+            no groupby is specified, aggregation happens at the tenant level.
+          items:
+            enum:
+              - app_name
+              - instance_name
+              - risk_level
+            type: string
+          type: array
+      type: object
+    TrendsData:
+      items:
+        properties:
+          count:
+            description: Count of the entity.
+            type: integer
+          severity:
+            $ref: "#/components/schemas/SeverityData"
+          timestamp:
+            description: Date and time value for the stat.
+            type: integer
+        type: object
+      type: array
+    UserStatsRequest:
+      example:
+        filters:
+          app_names:
+            - Github
+        groupby:
+          - instance_name
+      properties:
+        filters:
+          $ref: "#/components/schemas/FilterRequest"
+        groupby:
+          description:
+            Group by types to be applied for grouping results stats.If
+            no groupby is specified, aggregation happens at the tenant level.
+          items:
+            enum:
+              - app_name
+              - instance_name
+            type: string
+          type: array
+      type: object
+info:
+  description: APIs for fetching data for Apps Page.
+  title: SPM APPs APIs
+  version: v1
+openapi: 3.0.3
+paths:
+  /spm/stats/appmapping:
+    get:
+      operationId: getAppMappings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppMappingResponse"
+          description: Success
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get app mappings
+      tags:
+        - SPM APPs APIs
+    x-netskope-params:
+      apiGroup: apps
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/stats/getaggregated:
+    post:
+      operationId: getAggregatedStats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AggregatedStatsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                ResponseByApp:
+                  value:
+                    - failed_findings:
+                        critical: 10
+                        high: 12
+                        low: 1
+                        medium: 6
+                      instance_count: 4
+                      name: Github
+                      posture_score: 90
+                      posture_score_delta:
+                        change_in_num: 100
+                        notation: percent
+                        trajectory: up
+                      posture_score_level: High
+                      posture_score_trends:
+                        - count: 90
+                          timestamp: 1695859199
+                        - count: 90
+                          timestamp: 1695945599
+                        - count: 89
+                          timestamp: 1696031999
+                        - count: 88
+                          timestamp: 1696118399
+                        - count: 90
+                          timestamp: 1696204799
+                        - count: 95
+                          timestamp: 1696291199
+                        - count: 95
+                          timestamp: 1696377599
+                      thirdpartyapps_count:
+                        high: 23
+                        low: 1
+                        medium: 6
+                        unknown: 11
+                      users_count: 2345
+                    - failed_findings:
+                        critical: 10
+                        high: 12
+                        low: 1
+                        medium: 6
+                      instance_count: 1
+                      name: ServiceNow
+                      posture_score: 95
+                      posture_score_delta:
+                        change_in_num: 90
+                        notation: percent
+                        trajectory: up
+                      posture_score_trends:
+                        - count: 91
+                          timestamp: 1695859199
+                        - count: 92
+                          timestamp: 1695945599
+                        - count: 89
+                          timestamp: 1696031999
+                        - count: 88
+                          timestamp: 1696118399
+                        - count: 90
+                          timestamp: 1696204799
+                        - count: 95
+                          timestamp: 1696291199
+                        - count: 95
+                          timestamp: 1696377599
+                      thirdpartyapps_count:
+                        high: 23
+                        low: 1
+                        medium: 6
+                        unknown: 11
+                      users_count: 234
+                ResponseByInstance:
+                  value:
+                    - failed_findings:
+                        critical: 10
+                        high: 12
+                        low: 1
+                        medium: 6
+                      instance_details:
+                        last_scan_time: 1697126255
+                        state: active
+                      name: Instance1
+                      posture_score: 90
+                      posture_score_delta:
+                        change_in_num: 100
+                        notation: percent
+                        trajectory: up
+                      posture_score_level: High
+                      posture_score_trends:
+                        - count: 90
+                          timestamp: 1695859199
+                        - count: 90
+                          timestamp: 1695945599
+                        - count: 89
+                          timestamp: 1696031999
+                        - count: 88
+                          timestamp: 1696118399
+                        - count: 90
+                          timestamp: 1696204799
+                        - count: 95
+                          timestamp: 1696291199
+                        - count: 95
+                          timestamp: 1696377599
+                      thirdpartyapps_count:
+                        high: 23
+                        low: 1
+                        medium: 6
+                        unknown: 11
+                      users_count: 2345
+                    - failed_findings:
+                        critical: 10
+                        high: 12
+                        low: 1
+                        medium: 6
+                      instance_details:
+                        last_scan_time: 1697126255
+                        state: error
+                        status_msg: Failed to refresh token
+                      name: Instance2
+                      posture_score: 95
+                      posture_score_delta:
+                        change_in_num: 90
+                        notation: percent
+                        trajectory: up
+                      posture_score_trends:
+                        - count: 91
+                          timestamp: 1695859199
+                        - count: 92
+                          timestamp: 1695945599
+                        - count: 89
+                          timestamp: 1696031999
+                        - count: 88
+                          timestamp: 1696118399
+                        - count: 90
+                          timestamp: 1696204799
+                        - count: 95
+                          timestamp: 1696291199
+                        - count: 95
+                          timestamp: 1696377599
+                      thirdpartyapps_count:
+                        high: 23
+                        low: 1
+                        medium: 6
+                        unknown: 11
+                      users_count: 234
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/AggregatedStatsResponseByApp"
+                  - $ref: "#/components/schemas/AggregatedStatsResponseByInstance"
+          description: Success
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the aggregated stats for Apps Page.
+      tags:
+        - SPM APPs APIs
+    x-netskope-params:
+      apiGroup: apps
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/stats/getresults:
+    post:
+      operationId: getResultsStats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResultsStatsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - as_of_date_stats:
+                    category:
+                      AICPA-SOC:
+                        high: 5
+                        low: 1
+                        medium: 6
+                        unknown: 1
+                      CSA-CSM:
+                        high: 12
+                        low: 1
+                        medium: 6
+                        unknown: 10
+                      GDPR:
+                        high: 12
+                        low: 1
+                        medium: 6
+                        unknown: 10
+                      ISI-456:
+                        high: 1
+                        low: 1
+                        medium: 4
+                        unknown: 10
+                    total_count: 10
+                  delta:
+                    change_in_num: 100
+                    notation: percent
+                    trajectory: up
+                  name: Github
+                  trends:
+                    - count: 133132
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1695859199
+                    - count: 133133
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 3
+                        medium: 5
+                      timestamp: 1695945599
+                    - count: 133134
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 4
+                        medium: 5
+                      timestamp: 1696031999
+                    - count: 133335
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 5
+                        medium: 5
+                      timestamp: 1696118399
+                    - count: 133143
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696204799
+                    - count: 133444
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696291199
+                    - count: 133553
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696377599
+                - as_of_date_stats:
+                    category:
+                      AICPA-SOC:
+                        high: 5
+                        low: 1
+                        medium: 6
+                        unknown: 1
+                      CSA-CSM:
+                        high: 12
+                        low: 1
+                        medium: 6
+                        unknown: 10
+                      GDPR:
+                        high: 12
+                        low: 1
+                        medium: 6
+                        unknown: 10
+                      ISI-456:
+                        high: 1
+                        low: 1
+                        medium: 4
+                        unknown: 10
+                    total_count: 17
+                  delta:
+                    change_in_num: 90
+                    notation: percent
+                    trajectory: up
+                  name: Microsoft Teams
+                  trends:
+                    - count: 133132
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1695859199
+                    - count: 133133
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 3
+                        medium: 5
+                      timestamp: 1695945599
+                    - count: 133134
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 4
+                        medium: 5
+                      timestamp: 1696031999
+                    - count: 133335
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 5
+                        medium: 5
+                      timestamp: 1696118399
+                    - count: 133143
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696204799
+                    - count: 133444
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696291199
+                    - count: 133553
+                      severity:
+                        critical: 133120
+                        high: 5
+                        low: 2
+                        medium: 5
+                      timestamp: 1696377599
+              schema:
+                $ref: "#/components/schemas/ResultsStatsResponse"
+          description: Success
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the results stats
+      tags:
+        - SPM APPs APIs
+    x-netskope-params:
+      apiGroup: apps
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/stats/getthirdpartyapps:
+    post:
+      operationId: getThirdPartyAppsStats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartyStatsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - as_of_date_stats:
+                    severity:
+                      high: 5
+                      low: 1
+                      medium: 4
+                      unknown: 1
+                    total_count: 10
+                  delta:
+                    change_in_num: 100
+                    notation: percent
+                    trajectory: up
+                  name: TestInstance1
+                  trends:
+                    - count: 10
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 0
+                      timestamp: 1695859199
+                    - count: 12
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 2
+                      timestamp: 1695945599
+                    - count: 10
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 3
+                        unknown: 1
+                      timestamp: 1696031999
+                    - count: 11
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 1
+                      timestamp: 1696118399
+                    - count: 20
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 10
+                      timestamp: 1696204799
+                    - count: 11
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 1
+                      timestamp: 1696291199
+                    - count: 22
+                      severity:
+                        high: 5
+                        low: 1
+                        medium: 4
+                        unknown: 12
+                      timestamp: 1696377599
+                - as_of_date_stats:
+                    severity:
+                      high: 5
+                      low: 1
+                      medium: 6
+                      unknown: 1
+                    total_count: 12
+                  delta:
+                    change_in_num: 80
+                    notation: percent
+                    trajectory: up
+                  name: TestInstance2
+                  trends:
+                    - count: 1
+                      severity:
+                        high: 0
+                        low: 0
+                        medium: 0
+                        unknown: 1
+                      timestamp: 1695859199
+                    - count: 2
+                      severity:
+                        high: 0
+                        low: 1
+                        medium: 0
+                        unknown: 1
+                      timestamp: 1695945599
+                    - count: 3
+                      severity:
+                        high: 1
+                        low: 1
+                        medium: 0
+                        unknown: 1
+                      timestamp: 1696031999
+                    - count: 3
+                      severity:
+                        high: 1
+                        low: 1
+                        medium: 0
+                        unknown: 1
+                      timestamp: 1696118399
+                    - count: 4
+                      severity:
+                        high: 1
+                        low: 1
+                        medium: 1
+                        unknown: 1
+                      timestamp: 1696204799
+                    - count: 4
+                      severity:
+                        high: 1
+                        low: 1
+                        medium: 1
+                        unknown: 1
+                      timestamp: 1696291199
+                    - count: 4
+                      severity:
+                        high: 1
+                        low: 1
+                        medium: 1
+                        unknown: 1
+                      timestamp: 1696377599
+              schema:
+                $ref: "#/components/schemas/EntityStatsResponse"
+          description: Success
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the third party application stats.
+      tags:
+        - SPM APPs APIs
+    x-netskope-params:
+      apiGroup: apps
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/stats/getusers:
+    post:
+      operationId: getUsersStats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserStatsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                - as_of_date_stats:
+                    total_count: 10
+                  delta:
+                    change_in_num: 100
+                    notation: percent
+                    trajectory: up
+                  name: global
+                  trends:
+                    - count: 40
+                      timestamp: 1695859199
+                    - count: 41
+                      timestamp: 1695945599
+                    - count: 40
+                      timestamp: 1696031999
+                    - count: 45
+                      timestamp: 1696118399
+                    - count: 59
+                      timestamp: 1696204799
+                    - count: 30
+                      timestamp: 1696291199
+                    - count: 20
+                      timestamp: 1696377599
+              schema:
+                $ref: "#/components/schemas/EntityStatsResponse"
+          description: Success
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get users stats
+      tags:
+        - SPM APPs APIs
+    x-netskope-params:
+      apiGroup: apps
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+servers:
+  - url: https://spm-<tenant>-<app>.netskope.com/v1/spm
+tags:
+  - description: APIs for fetching data for Apps Page.
+    name: SPM APPs APIs

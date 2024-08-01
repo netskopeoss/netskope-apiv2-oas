@@ -1,0 +1,123 @@
+components:
+  schemas:
+    DLPRulesResponse:
+      properties:
+        data:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+        msg:
+          type: string
+        success:
+          type: boolean
+      type: object
+    InlinePoliciesResponse:
+      properties:
+        data:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+        msg:
+          type: string
+        success:
+          type: boolean
+      type: object
+info:
+  contact:
+    name: Netskope Inc.
+  description: MS Incidents
+  title: ms-incidents
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /ui/incidents/dlp/rules:
+    get:
+      description: Retrieve DLP rules.
+      parameters:
+        - description: The type of DLP rule
+          in: query
+          name: type
+          required: true
+          schema:
+            enum:
+              - predefined
+              - custom
+              - all
+            type: string
+        - description:
+            Providing this parameter will only fetch specified fields from
+            db If fields param is not provided, all columns from db are fetched
+          in: query
+          name: fields
+          schema:
+            example: rule_name, rule_data
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DLPRulesResponse"
+          description: OK
+        "400":
+          description: Bad request.
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        5XX:
+          description: Unexpected error.
+      summary: Retrieve DLP rules.
+    x-netskope-params:
+      apiGroup: ms-incidents
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: ms-incidents
+      version: 2
+  /ui/incidents/inline/policies:
+    get:
+      description: Retrieve Inline policies.
+      parameters:
+        - description: The type of DLP rule
+          in: query
+          name: type
+          required: true
+          schema:
+            enum:
+              - all
+              - allWithPending
+            type: string
+        - description:
+            Providing this parameter will only fetch specified fields from
+            db If fields param is not provided, all columns from db are fetched
+          in: query
+          name: fields
+          schema:
+            example: rule_name, rule_data, policy_type
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InlinePoliciesResponse"
+          description: OK
+        "400":
+          description: Bad request.
+        "401":
+          description: Authorization information is missing or invalid.
+        "404":
+          description: A user with the specified ID was not found.
+        5XX:
+          description: Unexpected error.
+      summary: Retrieve Inline policies.
+    x-netskope-params:
+      apiGroup: ms-incidents
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: ms-incidents
+      version: 2
+servers:
+  - url: http://localhost:3000/api/v2/ui

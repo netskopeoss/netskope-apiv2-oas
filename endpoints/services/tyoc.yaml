@@ -1,0 +1,588 @@
+components:
+  schemas:
+    TyocClassArrayDto:
+      properties:
+        customClassifiers:
+          items:
+            $ref: "#/components/schemas/TyocClassifierPresentDto"
+          type: array
+      type: object
+    TyocClassifierDto:
+      properties:
+        created:
+          default: 0
+          type: integer
+        description:
+          type: string
+        id:
+          type: string
+        lastTrained:
+          default: 0
+          type: integer
+        modifyBy:
+          type: string
+        name:
+          type: string
+        region:
+          nullable: true
+          type: string
+        status:
+          nullable: true
+          type: string
+        tenantId:
+          type: string
+        threshold:
+          default: 0.8500000238418579
+          format: float
+          type: number
+        type:
+          type: string
+        updated:
+          default: 0
+          type: integer
+        version:
+          default: 0
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+      type: object
+    TyocClassifierPresentDto:
+      properties:
+        created:
+          default: 0
+          type: integer
+        description:
+          nullable: true
+          type: string
+        id:
+          type: string
+        lastTrained:
+          default: 0
+          type: integer
+        lastUploaded:
+          default: 0
+          type: integer
+        modifyBy:
+          nullable: true
+          type: string
+        name:
+          type: string
+        overallStatus:
+          $ref: "#/components/schemas/TyocOverallStatus"
+        region:
+          type: string
+        status:
+          nullable: true
+          type: string
+        tenantId:
+          type: string
+        threshold:
+          default: 0.8500000238418579
+          format: float
+          type: number
+        type:
+          type: string
+        updated:
+          default: 0
+          type: integer
+        version:
+          default: 0
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+      type: object
+    TyocOverallStatus:
+      properties:
+        errMsg:
+          nullable: true
+          type: string
+        invalid:
+          default: 0
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+        negative:
+          default: 0
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+        valid:
+          default: 0
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+      type: object
+    TyocQueryDto:
+      properties:
+        filename:
+          type: string
+        id:
+          type: string
+      type: object
+    TyocStatusFingerprintPresentDto:
+      properties:
+        filename:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+      type: object
+    TyocUploadStatusDto:
+      properties:
+        fingerprints:
+          items:
+            $ref: "#/components/schemas/TyocStatusFingerprintPresentDto"
+          type: array
+        id:
+          type: string
+        isFalPos:
+          type: boolean
+        lastUpdate:
+          type: integer
+        msg:
+          type: string
+        ssid:
+          type: string
+        status:
+          type: string
+        txid:
+          type: string
+        uploadFile:
+          type: string
+      type: object
+    TyocUploadStatusListDto:
+      properties:
+        uploads:
+          items:
+            $ref: "#/components/schemas/TyocUploadStatusDto"
+          type: array
+      type: object
+    TyocUserDto:
+      properties:
+        description:
+          type: string
+        modifyBy:
+          type: string
+        name:
+          type: string
+        threshold:
+          default: 0.8500000238418579
+          format: float
+          type: number
+        type:
+          type: string
+      type: object
+info:
+  contact:
+    name: Wayne Xin
+    url: https://netskope.com/
+  description: Management page for 2.0 fingerprints
+  title: Fingerprinting Management Service
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /services/dlp/class/custom:
+    get:
+      operationId: gwGetAllTyocClasses
+      parameters:
+        - deprecated: false
+          description: offset of a large result, default to 0
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            maximum: 10000
+            minimum: 0
+            type: integer
+        - deprecated: false
+          description: batch size of each result, default to 0
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 0
+            maximum: 100
+            minimum: 0
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successful Response_1:
+                  value:
+                    customClassifiers:
+                      - created: 1686180238553
+                        description: null
+                        id: "8547030565787252272"
+                        lastTrained: 0
+                        modifyBy: null
+                        name: imageTest
+                        overallStatus:
+                          errMsg: null
+                          invalid: 0
+                          negative: 0
+                          valid: 0
+                        region: US-East
+                        status: active
+                        threshold: 0.8500000238418579
+                        type: simclr
+                        updated: 1686180238553
+                        version: 0
+                      - created: 1686515252736
+                        description: null
+                        id: "4819110922028986545"
+                        lastTrained: 0
+                        modifyBy: null
+                        name: Updated Image Test with Threshold
+                        overallStatus:
+                          errMsg: null
+                          invalid: 0
+                          negative: 0
+                          valid: 0
+                        region: US-East
+                        status: active
+                        threshold: 0.8500000238418579
+                        type: simclr
+                        updated: 1686515252736
+                        version: 0
+              schema:
+                $ref: "#/components/schemas/TyocClassArrayDto"
+          description: OK
+        "404":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Get all custom classes
+    post:
+      operationId: gwCreateTyocClass
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TyocUserDto"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successful Response_1:
+                  value:
+                    created: 1689376598488
+                    description: test update
+                    id: "5555383037969464020"
+                    lastTrained: 0
+                    modifyBy: john.smith@netskope.com
+                    name: ApiGateway Late night Jul13
+                    region: null
+                    status: created
+                    threshold: 0.8500000238418579
+                    type: image
+                    updated: 1689376598488
+                    version: 0
+              schema:
+                $ref: "#/components/schemas/TyocClassifierDto"
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Create new custom class
+    x-netskope-params:
+      apiGroup: tyoc
+      customerFacing: true
+      serviceConfig: dlp-fp-config
+      version: 2
+  /services/dlp/class/custom/getuploadstatus:
+    post:
+      description: "Check with class ID (id) and filename in payload "
+      operationId: gwCheckTyocUpload
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TyocQueryDto"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successful Response_1:
+                  value:
+                    ' {   "uploads": [     {       "id": "9095141720424589398",       "msg":
+                    null,       "txid": "2342343234324",       "ssid": "0",       "status":
+                    null,       "isFalPos": null,       "lastUpdate": 1693437483230,       "uploadFile":
+                    "/tmp/demo/training/Bose_A20_Aviation_headset.jpeg",       "fingerprints":
+                    [         {           "filename": "/tmp/demo/training/Bose_A20_Aviation_headset.jpeg",           "status":
+                    "created",           "type": "image"         }       ]     }   ]
+                    }  '
+              schema:
+                $ref: "#/components/schemas/TyocUploadStatusListDto"
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Check custom class artifact upload status
+    x-netskope-params:
+      apiGroup: tyoc
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          second: 20
+        writeRoutes:
+          second: 20
+      serviceConfig: dlp-fp-config
+      version: 2
+  /services/dlp/class/custom/upload/{id}:
+    post:
+      description:
+        "Optional parameters: ?txid=transmit_id&ssid=session_id&negative=false&sessionend=true
+        where 'name' in multipart body is the full path of the uploading file "
+      operationId: gwTyocUpload
+      parameters:
+        - deprecated: false
+          description: Class ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - deprecated: false
+          description: transmit ID
+          in: query
+          name: txid
+          required: false
+          schema:
+            type: string
+        - deprecated: false
+          description: session ID of a upload session
+          in: query
+          name: ssid
+          required: false
+          schema:
+            type: string
+        - deprecated: false
+          description: whether uploaded sample artifact is negative. Default is false
+          in: query
+          name: negative
+          required: false
+          schema:
+            type: boolean
+        - deprecated: false
+          description:
+            whether this tansmit is the last of the session, if yes, training
+            will be triggered. Default is false
+          in: query
+          name: sessionend
+          required: false
+          schema:
+            type: boolean
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                upload:
+                  format: binary
+                  type: string
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Upload raw file for custom class by ID
+    x-netskope-params:
+      apiGroup: tyoc
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          second: 20
+        writeRoutes:
+          second: 20
+      serviceConfig: dlp-fp-config
+      version: 2
+  /services/dlp/class/custom/{id}:
+    delete:
+      description:
+        The custom class and all its uploaded artifact features will be
+        deleted
+      operationId: gwDeleteTyocClass
+      parameters:
+        - deprecated: false
+          description: class ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            text/plain:
+              examples:
+                Successful Response_1:
+                  value:
+                    ' { "result": "deleted 2400_1419617902758911195, FP deleted:
+                    0" } '
+              schema:
+                type: string
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Delete a custom class by class ID
+    get:
+      operationId: gwGetTyocClass
+      parameters:
+        - deprecated: false
+          description: Custom class ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successful Response_1:
+                  value:
+                    created: 1689098875829
+                    description: null
+                    id: "9222309029146634064"
+                    lastTrained: 0
+                    lastUploaded: 1689274705938
+                    modifyBy: null
+                    name: Test ApiGateway Jul11
+                    overallStatus:
+                      errMsg: Insufficient artifacts in training
+                      invalid: 12
+                      valid: 10
+                    region: US-East
+                    status: error
+                    tenantId: "2400"
+                    threshold: 0.800000011920929
+                    type: image
+                    updated: 1689098875829
+                    version: 4
+              schema:
+                $ref: "#/components/schemas/TyocClassifierPresentDto"
+          description: OK
+        "404":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Not Found
+        "500":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Internal Server Error
+      summary: Get single custom class by its ID
+    put:
+      operationId: gwUpdateTyocClass
+      parameters:
+        - deprecated: false
+          description: Class ID
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TyocUserDto"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successful Response_1:
+                  value:
+                    created: 1689398645339
+                    description: Joan test update
+                    id: "1419617902758911195"
+                    lastTrained: 0
+                    modifyBy: joan.art@netskope.com
+                    name: Joan - Jul14
+                    region: null
+                    status: null
+                    threshold: 0.8999999761581421
+                    type: image
+                    updated: 1689398670442
+                    version: 0
+              schema:
+                $ref: "#/components/schemas/TyocClassifierDto"
+          description: OK
+      summary: Update a custom class by class ID
+    x-netskope-params:
+      apiGroup: tyoc
+      customerFacing: true
+      serviceConfig: dlp-fp-config
+      version: 2
+servers:
+  - description: 8080 server on localhost
+    url: http://localhost:8080
+  - description: 28080 server on localhost
+    url: http://localhost:28090

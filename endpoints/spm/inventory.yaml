@@ -1,0 +1,1615 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        body:
+          properties:
+            errors:
+              example:
+                - - We encountered a backend error. Please try again.
+                - - Required query params missing.
+              items:
+                type: string
+              type: array
+          type: object
+        status:
+          example: 400
+          type: integer
+      type: object
+    GraphAssociationsResponse:
+      example:
+        node_count: 2
+        owns:
+          - app_suite: Salesforce
+            instance_id: test-instance
+            resource_id: 5a7d48df-b6f2-45f8-a6d5-d15527004145
+            resource_name: Automated Process
+            resource_type: User
+        refers:
+          - app_suite: Salesforce
+            instance_id: test-instance
+            resource_id: 5a7d48df-b6f2-45f8-a6d5-d15527004167
+            resource_name: Automated Process
+            resource_type: User
+      properties:
+        node_count:
+          description: total number of connected nodes
+          type: integer
+        owns:
+          items:
+            properties:
+              app_suite:
+                description: Application Suite
+                type: string
+              instance_id:
+                description: ID of the instance
+                type: string
+              resource_id:
+                description: Resource id representing the resource
+                type: string
+              resource_name:
+                description: Name of the resource
+                type: string
+              resource_type:
+                description: Type of the resource
+                type: string
+            type: object
+          type: array
+        refers:
+          items:
+            properties:
+              app_suite:
+                description: Application Suite
+                type: string
+              instance_id:
+                description: ID of the instance
+                type: string
+              resource_id:
+                description: Resource id representing the resource
+                type: string
+              resource_name:
+                description: Name of the resource
+                type: string
+              resource_type:
+                description: Type of the resource
+                type: string
+            type: object
+          type: array
+      type: object
+    GraphResource:
+      properties:
+        app_category:
+          description: Application Category
+          type: string
+        app_name:
+          description: Application Name
+          type: string
+        app_suite:
+          description: Application Suite
+          type: string
+        creation_time:
+          description: Creation time of the resource
+          type: string
+        instance_group:
+          description: Instance group
+          type: string
+        instance_id:
+          description: ID of the instance
+          type: string
+        instance_name:
+          description: Name of the instance
+          type: string
+        instance_subgroup:
+          description: Sub group of the instance
+          type: string
+        internal_resource_id:
+          description: Internal resource id representing the resource
+          type: string
+        netskope_instance_name:
+          description: Name of the Netskope instance
+          type: string
+        parent_resource_id:
+          description: Parent resource ID to be linked.
+          type: string
+        parent_resource_type:
+          description: Parent resource Type
+          type: string
+        region_id:
+          description: Region ID where the resource is hosted
+          type: string
+        region_name:
+          description: Region Name where the resource is hosted
+          type: string
+        resource_name:
+          description: Name of the resource
+          type: string
+        resource_type:
+          description: Type of the resource
+          type: string
+      type: object
+    InstanceSummaryByAS:
+      properties:
+        as_of_date_stats:
+          properties:
+            app_suites:
+              items:
+                properties:
+                  is_configured:
+                    description: Determines if the application is configured
+                    type: boolean
+                  name:
+                    description: Name of application
+                    type: string
+                type: object
+              type: array
+            app_suites_configured_count:
+              description: Total number of configured applications
+              type: integer
+            app_suites_not_configured_count:
+              description: Total number of unconfigured applications
+              type: integer
+            app_suites_supported_count:
+              description: Total number of supported applications
+              type: integer
+          type: object
+      required:
+        - as_of_date_stats
+      type: object
+    InstanceSummaryByApps:
+      properties:
+        as_of_date_stats:
+          properties:
+            applications:
+              items:
+                properties:
+                  is_configured:
+                    description: Determines if the application is configured
+                    type: boolean
+                  name:
+                    description: Name of application
+                    type: string
+                type: object
+              type: array
+            apps_configured_count:
+              description: Total number of configured applications
+              type: integer
+            apps_not_configured_count:
+              description: Total number of unconfigured applications
+              type: integer
+            apps_supported_count:
+              description: Total number of supported applications
+              type: integer
+          type: object
+      required:
+        - as_of_date_stats
+      type: object
+    InventoryFieldsRequest:
+      properties:
+        aggregate_fields:
+          description: Specfies fields that belong to a resource type within an aggregation
+          example:
+            - ec2_instance
+            - lambda
+          items:
+            type: string
+          type: array
+        group_by:
+          description: Specifies the aggregation type
+          example: resource_types
+          type: string
+      type: object
+    InventoryFieldsResponse:
+      example:
+        ec2_instance:
+          - displayName: Admin Launch Index
+            id: AmiLaunchIndex
+            isSortable: false
+            type: Number
+          - displayName: Image ID
+            id: ImageId
+            isSortable: false
+            type: Number
+          - displayName: Platform
+            id: Platform
+            isSortable: false
+            type: Text
+          - displayName: Subnet ID
+            id: SubnetId
+            isSortable: false
+            type: Text
+        general:
+          - displayName: Resource Type
+            id: resource_type
+            isSortable: true
+            type: Text
+          - displayName: App Suite
+            id: app_suite
+            isSortable: true
+            type: Text
+          - displayName: App Name
+            id: app_name
+            isSortable: true
+            type: Text
+          - displayName: App Category
+            id: app_category
+            isSortable: true
+            type: Text
+          - displayName: Region Name
+            id: region_name
+            isSortable: true
+            type: Text
+          - displayName: Instance Name
+            id: instance_name
+            isSortable: true
+            type: Text
+          - displayName: Total Resources
+            id: total_resources
+            isSortable: true
+            type: Number
+          - displayName: Total Rules Violated
+            id: total_rules_violated
+            isSortable: true
+            type: Number
+        lambda_function:
+          - displayName: Runtime
+            id: Runtime
+            isSortable: false
+            type: Text
+          - displayName: KMS Key ARN
+            id: KMSKeyArn
+            isSortable: false
+            type: Text
+          - displayName: Master ARN
+            id: MasterArn
+            isSortable: false
+            type: Text
+          - displayName: Version
+            id: Version
+            isSortable: false
+            type: Text
+      properties:
+        <aggregate_fields>:
+          description: Specfies fields that belong to a resource type within an aggregation
+          items:
+            properties:
+              display_name:
+                description: Name of the field displayed in the UI
+                type: string
+              id:
+                description: Id of the inventory field
+                type: string
+              is_sortable:
+                description: Determines where the field is sortable
+                type: boolean
+              type:
+                description: Determines the field type
+                example: Text
+                type: string
+            type: object
+          type: array
+      type: object
+    ResourceAggregationRequest:
+      properties:
+        fields:
+          description: "Array of fields to be returned in the response.
+
+            Valid fields for grouping based on instance_name are - instance_name,
+            app_suite, total_checked_rules, passed_rules, failed_muted_rules, failed_critical_rules,
+            failed_high_rules, failed_medium_rules, failed_low_rules, unknown_rules,
+            failed_rules.
+
+            Valid fields for grouping based on resource_type are - resource_type,
+            app_suite, app_name, app_category, total_checked_rules, passed_rules,
+            failed_muted_rules, failed_critical_rules, failed_high_rules, failed_medium_rules,
+            failed_low_rules, unknown_rules, total_resources, failed_rules.
+
+            Valid fields for grouping based on resource_name are - resource_name,
+            resource_id, app_suite, app_name, app_category, region_id, region_name,
+            netskope_instance_name, instance_name, instance_id, resource_type, parent_res_type.
+
+            "
+          example:
+            - resource_name
+            - resource_type
+            - app_suite
+            - app_name
+          items:
+            type: string
+          type: array
+        filters:
+          description:
+            Array of filters. For illustrative purpose only few filters
+            are listed.
+          example:
+            app_name:
+              operator: like
+              values:
+                - Exchange
+            app_suite:
+              operator: equal
+              values:
+                - AzureAD
+                - Microsoft365
+        group_by:
+          description:
+            Field to be used for grouping the results. Value of this column
+            should be part of fields array.
+          enum:
+            - instance_name
+            - resource_type
+            - resource_name
+          type: string
+        limit:
+          default: 50
+          description: The number of items to return
+          type: integer
+        ngl_query:
+          description:
+            ngl query to used for search. If filters are specified, ngl_query
+            must not be used. ngl_query will work only with group_by option "resource_name"
+          type: string
+        offset:
+          default: 0
+          description: Position in the dataset of a particular record
+          type: integer
+        sort:
+          description: Specifies the sort order details
+          items:
+            properties:
+              column:
+                description:
+                  Column on which the data must be sorted. Value of this
+                  column should be part of fields array.
+                type: string
+              sort_order:
+                default: asc
+                description: Sorting order for the results
+                enum:
+                  - asc
+                  - desc
+                type: string
+            type: object
+          type: array
+        timestamp:
+          description: Fetch all the resource older than this timestamp
+          type: integer
+      required:
+        - offset
+        - fields
+        - limit
+        - group_by
+        - timestamp
+      type: object
+    ResourceAggregationResponse:
+      properties:
+        data:
+          example:
+            - app_category: IAM
+              app_name: AzureAD
+              app_suite: AzureAD
+              instance_id: 8f0ff347-4313-4e58-abda-4a828531df17
+              instance_name: triremeresearch.onmicrosoft.com
+              netskope_instance_name: triremeresearch.onmicrosoft.com
+              parent_res_type: IdentityAndSignIn
+              region_id: global
+              region_name: global
+              resource_id: Policies
+              resource_name: Policies
+              resource_type: Policies
+              creation_time: "2022-06-25T13:56:09Z"
+              last_updated_time: "2022-06-25T13:56:09Z"
+            - app_category: IAM
+              app_name: AzureAD
+              app_suite: AzureAD
+              instance_id: 8f0ff347-4313-4e58-abda-4a828531df17
+              instance_name: triremeresearch.onmicrosoft.com
+              netskope_instance_name: triremeresearch.onmicrosoft.com
+              parent_res_type: Policies
+              region_id: global
+              region_name: global
+              resource_id: AuthenticationMethodsPolicy
+              resource_name: AuthenticationMethodsPolicy
+              resource_type: AuthenticationMethodsPolicy
+              creation_time: "2022-06-25T13:56:09Z"
+              last_updated_time: "2022-06-25T17:56:09Z"
+            - app_category: IAM
+              app_name: AzureAD
+              app_suite: AzureAD
+              instance_id: 8f0ff347-4313-4e58-abda-4a828531df17
+              instance_name: triremeresearch.onmicrosoft.com
+              netskope_instance_name: triremeresearch.onmicrosoft.com
+              parent_res_type: ServicePrincipals
+              region_id: global
+              region_name: global
+              resource_id: ae7f7066-36a4-47fa-8def-c5dea1891ce3
+              resource_name: IC3 Gateway
+              resource_type: ServicePrincipal
+              creation_time: "2022-06-25T13:56:09Z"
+              last_updated_time: "2022-11-25T13:56:09Z"
+            - app_category: IAM
+              app_name: AzureAD
+              app_suite: AzureAD
+              instance_id: 8f0ff347-4313-4e58-abda-4a828531df17
+              instance_name: triremeresearch.onmicrosoft.com
+              netskope_instance_name: triremeresearch.onmicrosoft.com
+              parent_res_type: Account
+              region_id: global
+              region_name: global
+              resource_id: IdentityAndSignIn
+              resource_name: IdentityAndSignIn
+              resource_type: IdentityAndSignIn
+              creation_time: "2022-06-25T13:56:09Z"
+              last_updated_time: "2022-12-25T13:56:09Z"
+          items:
+            type: object
+          type: array
+        next_offset:
+          description: Get records from this offset. -1 if there is no more resources.
+          example: -1
+          type: integer
+        total_count:
+          description:
+            Total resource count only returned when there offset set to
+            0 in the request
+          example: 4
+          type: integer
+      type: object
+    ResourceGraphResponse:
+      properties:
+        edges:
+          items:
+            properties:
+              data:
+                properties:
+                  id:
+                    description: Graph ID for the edge between two resources
+                    type: string
+                  labels:
+                    description: Label for the edge between the resources
+                    type: string
+                  source:
+                    description: Internal Id of the source resource in the graph
+                    type: string
+                  target:
+                    description: Internal Id of the source resource in the graph
+                    type: string
+                type: object
+            type: object
+          type: array
+        node_count:
+          description: total number of connected nodes
+          type: integer
+        nodes:
+          items:
+            properties:
+              data:
+                properties:
+                  id:
+                    description: Node ID
+                    type: string
+                  name:
+                    description: Name of the Resource shown in the graph
+                    type: string
+                  resource:
+                    $ref: "#/components/schemas/GraphResource"
+                type: object
+            type: object
+          type: array
+      required:
+        - nodes
+        - edges
+      type: object
+    ResourceListResponse:
+      items:
+        properties:
+          app_category:
+            description: Application Category
+            type: string
+          app_name:
+            description: Application Name
+            type: string
+          app_suite:
+            description: Application Suite
+            type: string
+          compliance:
+            description: Compliance results of the resource
+            properties:
+              count_critical:
+                description: Number of failed critical rules count
+                type: integer
+              count_failed:
+                description: Number of failed rules count
+                type: integer
+              total_count:
+                description: Number of rules evalutated for the resource
+                type: integer
+            type: object
+          creation_time:
+            description: Creation time of the resource
+            type: string
+          instance_group:
+            description: Instance group
+            type: string
+          instance_id:
+            description: ID of the instance
+            type: string
+          instance_name:
+            description: Name of the instance
+            type: string
+          instance_subgroup:
+            description: Sub group of the instance
+            type: string
+          metadata:
+            description: Metadata of the resource
+            type: object
+          netskope_instance_name:
+            description: Name of the Netskope instance
+            type: string
+          parent_resource_id:
+            description: Parent resource ID to be linked.
+            type: string
+          parent_resource_type:
+            description: Parent resource Type
+            type: string
+          region_id:
+            description: Region ID where the resource is hosted
+            type: string
+          region_name:
+            description: Region Name where the resource is hosted
+            type: string
+          resource_id:
+            description: Id of the resource
+            type: string
+          resource_name:
+            description: Name of the resource
+            type: string
+          resource_type:
+            description: Type of the resource
+            type: string
+          tags:
+            description: Tags of the resource
+            items:
+              properties:
+                name:
+                  description: Name of the tag value
+                  type: string
+                value:
+                  description: Value of the tag
+                  type: string
+              type: object
+            type: array
+        type: object
+      type: array
+    ResourceResponse:
+      example:
+        app_category: IAM
+        app_name: AzureAD
+        app_suite: AzureAD
+        compliance:
+          count_critical: 1
+          count_failed: 1
+          total_count: 5
+        creation_time: 1641462752247
+        instance_group: org-815731449000
+        instance_id: acc-7777771000
+        instance_name: instance-name
+        instance_subgroup: ou-815731449001
+        metadata:
+          clientId: "12345"
+          consentType: AllPrincipals
+          id: id-12345
+          principalId: null
+          resourceId: 12345-13a8-497b-ab07-2c98cfc1818e
+          scope: ChannelMessage.Send Directory.AccessAsUser.All
+        netskope_instance_name: nskp-instance-name
+        parent_resource_id: acc-7777771000
+        parent_resource_type: Account
+        region_id: global
+        region_name: global
+        resource_name: i-0f4f34639ab935e110
+        resource_type: OAuth2PermissionGrant
+        tags: []
+      properties:
+        app_category:
+          description: Application Category
+          type: string
+        app_name:
+          description: Application Name
+          type: string
+        app_suite:
+          description: Application Suite
+          type: string
+        creation_time:
+          description: Creation time of the resource
+          type: string
+        instance_group:
+          description: Instance group
+          type: string
+        instance_id:
+          description: ID of the instance
+          type: string
+        instance_name:
+          description: Name of the instance
+          type: string
+        instance_subgroup:
+          description: Sub group of the instance
+          type: string
+        metadata:
+          description: Metadata of the resource
+          type: object
+        netskope_instance_name:
+          description: Name of the Netskope instance
+          type: string
+        parent_resource_id:
+          description: Parent resource ID to be linked.
+          type: string
+        parent_resource_type:
+          description: Parent resource Type
+          type: string
+        region_id:
+          description: Region ID where the resource is hosted
+          type: string
+        region_name:
+          description: Region Name where the resource is hosted
+          type: string
+        resource_name:
+          description: Name of the resource
+          type: string
+        resource_type:
+          description: Type of the resource
+          type: string
+        tags:
+          description: Tags of the resource
+          items:
+            properties:
+              name:
+                description: Name of the tag value
+                type: string
+              value:
+                description: Value of the tag
+                type: string
+            type: object
+          type: array
+      type: object
+    StatsByRiskCategoryResponse:
+      example:
+        as_of_date_stats:
+          apps_configured_count: 7
+          apps_supported_count: 11
+          by_risk_category:
+            high: 10
+            low: 250
+            medium: 120
+            unknown: 20
+          total_third_party_apps: 400
+        by_app:
+          - appname: Salesforce
+            by_risk_category:
+              high: 5
+              low: 30
+              medium: 10
+              unknown: 5
+            total_third_party_apps: 50
+          - appname: AzureAD
+            by_risk_category:
+              high: 5
+              low: 30
+              medium: 10
+              unknown: 5
+            total_third_party_apps: 50
+          - appname: Microsoft365
+            by_risk_category:
+              high: 0
+              low: 20
+              medium: 5
+              unknown: 5
+            total_third_party_apps: 30
+          - appname: SharePoint
+            by_risk_category:
+              high: 0
+              low: 20
+              medium: 0
+              unknown: 0
+            total_third_party_apps: 20
+          - appname: Others
+            by_risk_category:
+              high: 5
+              low: 170
+              medium: 60
+              unknown: 15
+            total_third_party_apps: 250
+        historic_stats:
+          - by_risk_category:
+              high: 5
+              low: 30
+              medium: 10
+              unknown: 5
+            timestamp: 1675295999
+            total_third_party_apps: 50
+          - by_risk_category:
+              high: 5
+              low: 60
+              medium: 20
+              unknown: 15
+            timestamp: 1675382399
+            total_third_party_apps: 100
+          - by_risk_category:
+              high: 5
+              low: 100
+              medium: 30
+              unknown: 15
+            timestamp: 1675468799
+            total_third_party_apps: 150
+          - by_risk_category:
+              high: 5
+              low: 130
+              medium: 50
+              unknown: 15
+            timestamp: 1675555199
+            total_third_party_apps: 200
+          - by_risk_category:
+              high: 5
+              low: 170
+              medium: 60
+              unknown: 15
+            timestamp: 1675641599
+            total_third_party_apps: 250
+          - by_risk_category:
+              high: 5
+              low: 200
+              medium: 80
+              unknown: 15
+            timestamp: 1675727999
+            total_third_party_apps: 300
+          - by_risk_category:
+              high: 10
+              low: 220
+              medium: 100
+              unknown: 20
+            timestamp: 1675814399
+            total_third_party_apps: 350
+          - by_risk_category:
+              high: 10
+              low: 250
+              medium: 120
+              unknown: 20
+            timestamp: 1675856040
+            total_third_party_apps: 400
+        trend:
+          change_in_num: 100
+          notation: percent
+          trajectory: up
+      properties:
+        as_of_date_stats:
+          properties:
+            apps_configured_count:
+              description: Total number of configured applications
+              type: integer
+            apps_supported_count:
+              description: Total number of supported applications
+              type: integer
+            by_risk_category:
+              description:
+                Distribution of the third party applications based on risk
+                category
+              properties:
+                high:
+                  description:
+                    count of third party applications with risk category
+                    high
+                  type: integer
+                low:
+                  description:
+                    count of third party applications with risk category
+                    low
+                  type: integer
+                medium:
+                  description:
+                    count of third party applications with risk category
+                    medium
+                  type: integer
+                unknown:
+                  description:
+                    count of third party applications with risk category
+                    unknown
+                  type: integer
+              type: object
+            total_third_party_apps:
+              description: Count of total third party applications
+              type: integer
+          type: object
+        by_app:
+          properties:
+            appname:
+              description: application name
+              type: string
+            by_risk_category:
+              description:
+                Distribution of the third party applications based on risk
+                category
+              properties:
+                high:
+                  description:
+                    count of third party applications with risk category
+                    high
+                  type: integer
+                low:
+                  description:
+                    count of third party applications with risk category
+                    low
+                  type: integer
+                medium:
+                  description:
+                    count of third party applications with risk category
+                    medium
+                  type: integer
+                unknown:
+                  description:
+                    count of third party applications with risk category
+                    unknown
+                  type: integer
+              type: object
+            total_third_party_apps:
+              description: Count of total third party applications
+              type: integer
+          type: object
+        historic_stats:
+          items:
+            properties:
+              by_risk_category:
+                description:
+                  Distribution of the third party applications based on
+                  risk category
+                properties:
+                  high:
+                    description:
+                      count of third party applications with risk category
+                      high
+                    type: integer
+                  low:
+                    description:
+                      count of third party applications with risk category
+                      low
+                    type: integer
+                  medium:
+                    description:
+                      count of third party applications with risk category
+                      medium
+                    type: integer
+                  unknown:
+                    description:
+                      count of third party applications with risk category
+                      unknown
+                    type: integer
+                type: object
+              timestamp:
+                description: Date and time value for the stat
+                type: integer
+              total_third_party_apps:
+                description: Count of total third party applications
+                type: integer
+            type: object
+          type: array
+        trend:
+          properties:
+            change_in_num:
+              description:
+                Difference between current third party applications count
+                and current week's average third party applications count
+              type: integer
+            notation:
+              description: The type of change_in_num value
+              enum:
+                - percent
+              type: string
+            trajectory:
+              description:
+                Showing the change in the trend from the current week's
+                average third party applications count
+              enum:
+                - up
+                - down
+                - unchanged
+              type: string
+          type: object
+      required:
+        - as_of_date_stats
+        - historic_stats
+        - trend
+        - by_app
+      type: object
+    StatsByUsersResponse:
+      properties:
+        as_of_date_stats:
+          properties:
+            total_users:
+              description: Count of total users
+              type: integer
+            users_by_app_suite:
+              items:
+                properties:
+                  app_suite:
+                    description: Name of application suite
+                    type: string
+                  count:
+                    description: Number of users for the application suite
+                    type: integer
+                type: object
+              type: array
+          type: object
+        historic_stats:
+          items:
+            properties:
+              timestamp:
+                description: Date and time value for the stat
+                type: integer
+              total_users:
+                description: Number of users at the given value of date and time
+                type: integer
+            type: object
+          type: array
+        trend:
+          properties:
+            change_in_num:
+              description:
+                Difference between current users count and last week's
+                average users count
+              type: integer
+            trajectory:
+              description:
+                Showing the change in the trend from the last week's average
+                users count
+              enum:
+                - up
+                - down
+                - unchanged
+              type: string
+          type: object
+      required:
+        - as_of_date_stats
+      type: object
+info:
+  description:
+    APIs for fetching aggregated resource information and filters needed
+    by Overview and Inventory dashboard
+  title: SPM Inventory APIs
+  version: v1
+openapi: 3.0.3
+paths:
+  /spm/inventory/getfields:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryFieldsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryFieldsResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get the list of all possible field names available in the inventory
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/getresources:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResourceAggregationRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceAggregationResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the aggregated resource information based on filter parameters
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/graph/resources:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceGraphResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the resources in a graph visualisation for a given tenant
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/graph/resources/{id}:
+    get:
+      description:
+        The API traverses the graph from the starting node with best effort
+        and return limited nodes and the edges. If the client specify the distance
+        parameter, the result size can be larger than limit.
+      parameters:
+        - description: the resource id of the starting node.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description:
+            flag for identifying whether the response must contain the starting
+            node or it should be excluded.
+          in: query
+          name: withstartnode
+          required: false
+          schema:
+            default: true
+            type: boolean
+        - description:
+            the maximum distance of the nodes in the results from the starting
+            node.
+          in: query
+          name: distance
+          required: false
+          schema:
+            default: 1
+            type: integer
+        - description: how many nodes in the result.
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 50
+            type: integer
+        - description: Instance id of the resource represented in the node
+          in: query
+          name: instanceid
+          required: false
+          schema:
+            type: string
+        - description: AppSuite of the resource represented in the node
+          in: query
+          name: appsuite
+          required: true
+          schema:
+            type: string
+        - description: type of the resource represented in the graph node
+          in: query
+          name: resourcetype
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceGraphResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the resources in a graph visualisation starting from a given node
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/graph/resources/{id}/associations:
+    get:
+      description:
+        The API traverses the graph to find all associated nodes directly
+        connected to the current node.
+      parameters:
+        - description: the resource id of the starting node.
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: Instance id of the resource represented in the node
+          in: query
+          name: instanceid
+          required: false
+          schema:
+            type: string
+        - description: AppSuite of the resource represented in the node
+          in: query
+          name: appsuite
+          required: true
+          schema:
+            type: string
+        - description: type of the resource represented in the graph node
+          in: query
+          name: resourcetype
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GraphAssociationsResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the associations for a specific node.
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/stats/byusers:
+    get:
+      description: "This API will provide the following data sets
+
+        1. Total number of users.
+
+        2. App Suites and there respective users count.
+
+        3. The last 7 days of data including the total number users on that respective
+        day.
+
+        4. Users trend in terms of the number of users increase or decrease in terms
+        of percentage or exact value. Current count vs (avg count of previous 7 days).
+
+        "
+      parameters:
+        - description: epoch time denoting time until which the stats are to be returned
+          in: query
+          name: timestamp
+          required: true
+          schema:
+            type: number
+        - description:
+            parameter specifying which column of the response will be sorted
+            based on
+          in: query
+          name: sortby
+          required: true
+          schema:
+            default: total_users
+            type: string
+        - description: depicts which order the returned result will be sorted in
+          in: query
+          name: sortorder
+          required: true
+          schema:
+            default: desc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsByUsersResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get users data for landing page
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/stats/thirdpartyapps/byriskcategory:
+    get:
+      description: "This API does the following:
+
+        1. Gives current day stats of third party application grouped by risk category.
+
+        2.Historic stats of third party applications per risk category and the trend
+        for the same."
+      parameters:
+        - description: epoch time denoting time until which the stats are to be returned
+          in: query
+          name: timestamp
+          required: true
+          schema:
+            type: number
+        - description:
+            parameter specifying which column of the response will be sorted
+            based on
+          in: query
+          name: sortby
+          required: true
+          schema:
+            default: total_third_party_apps
+            type: string
+        - description: depicts which order the returned result will be sorted in
+          in: query
+          name: sortorder
+          required: true
+          schema:
+            default: desc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsByRiskCategoryResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get applications overview by risk category of third party applications
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: false
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/summary/instanceconfig/byapps:
+    get:
+      description: "This API will provide the following data sets
+
+        1. Total number of supported Applications.
+
+        2. Total number of configured Applications.
+
+        3. Total number of non-configured Applications.
+
+        4. List of applications along with a flag indicating whether it is configured
+        or not.
+
+        "
+      parameters:
+        - description: epoch time denoting time until which the stats are to be returned
+          in: query
+          name: timestamp
+          required: true
+          schema:
+            type: number
+        - description:
+            parameter specifying which column of the response will be sorted
+            based on
+          in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: depicts which order the returned result will be sorted in
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstanceSummaryByApps"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get applications data for landing page
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/summary/instanceconfig/byappsuites:
+    get:
+      description: "This API will provide the following data sets
+
+        1. Total number of supported App Suites.
+
+        2. Total number of configured App Suites.
+
+        3. Total number of non-configured App Suites.
+
+        4. List of app-suites along with a flag indicating whether it is configured
+        or not.
+
+        "
+      parameters:
+        - description: epoch time denoting time until which the stats are to be returned
+          in: query
+          name: timestamp
+          required: true
+          schema:
+            type: number
+        - description:
+            parameter specifying which column of the response will be sorted
+            based on
+          in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: depicts which order the returned result will be sorted in
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstanceSummaryByAS"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get applications data for landing page
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/{id}:
+    get:
+      parameters:
+        - description: ID of the requested resource
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description: Fetch latest resource within this timestamp
+          in: query
+          name: timestamp
+          required: true
+          schema:
+            type: integer
+        - description: App suite of the requested resource.
+          in: query
+          name: app_suite
+          required: true
+          schema:
+            type: string
+        - description: Instance ID of the requested resource.
+          in: query
+          name: instance_id
+          required: true
+          schema:
+            type: string
+        - description: Resource type of the requested resource.
+          in: query
+          name: resource_type
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourceResponse"
+          description: Success response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Resource Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Service Unavailable
+      summary: Get the SSPM resource information for a given resource ID
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+servers:
+  - url: https://spm-<tenant>-<app>.netskope.com/v1/spm

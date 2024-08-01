@@ -1,0 +1,289 @@
+components:
+  parameters:
+    fileid:
+      description: fileid returned from start call
+      in: path
+      name: fileid
+      required: true
+      schema:
+        example: "168"
+        type: string
+    part:
+      description: part number of the file
+      in: query
+      name: part
+      required: true
+      schema:
+        maximum: 10000
+        minimum: 1
+        type: integer
+    size:
+      description: size of file chunk - max 16M
+      in: query
+      name: size
+      required: true
+      schema:
+        maximum: 16000000
+        minimum: 1
+        type: integer
+    uploadid:
+      description: uploadid returned from start call
+      in: query
+      name: uploadid
+      required: true
+      schema:
+        example: 16cf1289...ab8
+        type: string
+  schemas:
+    filedone:
+      properties:
+        partlist:
+          description: list of column names
+          example:
+            - etag1
+            - etag2
+            - etag3
+          items:
+            type: string
+          type: array
+      type: object
+    filestart:
+      properties:
+        columns:
+          description: list of column names
+          example:
+            - First Name
+            - SSN
+          items:
+            type: string
+          type: array
+        filename:
+          example: edm.csv
+          type: string
+      type: object
+    response:
+      properties:
+        msg:
+          description: Error/Warning message
+          type: string
+        status:
+          description: Status of request
+          enum:
+            - success
+            - error
+          type: string
+      type: object
+    start_response:
+      properties:
+        fileid:
+          description: file_id for this csv filename
+          type: string
+        msg:
+          description: Error/Warning message
+          type: string
+        status:
+          description: Status of request
+          enum:
+            - success
+            - error
+          type: string
+        uploadid:
+          description: Unique per file upload ID
+          type: string
+      type: object
+    status_response:
+      properties:
+        msg:
+          description: Error/Warning message
+          type: string
+        status:
+          description: Status of request
+          enum:
+            - success
+            - error
+          type: string
+        upload_status:
+          description: Status of current file upload
+          enum:
+            - inprogress
+            - completed
+            - aborted
+          type: string
+      type: object
+    upload_response:
+      properties:
+        etag:
+          description: Needed for done call
+          type: string
+        msg:
+          description: Error/Warning message
+          type: string
+        status:
+          description: Status of request
+          enum:
+            - success
+            - error
+          type: string
+      type: object
+info:
+  description: REST APIs exposed by the DLP EDM upload service
+  title: DLP EDM Upload Service
+  version: 1.0.0
+openapi: 3.1.0
+paths:
+  /services/dlp/edm/file/upload:
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/filestart"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/start_response"
+          description: successful operation
+        "400":
+          description: Invalid request value
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: Error occurrance
+      summary: Create Domain Fronting Exception
+      tags:
+        - pdd-upload
+    x-netskope-params:
+      apiGroup: edm
+      customerFacing: false
+      serviceConfig: dlp-pdd-upload
+      version: 2
+  /services/dlp/edm/file/upload/{fileid}:
+    delete:
+      parameters:
+        - $ref: "#/components/parameters/fileid"
+        - $ref: "#/components/parameters/uploadid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: successful operation
+        "400":
+          description: Invalid request value
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: Error occurrance
+      summary: Create Domain Fronting Exception
+      tags:
+        - pdd-upload
+    get:
+      parameters:
+        - $ref: "#/components/parameters/fileid"
+        - $ref: "#/components/parameters/uploadid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/status_response"
+          description: successful operation
+        "400":
+          description: Invalid request value
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: Error occurrance
+      summary: Create Domain Fronting Exception
+      tags:
+        - pdd-upload
+    post:
+      parameters:
+        - $ref: "#/components/parameters/fileid"
+        - $ref: "#/components/parameters/uploadid"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/filedone"
+              type: object
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: successful operation
+        "400":
+          description: Invalid request value
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: Error occurrance
+      summary: Create Domain Fronting Exception
+      tags:
+        - pdd-upload
+    put:
+      parameters:
+        - $ref: "#/components/parameters/fileid"
+        - $ref: "#/components/parameters/part"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/uploadid"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/upload_response"
+          description: successful operation
+        "400":
+          description: Invalid request value
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/response"
+          description: Error occurrance
+      summary: Create Domain Fronting Exception
+      tags:
+        - pdd-upload
+    x-netskope-params:
+      apiGroup: edm
+      customerFacing: false
+      serviceConfig: dlp-pdd-upload
+      version: 2
+servers:
+  - description: 9000 server on localhost
+    url: http://localhost:9000

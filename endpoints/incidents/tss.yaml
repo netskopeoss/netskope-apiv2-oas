@@ -1,0 +1,188 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        message:
+          type: string
+      type: object
+    GetReportResponse:
+      properties:
+        processtree:
+          type: string
+        report:
+          type: object
+      type: object
+info:
+  description:
+    " TSS artifact retrieval API \n ### Feature description: \n Provides\
+    \ a mechanism to retrieve malware related artifacts \n"
+  title: TSS Artifacts
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /incidents/malwareanalysis/pcap/{md5}:
+    get:
+      description:
+        Retrieve the pcap file for a sample (md5) seen in Incidents > Malware
+        > Malware Details
+      parameters:
+        - description: md5 of a sample
+          in: path
+          name: md5
+          required: true
+          schema:
+            example: 896765c9f7b218e096691dd903260e96
+            type: string
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: successful request
+        "400":
+          content:
+            application/json:
+              example:
+                message: Invalid md5 value
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              example:
+                message: No pcap file found for given md5 896765c9f7b218e096691dd903260e96
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not Found
+        "503":
+          content:
+            application/json:
+              example:
+                message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Please report this error to Netskope
+      summary: Get pcap file by md5
+    x-netskope-params:
+      apiGroup: tss
+      customerFacing: true
+      serviceConfig: atp
+      version: 2
+  /incidents/malwareanalysis/reports/{md5}:
+    get:
+      description:
+        Retrieve the malware analysis report for a sample (md5) seen in
+        Incidents > Malware > Malware Details in Structured Threat Information Expression
+        (STIX™ 2) format
+      parameters:
+        - description: md5 of a sample
+          in: path
+          name: md5
+          required: true
+          schema:
+            example: 896765c9f7b218e096691dd903260e96
+            type: string
+        - description: Determine whether or not include process tree graph in the response
+          in: query
+          name: processtree
+          schema:
+            default: false
+            type: boolean
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetReportResponse"
+          description: successful request
+        "400":
+          content:
+            application/json:
+              example:
+                message: Invalid md5 value
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              example:
+                message: No report found for given md5 896765c9f7b218e096691dd903260e96
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not Found
+        "503":
+          content:
+            application/json:
+              example:
+                message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Please report this error to Netskope
+      summary: Get malware report by md5
+    x-netskope-params:
+      apiGroup: tss
+      customerFacing: true
+      serviceConfig: atp
+      version: 2
+  /incidents/malwareanalysis/screenshots/{md5}:
+    get:
+      description:
+        Retrieve the screenshots for a sample (md5) seen in Incidents >
+        Malware > Malware Details
+      parameters:
+        - description: md5 of a sample
+          in: path
+          name: md5
+          required: true
+          schema:
+            example: 896765c9f7b218e096691dd903260e96
+            type: string
+      responses:
+        "200":
+          content:
+            application/zip:
+              schema:
+                format: binary
+                type: string
+          description: successful request
+        "400":
+          content:
+            application/json:
+              example:
+                message: Invalid md5 value
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Invalid request
+        "404":
+          content:
+            application/json:
+              example:
+                message: No screenshots found for given md5 896765c9f7b218e096691dd903260e96
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not Found
+        "503":
+          content:
+            application/json:
+              example:
+                message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Please report this error to Netskope
+      summary: Get screenshots by md5
+    x-netskope-params:
+      apiGroup: tss
+      customerFacing: true
+      serviceConfig: atp
+      version: 2

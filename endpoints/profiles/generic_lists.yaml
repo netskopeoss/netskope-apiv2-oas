@@ -1,0 +1,388 @@
+components:
+  schemas:
+    error-response-500:
+      properties:
+        datetime:
+          description: the time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: unique error code for troubleshooting {service}{category}{detail}
+          example: "701"
+          type: string
+        message:
+          description: human readable error message, could be general or specific
+          example: database query error / internal error
+          type: string
+        trace_id:
+          description: trace id for troubleshooting {service}{category}{detail}
+          example: bsbg4m9ru4bb3qstvkl0
+          type: string
+      type: object
+    list:
+      properties:
+        create_by:
+          description: user who created
+          example: automation@sample.com
+          type: string
+        create_time:
+          description: UTC time conform ISO 8601
+          example: "2022-12-14T06:08:04.123Z"
+          type: string
+        description:
+          example: all of search engines websites
+          type: string
+        id:
+          example: 507f191e810c19729de860ea
+          type: string
+        modify_by:
+          description: user who modified lastly
+          example: superman@sample.com
+          type: string
+        modify_time:
+          description: UTC time conform ISO 8601
+          example: "2022-12-30T01:05:00.281Z"
+          type: string
+        name:
+          example: search engines domains
+          type: string
+        status:
+          description: status of urilist
+          enum:
+            - applied
+            - pending-apply
+            - pending-delete
+            - deleted
+          type: string
+        type:
+          description: type of list
+          enum:
+            - url-exact
+            - url-regex
+            - domain
+            - network
+          example: domain
+          type: string
+        values:
+          example:
+            - comment: search engine
+              value: "*.google.com"
+            - value: www.yahoo.com
+            - comment: social media
+              value: www.facebook.com
+          items:
+            properties:
+              comment:
+                example: search engine
+                type: string
+              value:
+                example: "*.google.com"
+                type: string
+            type: object
+          type: array
+        values_count:
+          example: 3
+          type: number
+      type: object
+    lists:
+      properties:
+        elements:
+          example:
+            - create_by: automation@sample.com
+              create_time: "2022-11-14T06:08:04.123Z"
+              description: self defined websites
+              id: 9879876e810c19729de32111
+              modify_by: superman@sample.com
+              modify_time: "2022-11-30T01:05:00.281Z"
+              name: custom domains
+              status: applied
+              type: domain
+              values:
+                - "*.gmail.com"
+                - www.facebook.com
+                - www.instagram.com
+              values_count: 3
+            - create_by: automation@sample.com
+              create_time: "2022-12-14T06:08:04.123Z"
+              description: all of search engines websites
+              id: 507f191e810c19729de860ea
+              modify_by: superman@sample.com
+              modify_time: "2022-12-30T01:05:00.281Z"
+              name: search engines domains
+              status: applied
+              type: domain
+              values:
+                - comment: search engine
+                  value: "*.google.com"
+                - value: www.yahoo.com
+                - comment: social media
+                  value: www.facebook.com
+              values_count: 3
+          items:
+            $ref: "#/components/schemas/list"
+          type: array
+      type: object
+    lists-post:
+      properties:
+        description:
+          example: all of search engines websites
+          type: string
+        name:
+          example: search engines domains
+          type: string
+        type:
+          description: type of list
+          enum:
+            - urlexact
+            - urlregex
+            - domain
+            - network
+          example: domain
+          type: string
+        values:
+          example:
+            - comment: search engine
+              value: "*.google.com"
+            - value: www.yahoo.com
+            - comment: social media
+              value: www.facebook.com
+          items:
+            properties:
+              comment:
+                example: search engine
+                type: string
+              value:
+                example: "*.google.com"
+                type: string
+            type: object
+          type: array
+      type: object
+    successful-delete-response:
+      properties:
+        status:
+          description: successful operation
+          example: success
+          type: string
+      type: object
+info:
+  description:
+    "Generic Lists configuration API service provides the API endpoint
+    for CRUD operations on Generic Lists resource, the generic list would be reference
+    by multiple resources, for example, domainfronting
+
+    "
+  title: "Generic Lists configuration API service.
+
+    "
+  version: 0.0.1
+openapi: 3.0.3
+paths:
+  /profiles/lists:
+    get:
+      parameters:
+        - description: specifying fields to be returned in the response
+          example: name,values_count
+          explode: false
+          in: query
+          name: fields
+          required: false
+          schema:
+            type: string
+          style: form
+        - description:
+            offset of the first item in the list to retrieve, from the beginning
+            if omit
+          explode: false
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: number
+          style: form
+        - description: number of items
+          explode: false
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+          style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lists"
+          description: successful operation
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response-500"
+          description: Error occurrance
+      summary:
+        Return all list objects, recommended to restrict the fields returned
+        with &fields=id,name,description
+      tags:
+        - lists
+    post:
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lists-post"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/list"
+          description: successful operation
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response-500"
+          description: Error occurrance
+      summary:
+        "Create single list resource. Required attributes: Name, Type, and
+        Values. Current list types supported: Domains - List objects which include
+        only domain values and optional comment."
+      tags:
+        - lists
+    x-netskope-params:
+      apiGroup: generic_lists
+      customerFacing: true
+      serviceConfig: swg-api-service
+      version: 2
+  /profiles/lists/{id}:
+    delete:
+      parameters:
+        - description: single resource ID
+          example: "88"
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successful-delete-response"
+          description: successful operation
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "404":
+          description: given ID is not found
+        "409":
+          description: deletion forbidden due to resource referenced by other resources
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response-500"
+          description: Error occurrance
+      summary: Delete single list by ID
+      tags:
+        - lists
+    get:
+      parameters:
+        - description: single resource ID
+          example: "12"
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/list"
+          description: successful operation
+        "400":
+          description: given ID is not number
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "404":
+          description: given ID is not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response-500"
+          description: Error occurrance
+      summary: Get single list resource by ID
+      tags:
+        - lists
+    patch:
+      parameters:
+        - description: single resource ID
+          example: "23"
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lists-post"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/list"
+          description: successful operation
+        "403":
+          description:
+            This is a licensed feature, please contact Netskope support
+            for enablement
+        "404":
+          description: given ID is not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error-response-500"
+          description: Error occurrance
+      summary: Partial update on fields, given action will replace to values field.
+      tags:
+        - lists
+    x-netskope-params:
+      apiGroup: generic_lists
+      customerFacing: true
+      serviceConfig: swg-api-service
+      version: 2
+servers:
+  - description: Development server
+    url: http://localhost:3000/api/v2
+tags:
+  - description: Generic list resources, including domain, url and network location
+    name: lists

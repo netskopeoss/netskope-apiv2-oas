@@ -1,0 +1,525 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        body:
+          properties:
+            errors:
+              items:
+                type: string
+              type: array
+          type: object
+        status:
+          example: 400
+          type: integer
+      type: object
+    ThirdPartyAppAggregationRequest:
+      properties:
+        attributes:
+          description: Array of fields to be returned in the response.
+          example:
+            - resource_name
+            - app_name
+            - instance_name
+            - risk_score
+            - risk_level
+            - custom_attribute.verifier_details
+            - custom_attribute.verification_status
+          items:
+            enum:
+              - resource_name
+              - app_suite
+              - app_name
+              - instance_id
+              - instance_name
+              - risk_score
+              - risk_level
+              - permissions
+              - custom_attribute.verifier_details
+              - custom_attribute.verification_status
+              - custom_attribute.last_updated_time
+              - custom_attribute.notes
+            type: string
+          type: array
+        filename:
+          description: Name of the file to return when Accept header is text/csv.
+          type: string
+        filters:
+          description:
+            Array of filters. For illustrative purpose only few filters
+            are listed.
+          example:
+            instance_name:
+              operator: equal
+              values:
+                - TestInstance1
+                - TestInstance2
+            resource_name:
+              operator: equal
+              values:
+                - TestApp
+        limit:
+          default: 50
+          description: The number of items to return.
+          type: integer
+        offset:
+          default: 0
+          description: Position in the dataset of a particular record.
+          type: integer
+        sortby:
+          description: Specifies the sort order details.
+          example:
+            - column: app_name
+              sort_order: asc
+          items:
+            $ref: "#/components/schemas/ThirdPartyAppAggregationRequest_sortby"
+          type: array
+      type: object
+    ThirdPartyAppAggregationRequest_sortby:
+      properties:
+        column:
+          description: Column on which the data must be sorted.
+          type: string
+        sort_order:
+          default: asc
+          description: Sorting order.
+          enum:
+            - asc
+            - desc
+          type: string
+      type: object
+    ThirdPartyAppAggregationResponse:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/ThirdPartyAppResource"
+          type: array
+        next_offset:
+          description: Get records from this offset. -1 if there is no more resources.
+          example: -1
+          type: integer
+        total_count:
+          description:
+            Total resource count only returned when there offset set to
+            0 in the request.
+          example: 1
+          type: integer
+      type: object
+    ThirdPartyAppCustomAttributes:
+      description: Attributes associated with the thrid party app.
+      example:
+        last_updated_time: 1696934855
+        notes: Updated by abc@netskope.com
+        verification_status: Approved
+        verifier_details: abc@netskope.com
+      properties:
+        last_updated_time:
+          description:
+            Timestamp when the attribute were updated represented as Unix
+            epoch seconds.
+          type: integer
+        notes:
+          description: Notes specifed when the attributes were updated
+          type: string
+        verification_status:
+          description: Status of the approval.
+          type: string
+        verifier_details:
+          description: Details of the approver who approved the app.
+          type: string
+      type: object
+    ThirdPartyAppFieldsResponse:
+      example:
+        fields:
+          - display_name: Thirdparty AppName
+            id: resource_name
+            sortable: true
+            type: string
+          - display_name: Permissions
+            id: permissions
+            sortable: false
+            type: array
+      properties:
+        fields:
+          description: Array of fields
+          items:
+            properties:
+              display_name:
+                description: Name of the field displayed in the UI
+                type: string
+              id:
+                description: Id of the field
+                type: string
+              sortable:
+                description: Determines where the field is sortable
+                type: boolean
+              type:
+                description: Determines the field type
+                type: string
+            type: object
+          type: array
+      type: object
+    ThirdPartyAppFilterOptionsRequest:
+      example:
+        filter_key: custom_attribute.verification_status
+        limit: 30
+        offset: 0
+      properties:
+        filter_key:
+          description: API will fetch all possible values for the filter_key.
+          enum:
+            - resource_name
+            - app_name
+            - instance_name
+            - risk_level
+            - custom_attribute.verification_status
+          type: string
+        keyword:
+          description: Case-insensitive keyword used to match for filter values.
+          type: string
+        limit:
+          default: 50
+          description: Limit of the filter values returned.
+          type: integer
+        offset:
+          default: 0
+          description: Offset from which the filter values are to be returned.
+          type: integer
+      type: object
+    ThirdPartyAppFilterOptionsResponse:
+      example:
+        data:
+          - id: verification_pending
+            name: Verification Pending
+          - id: verification_in_progess
+            name: Verification in Progress
+        next_offset: 0
+      properties:
+        data:
+          description: Array of filter values
+          items:
+            properties:
+              id:
+                description: ID of the value
+                type: string
+              name:
+                description: Value to be displayed in the UI
+                type: string
+            type: object
+          type: array
+        next_offset:
+          description: Get records from this cursor. Empty if there are no more resources.
+          type: integer
+      type: object
+    ThirdPartyAppResource:
+      example:
+        app_name: AzureAD
+        custom_attribute:
+          last_updated_time: 1696934855
+          notes: Updated by abc@netskope.com
+          verification_status: Approved
+          verifier_details: abc@netskope.com
+        instance_name: instance-name
+        permissions:
+          - File.Read
+          - File.Writr
+        resource_id: "12313131"
+        resource_name: Egnite
+        risk_level: Critical
+        risk_score: 90
+      properties:
+        app_name:
+          description: SAAS Application Name.
+          type: string
+        app_suite:
+          description: SAAS Application Suite.
+          type: string
+        custom_attribute:
+          $ref: "#/components/schemas/ThirdPartyAppCustomAttributes"
+        instance_id:
+          description: ID of the SAAS application instance.
+          type: string
+        instance_name:
+          description: Name of the SAAS application instance.
+          type: string
+        permissions:
+          description: List of the permissions owned by the app.
+          items:
+            type: string
+          type: array
+        resource_id:
+          description: ID of the thirdparty app.
+        resource_name:
+          description: Name of the thirdparty app.
+          type: string
+        risk_level:
+          description: Risk level of the thirdparty app.
+          type: string
+        risk_score:
+          description: Risk score of the thirdparty app.
+          type: integer
+      type: object
+info:
+  description:
+    APIs for fetching aggregated resource information and filters for thirdpartyapps
+    Inventory dashboard.
+  title: SPM Third Party Apps Inventory APIs
+  version: v1
+openapi: 3.0.3
+paths:
+  /spm/inventory/thirdpartyapps/fields:
+    get:
+      operationId: getThirdPartyResourceFields
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartyAppFieldsResponse"
+          description: Success response
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Get the SSPM third party inventory field information.
+      tags:
+        - SPM Third Party Apps Inventory APIs
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/thirdpartyapps/filters/getvalues:
+    post:
+      operationId: getThirdPartyResourceFilterValues
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartyAppFilterOptionsRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartyAppFilterOptionsResponse"
+          description: Success response
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Fetch all values of given filter_key referred in inventory.
+      tags:
+        - SPM Third Party Apps Inventory APIs
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/thirdpartyapps/getresources:
+    post:
+      operationId: getThirdPartyResources
+      parameters:
+        - description:
+            If application/json specified returns a json response else if
+            text/csv specified returns the data in csv.
+          explode: false
+          in: header
+          name: Accept
+          required: true
+          schema:
+            enum:
+              - application/json
+              - text/csv
+            example: application/json
+            type: string
+          style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartyAppAggregationRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThirdPartyAppAggregationResponse"
+            text/csv: {}
+          description: Success response
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary:
+        Get the aggregated thrid party resource information based on filter
+        parameters.
+      tags:
+        - SPM Third Party Apps Inventory APIs
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+  /spm/inventory/thirdpartyapps/{id}/attributes:
+    patch:
+      operationId: updateThirdPartyResourceAttributes
+      parameters:
+        - description: ID of the requested resource.
+          explode: false
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          style: simple
+        - description: App-suite of the requested resource.
+          explode: false
+          in: query
+          name: app_suite
+          required: true
+          schema:
+            type: string
+          style: form
+        - description: App-name of the requested resource.
+          explode: false
+          in: query
+          name: app_name
+          required: true
+          schema:
+            type: string
+          style: form
+        - description: ID of the instance containing the requested resource.
+          explode: false
+          in: query
+          name: instance_id
+          required: true
+          schema:
+            type: string
+          style: form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThirdPartyAppCustomAttributes"
+        required: true
+      responses:
+        "204":
+          description: Success response
+        4XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - Missing query parameter.
+                status: 400
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Error
+        5XX:
+          content:
+            application/json:
+              example:
+                body:
+                  errors:
+                    - We encountered a backend error. Please try again.
+                status: 500
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal Server Error
+      summary: Update the attributes for thirdparty apps.
+      tags:
+        - SPM Third Party Apps Inventory APIs
+    x-netskope-params:
+      apiGroup: inventory
+      customerFacing: true
+      nsBeta: true
+      rateLimit:
+        readRoutes:
+          second: 10
+        writeRoutes:
+          second: 10
+      serviceConfig: spm
+      version: 2
+servers:
+  - url: https://spm-<tenant>-<app>.netskope.com/v1/spm
+tags:
+  - description:
+      APIs for fetching aggregated resource information and filters for thirdpartyapps
+      Inventory dashboard.
+    name: SPM Third Party Apps Inventory APIs

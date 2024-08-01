@@ -1,0 +1,880 @@
+components:
+  schemas:
+    destinations.ValidationError:
+      type: object
+      properties:
+        datetime:
+          type: string
+          description: date time
+          example: 2022-08-31T11:14:23Z
+        err_code:
+          type: string
+          description: error code definition
+          example: "310101"
+        message:
+          type: string
+          description: error message
+          example: some error happened
+        trace_id:
+          type: string
+          description: trace ID
+          example: 547c581b-b779-4770-8b73-aeece0742252
+        validation_errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/destinations.ve"
+    destinations.createDestinationPayload:
+      required:
+        - name
+      type: object
+      properties:
+        description:
+          maxLength: 200
+          type: string
+          example: my destination description
+        name:
+          maxLength: 100
+          type: string
+          example: my destination
+        type:
+          type: string
+          example: regex
+        values:
+          type: array
+          example:
+            - google.com
+            - netskope.com
+          items:
+            type: string
+    destinations.deleteDestinationResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+          enum:
+            - pending-delete
+            - success
+    destinations.deployDestinationsPayload:
+      type: object
+      properties:
+        change_note:
+          maxLength: 100
+          type: string
+          example: add custom ftp destination
+        ids:
+          maxItems: 100
+          type: array
+          example:
+            - "1"
+            - "2"
+            - "3"
+          items:
+            type: string
+    destinations.deployDestinationsResponse:
+      type: object
+      properties:
+        applied:
+          type: array
+          example:
+            - "1"
+            - "2"
+            - "3"
+          items:
+            type: string
+    destinations.destination:
+      type: object
+      properties:
+        create_by:
+          type: string
+          example: API Token
+        create_time:
+          type: string
+          example: 2024-05-20T12:00:55.168Z
+        description:
+          type: string
+          example: Destination profile for Engineering division
+        id:
+          type: string
+          example: "1"
+        modify_by:
+          type: string
+          example: Another API Token
+        modify_time:
+          type: string
+          example: 2024-06-10T12:00:23.168Z
+        name:
+          type: string
+          example: Engineering department
+        status:
+          type: string
+          example: applied
+          enum:
+            - pending
+            - pending-delete
+            - applied
+        type:
+          type: string
+          example: insensitive
+          enum:
+            - regex
+            - sensitive
+            - insensitive
+        values:
+          type: array
+          example:
+            - google.com
+            - netskope.com
+          items:
+            type: string
+        values_count:
+          type: integer
+          example: 2
+    destinations.destinations:
+      type: object
+      properties:
+        elements:
+          type: array
+          items:
+            $ref: "#/components/schemas/destinations.destination"
+        total_count:
+          type: integer
+          example: 1
+    destinations.operateValuesPayload:
+      type: object
+      properties:
+        operation:
+          $ref: "#/components/schemas/destinations.valueOperation"
+    destinations.partialUpdateDestinationPayload:
+      type: object
+      properties:
+        description:
+          maxLength: 200
+          type: string
+          example: my destination description
+        name:
+          maxLength: 100
+          type: string
+          example: my destination
+        type:
+          type: string
+          example: insensitive
+        values:
+          type: array
+          example:
+            - google.com
+            - netskope.com
+          items:
+            type: string
+    destinations.valueOperation:
+      type: object
+      properties:
+        indexes:
+          maxItems: 10
+          type: array
+          example:
+            - 0
+            - 10
+          items:
+            type: integer
+        op:
+          type: string
+        values:
+          maxItems: 10
+          type: array
+          example:
+            - google.com
+            - netskope.com
+          items:
+            type: string
+    destinations.ve:
+      type: object
+      properties:
+        error:
+          type: string
+          example: must be a maximum of 100 characters in length
+        field:
+          type: string
+          example: name
+    ginhelper.Error:
+      type: object
+      properties:
+        datetime:
+          type: string
+          description: date time
+          example: 2022-08-31T11:14:23Z
+        err_code:
+          type: string
+          description: error code definition
+          example: "310101"
+        message:
+          type: string
+          description: error message
+          example: some error happened
+        trace_id:
+          type: string
+          description: trace ID
+          example: 547c581b-b779-4770-8b73-aeece0742252
+info:
+  description: "Destination profile configuration API provides the API endpoints
+    for CRUD operations on Destination profile resource, the Destination profile would be referenced
+    by multiple resources such as real time protection policy"
+  title: "Destination profile configuration API."
+  version: 0.0.1
+openapi: 3.0.3
+paths:
+  /profiles/destinations:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    get:
+      tags:
+        - destination profile
+      summary: Get Destination Profiles
+      description: |-
+        Get a subset of Destination Profiles restricted by offset, limit, and filter. <br />
+        The returned profiles can be filtered by one or more attributes. <br />
+        The basic syntax is: <code>attribute attribute_operator "value"</code> or <code>attribute in ("value1", "value2")</code> for "in" attribute operator. <br />
+        <ul><li> Supported attributes (case-sensitive): <code>id</code>, <code>name</code>, <code>status</code>, <code>values</code>, <code>description</code></li>
+        <li> Supported attribute operators: <code>eq</code> (equal: case-sensitive fully match), <code>in</code>(in array of strings, limited to 10 strings: case-sensitive fully match), <code>co</code> (contains: case-insensitive partial match). </li>
+        <li> Supported value type: string, which must be enclosed with double quotes. </li>
+        Examples: <br />
+        1. Find a profile name contains "eng": <code>?filter=name co "eng"</code>. <br />
+        2. Find a profile status in "pending" or "pending-delete": <code>?filter=status in ("pending","pending-delete")</code>. <br />
+        3. Find profiles whose id is 1 or 2 or 3: <code>?filter=id in ("1","2","3")</code>. <br />
+        4. Find profiles whose values contains "netskope": <code>?filter=values co "netskope"</code>. <br />
+        5. Find profiles whose values equal "www.netskope.com": <code>?filter=values eq "www.netskope.com"</code>. <br />
+        6. Find profiles whose values is either "www.netskope.com" or "www.example.com": <code>?filter=values in ("www.netskope.com","www.example.com")</code>.
+      parameters:
+        - name: fields
+          in: query
+          description:
+            "Specifying fields to be returned in the response. Example: <code>?fields=name,description</code>.\
+            \ Note that the id field will always be returned. If omitted, all fields\
+            \ will be returned."
+          schema:
+            type: string
+            enum:
+              - name
+              - description
+              - type
+              - status
+              - values_count
+              - create_by
+              - create_time
+              - modify_by
+              - modify_time
+        - name: offset
+          in: query
+          description:
+            The (zero-based) offset of the first item in the list to retrieve.
+            Default to 0.
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Max number of items to retrieve. Default to 10. Maximum 50.
+          schema:
+            type: integer
+        - name: filter
+          in: query
+          description: Filter returned profiles. See description for full example.
+          schema:
+            type: string
+        - name: sortby
+          in: query
+          description:
+            Sort lists of destinations profiles by a field. Default sort
+            by id field.
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - modify_time
+        - name: sortorder
+          in: query
+          description: Assign sorting order with ascending or descending
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destinations"
+        "400":
+          description: Invalid headers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+    post:
+      tags:
+        - destination profile
+      summary: Create a Destination Profile
+      description: Create a Destination Profile by given name and values
+      parameters:
+        - name: interactive
+          in: query
+          description:
+            "If interactive is set to true, the changes made by API calls\
+            \ will be in pending status. Need to manually call 'deploy' API to make\
+            \ changes take effect. Default to false."
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+        - name: details
+          in: query
+          description:
+            Return the values field in response body if set to true. Default
+            to true.
+          schema:
+            type: boolean
+      requestBody:
+        description: Create destination payload
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/destinations.createDestinationPayload"
+        required: true
+      responses:
+        "201":
+          description: Destination Profile is created and applied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "202":
+          description: Destination Profile is created but not yet applied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers or request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.ValidationError"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "409":
+          description: Destination profile name already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+      x-codegen-request-body-name: request_body
+  /profiles/destinations/deploy:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    post:
+      tags:
+        - destination profile
+      summary: Deploy Destination Profiles
+      description: Deploy pending Destination Profile changes
+      parameters:
+        - name: all
+          in: query
+          description:
+            "Value must be true or false. If true, all the pending destination\
+            \ profiles will be applied. And the ids field in body must be empty or omitted.\
+            \ If false, a request body must be provided, which gives a list of destination\
+            \ profile IDs to be deployed. If the number of pending destination profiles\
+            \ exceed 100, admins will have to provide ids. Defaults to false."
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+      requestBody:
+        description: Deploy destinations payload
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/destinations.deployDestinationsPayload"
+        required: false
+      responses:
+        "200":
+          description: A list of Destination Profiles whose changes have taken effect.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.deployDestinationsResponse"
+        "400":
+          description: Invalid headers or request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.ValidationError"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+      x-codegen-request-body-name: request_body
+  /profiles/destinations/{id}:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    get:
+      tags:
+        - destination profile
+      summary: Get a Destination Profile
+      description: Get a Destination Profile by given ID
+      parameters:
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+        - name: details
+          in: query
+          description:
+            Return the values field in response body if set to true. Default
+            to true.
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+    delete:
+      tags:
+        - destination profile
+      summary: Delete a Destination Profile
+      description: Delete a Destination Profile by given ID.
+      parameters:
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+        - name: interactive
+          in: query
+          description:
+            "If interactive is set to true, the changes made by API calls\
+            \ will be in pending status. Need to manually call 'deploy' API to make\
+            \ changes take effect. Default to false."
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Destination profile is deleted and applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.deleteDestinationResponse"
+        "202":
+          description: Destination profile is deleted and not yet applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.deleteDestinationResponse"
+        "400":
+          description: Invalid header
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+    patch:
+      tags:
+        - destination profile
+      summary: Partial update a Destination Profile
+      description: |-
+        Partial update a Destination Profile by given ID. Now only support following 1st layer fields:
+        1. name
+        2. description
+        3. values
+        4. type (if present, then the values field must be present as well)
+      parameters:
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+        - name: interactive
+          in: query
+          description:
+            "If interactive is set to true, the changes made by API calls\
+            \ will be in pending status. Need to manually call 'deploy' API to make\
+            \ changes take effect. Default to false."
+          schema:
+            type: boolean
+        - name: details
+          in: query
+          description:
+            Return the values field in response body if set to true. Default
+            to true.
+          schema:
+            type: boolean
+      requestBody:
+        description: Request payload
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/destinations.partialUpdateDestinationPayload"
+        required: true
+      responses:
+        "200":
+          description: Destination Profile is updated and applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "202":
+          description: Destination Profile is updated but not yet applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers or request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.ValidationError"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "409":
+          description: Destination name already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+      x-codegen-request-body-name: request_body
+  /profiles/destinations/{id}/revert:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    post:
+      tags:
+        - destination profile
+      summary: Revert a Destination Profile.
+      description:
+        Revert a Destination Profile whose status is in pending or pending-delete
+        to applied status with whose data back to the applied version.
+      parameters:
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+        - name: details
+          in: query
+          description:
+            Return the values field in response body if set to true. Default
+            to true.
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description:
+            Destination Profile is reverted to applied status and it's
+            data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "409":
+          description:
+            Destination profile is not in pending status nor pending-delete
+            status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+  /profiles/destinations/{id}/values:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    patch:
+      tags:
+        - destination profile
+      summary: Operate on values field
+      description: |-
+        Append/Remove matched element from values field. <br />
+        Examples:
+        - remove all matched elements by case-sensitive and exact match on given values <code>{"operation": {"op": "remove", "values":["bad-sase.com"]}</code>. Limit to 10 values.
+        - remove urls at index 0 and 10 <code>{"operation": {"op": "remove", "indexes":[0, 10]}</code>. Limit to 10 indexes.
+        - append values to the end: <code>{"operation": {"op": "append", "values":["bad-sase.com", "www.good.com"]}</code>
+      parameters:
+        - name: interactive
+          in: query
+          description:
+            "If interactive is set to true, the changes made by API calls\
+            \ will be in pending status. Need to manually call 'deploy' API to make\
+            \ changes take effect. Default to false."
+          schema:
+            type: boolean
+            enum:
+              - true
+              - false
+        - name: details
+          in: query
+          description:
+            Return the values field in response body if set to true. Default
+            to true.
+          schema:
+            type: boolean
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Operate on values field
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/destinations.operateValuesPayload"
+        required: true
+      responses:
+        "200":
+          description: Destination Profile is updated and applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers or request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.ValidationError"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+      x-codegen-request-body-name: request_body
+  /profiles/destinations/{id}/versions/{identifier}:
+    x-netskope-params:
+      apiGroup: destinations
+      customerFacing: false
+      serviceConfig: swg-profile-service
+      version: 2
+    get:
+      tags:
+        - destination profile
+      summary: Get the applied version of a Destination Profile
+      description: Get the applied version of a Destination Profile by given ID
+      parameters:
+        - name: id
+          in: path
+          description: Destination profile ID
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          description:
+            The version identifier. Currently only support the latest applied
+            version which called 'applied'. Enums(applied)
+          required: true
+          schema:
+            type: string
+            enum:
+              - applied
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/destinations.destination"
+        "400":
+          description: Invalid headers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "403":
+          description:
+            "This is a licensed feature, please contact Netskope support\
+            \ for enablement"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "404":
+          description: Given ID is not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+        "500":
+          description: Error occurrence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ginhelper.Error"
+servers:
+  - description: Development server
+    url: http://localhost:3000/api/v2

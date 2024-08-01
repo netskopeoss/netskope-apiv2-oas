@@ -1,0 +1,397 @@
+components:
+  schemas:
+    AnalysisReport:
+      properties:
+        analysis_report:
+          type: string
+      type: object
+    SampleErrorResponse:
+      properties:
+        error_message:
+          type: string
+        status:
+          type: string
+      type: object
+    SampleInfo:
+      properties:
+        latest_detection_date:
+          format: int32
+          nullable: true
+          type: integer
+        malware_name:
+          nullable: true
+          type: string
+        md5:
+          nullable: true
+          type: string
+        seen:
+          type: boolean
+        severity:
+          format: int32
+          nullable: true
+          type: integer
+        sha256:
+          type: string
+        verdict:
+          nullable: true
+          type: string
+      type: object
+    SampleInfoRequest:
+      description: List of sample hash value, supporting md5 or sha256
+      properties:
+        hash:
+          example:
+            - ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e
+            - 4aacabe02537f435d83be4d180751234
+          items:
+            example: '["ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e","4aacabe02537f435d83be4d180751234"]'
+            type: string
+          type: array
+      type: object
+    SampleInfoResponse:
+      properties:
+        result:
+          additionalProperties:
+            $ref: "#/components/schemas/SampleInfo"
+          type: object
+        status:
+          type: string
+      type: object
+    SampleReport:
+      properties:
+        netskope-sample-report:
+          additionalProperties:
+            $ref: "#/components/schemas/AnalysisReport"
+          type: object
+        version:
+          type: string
+      type: object
+    SampleReportResponse:
+      properties:
+        result:
+          $ref: "#/components/schemas/SampleReport"
+        status:
+          type: string
+      type: object
+info:
+  description: Retro Hunt Scan API Query Service
+  title: nsiq-rhqs
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /nsiq/retrohunt/ioc/getinfo:
+    post:
+      description:
+        "Get sample information in batch. \nRetrohunt API results can be\
+        \ retrieved for the data for the period after the feature is enabled."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SampleInfoRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                result:
+                  4aacabe02537f435d83be4d180751234:
+                    latest_detection_date: 1632499560
+                    malware_name: Trojan.Agent.CZTF
+                    md5: 4aacabe02537f435d83be4d180751234
+                    seen: true
+                    severity: 3
+                    sha256: eb96a7762172dcfe248091f6e9336a2c64d994f43276135ef5c4f59b25264a67
+                    verdict: malicious
+                  ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e:
+                    latest_detection_date: null
+                    malware_name: null
+                    md5: null
+                    seen: false
+                    severity: null
+                    sha256: ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e
+                    verdict: null
+                status: OK
+              schema:
+                $ref: "#/components/schemas/SampleInfoResponse"
+          description: OK
+        "206":
+          content:
+            application/json:
+              example:
+                result:
+                  4aacabe02537f435d83be4d180751234:
+                    latest_detection_date: 1632499560
+                    malware_name: Trojan.Agent.CZTF
+                    md5: 4aacabe02537f435d83be4d180751234
+                    seen: true
+                    severity: 3
+                    sha256: eb96a7762172dcfe248091f6e9336a2c64d994f43276135ef5c4f59b25264a67
+                    verdict: malicious
+                  ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e:
+                    latest_detection_date: null
+                    malware_name: null
+                    md5: null
+                    seen: false
+                    severity: null
+                    sha256: ba5aa2352bf1132e0fd3e58680eafa8e912b0c56b9919b211fd84878e615798e
+                    verdict: null
+                status: OK
+              schema:
+                $ref: "#/components/schemas/SampleInfoResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              example:
+                error_message: Please use right url to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use right url to query
+        "401":
+          content:
+            application/json:
+              example:
+                error_message: Please make sure you enable this service in Netskope
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please make sure you enable this service in Netskope
+        "405":
+          content:
+            application/json:
+              example:
+                error_message: Please use the right method to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the right method to query
+        "406":
+          content:
+            application/json:
+              example:
+                error_message: Please use the the proper md5 or sha256 to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the the proper md5 or sha256 to query
+        "413":
+          content:
+            application/json:
+              example:
+                error_message: Please make sure only have up to 500 samples to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please make sure only have up to 500 samples to query
+        "429":
+          content:
+            application/json:
+              example:
+                error_message: Rate limit exceeding, please slow down your request
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Rate limit exceeding, please slow down your request
+        "500":
+          content:
+            application/json:
+              example:
+                error_message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please report this error to Netskope or query again
+      summary: Get sample information in batch
+    x-netskope-params:
+      apiGroup: nsiq
+      customerFacing: true
+      serviceConfig: nsiq
+      version: 2
+  /nsiq/retrohunt/ioc/info:
+    get:
+      description:
+        "Get sample information. \nRetrohunt API results can be retrieved\
+        \ for the data for the period after the feature is enabled."
+      parameters:
+        - description: sample hash value, supporting md5 or sha256
+          in: query
+          name: hash
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                result:
+                  4aacabe02537f435d83be4d180751234:
+                    latest_detection_date: 1632499560
+                    malware_name: Trojan.Agent.CZTF
+                    md5: 4aacabe02537f435d83be4d180751234
+                    seen: true
+                    severity: 3
+                    sha256: eb96a7762172dcfe248091f6e9336a2c64d994f43276135ef5c4f59b25264a67
+                    verdict: malicious
+                status: OK
+              schema:
+                $ref: "#/components/schemas/SampleInfoResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              example:
+                error_message: Please use right url to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use right url to query
+        "401":
+          content:
+            application/json:
+              example:
+                error_message: Please make sure you enable this service in Netskope
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please make sure you enable this service in Netskope
+        "405":
+          content:
+            application/json:
+              example:
+                error_message: Please use the right method to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the right method to query
+        "406":
+          content:
+            application/json:
+              example:
+                error_message: Please use the the proper md5 or sha256 to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the the proper md5 or sha256 to query
+        "429":
+          content:
+            application/json:
+              example:
+                error_message: Rate limit exceeding, please slow down your request
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Rate limit exceeding, please slow down your request
+        "500":
+          content:
+            application/json:
+              example:
+                error_message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please report this error to Netskope or query again
+      summary: Get single sample information
+    x-netskope-params:
+      apiGroup: nsiq
+      customerFacing: true
+      serviceConfig: nsiq
+      version: 2
+  /nsiq/retrohunt/ioc/report:
+    get:
+      description:
+        "Get sample report. \nRetrohunt API results can be retrieved for\
+        \ the data for the period after the feature is enabled"
+      parameters:
+        - description: md5 or sha256 hash value, md5 is preferred
+          in: query
+          name: hash
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                result:
+                  netskope-sample-report:
+                    4aacabe02537f435d83be4d180751234:
+                      analysis_report: '{"NetskopeAV":{"severity":"high","malware_name":"Trojan.Agent.CZTF"}}'
+                  version: "1.0"
+                status: OK
+              schema:
+                $ref: "#/components/schemas/SampleReportResponse"
+          description: OK
+        "400":
+          content:
+            application/json:
+              example:
+                error_message: Please use right url to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use right url to query
+        "401":
+          content:
+            application/json:
+              example:
+                error_message: Please make sure you enable this service in Netskope
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please make sure you enable this service in Netskope
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Not authorized to check this sample report
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Not authorized to check this sample report
+        "405":
+          content:
+            application/json:
+              example:
+                error_message: Please use the right method to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the right method to query
+        "406":
+          content:
+            application/json:
+              example:
+                error_message: Please use the the proper md5 or sha256 to query
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please use the the proper md5 or sha256 to query
+        "429":
+          content:
+            application/json:
+              example:
+                error_message: Rate limit exceeding, please slow down your request
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Rate limit exceeding, please slow down your request
+        "500":
+          content:
+            application/json:
+              example:
+                error_message: Please report this error to Netskope or query again
+                status: Error
+              schema:
+                $ref: "#/components/schemas/SampleErrorResponse"
+          description: Please report this error to Netskope or query again
+      summary: Get sample report
+    x-netskope-params:
+      apiGroup: nsiq
+      customerFacing: true
+      serviceConfig: nsiq
+      version: 2

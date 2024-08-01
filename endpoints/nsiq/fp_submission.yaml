@@ -1,0 +1,1081 @@
+components:
+  schemas:
+    CheckTenantUserEmailRequest:
+      properties:
+        user_email:
+          description: Requester’s email address
+          type: string
+      required:
+        - user_email
+      type: object
+    CheckTenantUserEmailResponse:
+      properties:
+        is_valid:
+          type: boolean
+        user_email:
+          description: Requester’s email address
+          type: string
+      required:
+        - user_email
+        - is_valid
+      type: object
+    ErrorResponse:
+      properties:
+        error_message:
+          type: string
+        status:
+          type: string
+      type: object
+    FPCaseInfo:
+      properties:
+        incident_id:
+          type: string
+        tickets:
+          items:
+            $ref: "#/components/schemas/FPTicketInfo"
+          type: array
+    FPSubmissionResponse:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/FPCaseInfo"
+          type: array
+        status:
+          type: string
+    FPTicketInfo:
+      properties:
+        system:
+          enum:
+            - jira
+            - salesforce
+            - recat
+          type: string
+        ticket_id:
+          type: string
+    IPSFPInfo:
+      properties:
+        affected_version:
+          type: string
+        description:
+          type: string
+        incident_id:
+          type: string
+        signature_id:
+          type: string
+        signature_name:
+          type: string
+        timestamp:
+          format: int64
+          type: integer
+        transaction_id:
+          type: string
+        url:
+          type: string
+      required:
+        - incident_id
+      type: object
+    IPSFPSubmissionRequest:
+      properties:
+        fp_data:
+          items:
+            $ref: "#/components/schemas/IPSFPInfo"
+          type: array
+        tenant_user_name:
+          description: Requester’s name
+          type: string
+        user_email:
+          description: Requester’s email address
+          type: string
+      required:
+        - user_email
+        - fp_data
+      type: object
+    MalwareFPInfo:
+      properties:
+        affected_version:
+          type: string
+        description:
+          type: string
+        detection_name:
+          type: string
+        filename:
+          type: string
+        incident_id:
+          type: string
+        last_seen_time:
+          format: int64
+          type: integer
+        md5:
+          type: string
+        mode:
+          type: string
+      required:
+        - incident_id
+      type: object
+    MalwareFPSubmissionRequest:
+      properties:
+        fp_data:
+          items:
+            $ref: "#/components/schemas/MalwareFPInfo"
+          type: array
+        tenant_user_name:
+          description: Requester’s name
+          type: string
+        user_email:
+          description: Requester’s email address
+          type: string
+      required:
+        - user_email
+        - fp_data
+      type: object
+    PaginatedFPSubmissionResponse:
+      properties:
+        data:
+          items:
+            $ref: "#/components/schemas/FPCaseInfo"
+          type: array
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        status:
+          type: string
+    Pagination:
+      properties:
+        limit:
+          format: int32
+          type: integer
+        offset:
+          format: int64
+          type: integer
+        total:
+          format: int64
+          type: integer
+      type: object
+    UrlFPInfo:
+      properties:
+        affected_version:
+          type: string
+        current_category_id:
+          items:
+            type: integer
+          type: array
+        description:
+          type: string
+        incident_id:
+          type: string
+        page:
+          type: string
+        threat_match_value:
+          type: string
+        timestamp:
+          format: int64
+          type: integer
+        url:
+          type: string
+      required:
+        - incident_id
+      type: object
+    UrlFPSubmissionRequest:
+      properties:
+        fp_data:
+          items:
+            $ref: "#/components/schemas/UrlFPInfo"
+          type: array
+        tenant_user_name:
+          description: Requester’s name
+          type: string
+        user_email:
+          description: Requester’s email address
+          type: string
+      required:
+        - user_email
+        - fp_data
+      type: object
+info:
+  description: APIs to submit FP requests and query the submission status.
+  title: NSIQ FP submission API
+  version: v0.0.1
+openapi: 3.0.1
+paths:
+  /nsiq/falsepositives/ips:
+    get:
+      operationId: getIPSAlertFP
+      parameters:
+        - description: Retrieve submissions for the given incident ID.
+          in: query
+          name: incidentid
+          required: false
+          schema:
+            example: "1234567890"
+            type: string
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with endtime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: starttime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with starttime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: endtime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0).
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 5
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Field to use for sorting the result.
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: timestamp
+            enum:
+              - timestamp
+              - id
+            type: string
+        - description: Order to use for sorting the result.
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "1234512345"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                  - incident_id: "1234512346"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0002
+                      - system: salesforce
+                        ticket_id: tester-0002
+                pagination:
+                  limit: 10
+                  offset: 0
+                  total: 2
+                status: Success
+              schema:
+                $ref: "#/components/schemas/PaginatedFPSubmissionResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid parameter value:
+                  description: Invalid parameter value
+                  value:
+                    error_message: Invalid 'starttime' value.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get list of IPS alert FP submission
+      tags:
+        - IPS Alert FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    post:
+      operationId: submitIPSAlertFP
+      requestBody:
+        content:
+          application/json:
+            example:
+              fp_data:
+                - affected_version: 150.0.0.0
+                  description: ips alert fp test
+                  incident_id: "1234512345"
+                  signature_id: "12345"
+                  signature_name: some signature
+                  timestamp: 1654567422
+                  transaction_id: aaa12345
+                  url: http://example.com/
+              user_email: user@example.tenant.com
+            schema:
+              $ref: "#/components/schemas/IPSFPSubmissionRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "1234512345"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                status: Created
+              schema:
+                $ref: "#/components/schemas/FPSubmissionResponse"
+          description: Created
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid tenant user email:
+                  description: Invalid tenant user email
+                  value:
+                    error_message: Tenant user email is not valid.
+                    status: Error
+                Missing required request body field:
+                  description: missing required request body field
+                  value:
+                    error_message: Null or empty 'incident_id' field.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "429":
+          content:
+            application/json:
+              examples:
+                Quota limit exceeded:
+                  description: Quota limit exceeded
+                  value:
+                    error_message:
+                      Quota limit exceeded. Please reduce the number
+                      of FP submission or retry your request again later.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Too Many Requests
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Submit IPS alert FP.
+      tags:
+        - IPS Alert FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: fp_submission
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+  /nsiq/falsepositives/malware:
+    get:
+      operationId: getMalwareFP
+      parameters:
+        - description: Retrieve submissions for the given incident ID.
+          in: query
+          name: incidentid
+          required: false
+          schema:
+            example: "1234567890"
+            type: string
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with endtime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: starttime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with starttime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: endtime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0).
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 5
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Field to use for sorting the result.
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: timestamp
+            enum:
+              - timestamp
+              - id
+            type: string
+        - description: Order to use for sorting the result.
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "123456789"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                  - incident_id: "123456780"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0002
+                      - system: salesforce
+                        ticket_id: tester-0002
+                pagination:
+                  limit: 10
+                  offset: 0
+                  total: 2
+                status: Success
+              schema:
+                $ref: "#/components/schemas/PaginatedFPSubmissionResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid parameter value:
+                  description: Invalid parameter value
+                  value:
+                    error_message: Invalid 'starttime' value.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get list of malware FP submission
+      tags:
+        - Malware FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    post:
+      operationId: submitMalwareFP
+      requestBody:
+        content:
+          application/json:
+            example:
+              fp_data:
+                - affected_version: 150.0.0.0
+                  description: malware fp test
+                  detection_name: Gen.MalwareTest.6f2d260f
+                  filename: abc.txt
+                  incident_id: "1234512345"
+                  last_seen_time: 1654567422
+                  md5: e92399ce76e82a536ab47203a54ee1f2
+                  mode: inline
+              user_email: user@example.tenant.com
+            schema:
+              $ref: "#/components/schemas/MalwareFPSubmissionRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "1234512345"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                status: Created
+              schema:
+                $ref: "#/components/schemas/FPSubmissionResponse"
+          description: Created
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid tenant user email:
+                  description: Invalid tenant user email
+                  value:
+                    error_message: Tenant user email is not valid.
+                    status: Error
+                Missing required request body field:
+                  description: missing required request body field
+                  value:
+                    error_message: Null or empty 'incident_id' field.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "429":
+          content:
+            application/json:
+              examples:
+                Quota limit exceeded:
+                  description: Quota limit exceeded
+                  value:
+                    error_message:
+                      Quota limit exceeded. Please reduce the number
+                      of FP submission or retry your request again later.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Too Many Requests
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Submit malware FP.
+      tags:
+        - Malware FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: fp_submission
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+  /nsiq/falsepositives/url:
+    get:
+      operationId: getUrlFP
+      parameters:
+        - description: Retrieve submissions for the given incident ID.
+          in: query
+          name: incidentid
+          required: false
+          schema:
+            example: "1234567890"
+            type: string
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with endtime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: starttime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            Retrieve submissions for the given time range. Used together
+            with starttime parameter. Must be in Unix epoch seconds format.
+          in: query
+          name: endtime
+          required: false
+          schema:
+            example: 1657112400
+            type: integer
+        - description:
+            The zero-based offset of the first item in the list to retrieve
+            (min 0).
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            minimum: 0
+            type: integer
+        - description: Max number of items to retrieve (min 1, max 10).
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 5
+            maximum: 10
+            minimum: 1
+            type: integer
+        - description: Field to use for sorting the result.
+          in: query
+          name: sortby
+          required: false
+          schema:
+            default: timestamp
+            enum:
+              - timestamp
+              - id
+            type: string
+        - description: Order to use for sorting the result.
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            default: asc
+            enum:
+              - asc
+              - desc
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "1234512345"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                  - incident_id: "1234512346"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0002
+                      - system: salesforce
+                        ticket_id: tester-0002
+                pagination:
+                  limit: 10
+                  offset: 0
+                  total: 2
+                status: Success
+              schema:
+                $ref: "#/components/schemas/PaginatedFPSubmissionResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid parameter value:
+                  description: Invalid parameter value
+                  value:
+                    error_message: Invalid 'starttime' value.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Get list of URL FP submission
+      tags:
+        - URL FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    post:
+      operationId: submitUrlFP
+      requestBody:
+        content:
+          application/json:
+            example:
+              fp_data:
+                - affected_version: 150.0.0.0
+                  current_category_id:
+                    - 521
+                    - 588
+                  description: url alert fp test
+                  incident_id: "1234512345"
+                  page: http://example.com/?name=tester
+                  threat_match_value: aaa12345
+                  timestamp: 1654567422
+                  url: http://example.com/
+              user_email: user@example.tenant.com
+            schema:
+              $ref: "#/components/schemas/UrlFPSubmissionRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              example:
+                data:
+                  - incident_id: "1234512345"
+                    tickets:
+                      - system: jira
+                        ticket_id: tester-0001
+                      - system: salesforce
+                        ticket_id: tester-0001
+                status: Created
+              schema:
+                $ref: "#/components/schemas/FPSubmissionResponse"
+          description: Created
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid tenant user email:
+                  description: Invalid tenant user email
+                  value:
+                    error_message: Tenant user email is not valid.
+                    status: Error
+                Missing required request body field:
+                  description: missing required request body field
+                  value:
+                    error_message: Null or empty 'incident_id' field.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "429":
+          content:
+            application/json:
+              examples:
+                Quota limit exceeded:
+                  description: Quota limit exceeded
+                  value:
+                    error_message:
+                      Quota limit exceeded. Please reduce the number
+                      of FP submission or retry your request again later.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Too Many Requests
+          headers:
+            x-netskope-fp-quota-limit:
+              description:
+                The maximum number of FP submission you're allowed to submit
+                per day per tenant.
+              schema:
+                default: 1000
+                type: integer
+            x-netskope-fp-quota-remaining:
+              description:
+                The remaining number of FP submission in the current quota
+                limit window.
+              schema:
+                type: integer
+            x-netskope-fp-quota-reset:
+              description:
+                The time in Unix epoch seconds at which the current quota
+                limit window will reset.
+              schema:
+                type: integer
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Submit URL FP.
+      tags:
+        - URL FP Submission Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: fp_submission
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+  /nsiq/falsepositives/validations/useremail:
+    post:
+      operationId: checkTenantUserEmail
+      requestBody:
+        content:
+          application/json:
+            example:
+              user_email: user@example.tenant.com
+            schema:
+              $ref: "#/components/schemas/CheckTenantUserEmailRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                User email is invalid:
+                  description: User email is invalid
+                  value:
+                    is_valid: false
+                    user_email: user@example.tenant.com
+                User email is valid:
+                  description: User email is valid
+                  value:
+                    is_valid: true
+                    user_email: user@example.tenant.com
+              schema:
+                $ref: "#/components/schemas/CheckTenantUserEmailResponse"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                Missing required request body field:
+                  description: missing required request body field
+                  value:
+                    error_message: Missing 'user_email' field.
+                    status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              example:
+                error_message: Forbidden. User is not allowed to use the service.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              example:
+                error_message:
+                  Internal server error. Please report this error to
+                  Netskope or query again.
+                status: Error
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error
+      summary: Check user email is valid
+      tags:
+        - Validation Request
+      x-netskope-route-params:
+        hiddenFromUI: true
+    x-netskope-params:
+      apiGroup: fp_submission
+      customerFacing: true
+      serviceConfig: nsiqrecat
+      version: 2
+tags:
+  - description: to validate param
+    name: Validation Request
+  - description: to submit or get malware FP
+    name: Malware FP Submission Request
+  - description: to submit or get URL FP
+    name: URL FP Submission Request
+  - description: to submit or get IPS (Intrusion Prevention System) FP
+    name: IPS Alert FP Submission Request

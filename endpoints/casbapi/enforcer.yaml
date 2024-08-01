@@ -1,0 +1,251 @@
+components:
+  schemas:
+    applyLabel:
+      description: Apply a DRM label to the entity.
+      properties:
+        labelId:
+          description: The unique identifier of the data classification label.
+          type: string
+        vendorApp:
+          description: The name of the DRM vendor app.
+          enum:
+            - mip
+            - box
+            - gdrive
+          type: string
+        vendorInstance:
+          description: The name of the DRM vendor instance.
+          type: string
+      required:
+        - vendorApp
+        - vendorInstance
+        - labelId
+      type: object
+    changeOwnerToUser:
+      description: Change ownership to a specific user.
+      properties:
+        ownerEmail:
+          description: The email of the user that should be the new owner.
+          type: string
+      required:
+        - ownerEmail
+      type: object
+    enforceRequest:
+      description: Request body contains necessary data for remediation.
+      properties:
+        notification:
+          $ref: "#/components/schemas/notification"
+        remediations:
+          description: The details of requested remediation.
+          items:
+            $ref: "#/components/schemas/remediation"
+          minItems: 1
+          type: array
+      required:
+        - remediations
+      type: object
+    legalHold:
+      description: Put the file on legal hold.
+      properties:
+        profileId:
+          description: The profile id of the legal hold profile.
+          type: string
+      required:
+        - profileId
+      type: object
+    manualAction:
+      description:
+        Action taken on the entity. Exactly one action needs to be defined.
+        For quarantine release and block action, you need to provide the quarantined
+        file as the entity ID in the request, and set the `app` and `instance` fields
+        with the instance of quarantine profile.
+      properties:
+        applyLabel:
+          $ref: "#/components/schemas/applyLabel"
+        changeOwnerToUser:
+          $ref: "#/components/schemas/changeOwnerToUser"
+        delete:
+          $ref: "#/components/schemas/emptyObject"
+        legalHold:
+          $ref: "#/components/schemas/legalHold"
+        quarantine:
+          $ref: "#/components/schemas/quarantine"
+        quarantineBlock:
+          $ref: "#/components/schemas/emptyObject"
+        quarantineRelease:
+          $ref: "#/components/schemas/emptyObject"
+        restrictAccessToInternalCollaborators:
+          $ref: "#/components/schemas/emptyObject"
+        restrictAccessToInternalCollaboratorsAndSpecificDomains:
+          $ref: "#/components/schemas/restrictAccessToInternalCollaboratorsAndSpecificDomains"
+        restrictAccessToOwner:
+          $ref: "#/components/schemas/emptyObject"
+        revokeIndividualCollaborators:
+          $ref: "#/components/schemas/emptyObject"
+        revokeOrgWideSharing:
+          $ref: "#/components/schemas/emptyObject"
+        revokePublicSharing:
+          $ref: "#/components/schemas/emptyObject"
+        revokeSpecificDomains:
+          $ref: "#/components/schemas/revokeSpecificDomains"
+      type: object
+    quarantine:
+      description: Quarantine the file.
+      properties:
+        profileId:
+          description: The profile id of the quarantine profile.
+          type: string
+        zipPassword:
+          description:
+            The zip password for zip compressing the quarantined file.
+            zipPassword is required when the quarantine is triggered by TSS detection
+          type: string
+      required:
+        - profileId
+      type: object
+    remediation:
+      description: Describe the remediation on an entity.
+      properties:
+        action:
+          $ref: "#/components/schemas/manualAction"
+        app:
+          description:
+            The app that the entity belongs to for which the remediation
+            request is initiated. Please refer to our `ui/casbapi/apps` endpoint to
+            fetch app names.
+          type: string
+        entityID:
+          description: The unique entity ID across app instance.
+          type: string
+        entityType:
+          description: The type of entity.
+          enum:
+            - Comment
+            - Commit
+            - Email
+            - File
+            - Folder
+            - Page
+            - Repository
+            - Wiki
+            - Message
+          type: string
+        instance:
+          description:
+            The instance that the entity belongs to for which the remediation
+            request is initiated. Please refer to our `ui/casbapi/apps/{name}/instances`
+            endpoint to fetch instance names.
+          type: string
+      required:
+        - app
+        - instance
+        - action
+        - entityType
+        - entityID
+      type: object
+    restrictAccessToInternalCollaboratorsAndSpecificDomains:
+      description:
+        Remove sharing for all external and anonymous users and groups
+        except if the user or group belongs to one of the specified domains.
+      properties:
+        domainProfileIds:
+          description: List of domain profile ids which are excepted from the remediation.
+          items:
+            type: string
+          type: array
+      required:
+        - domainProfileIds
+      type: object
+    revokeSpecificDomains:
+      description: Remove access for users and groups belonging to the specified domains.
+      properties:
+        domainProfileIds:
+          description: List of domain profile ids.
+          items:
+            type: string
+          type: array
+      required:
+        - domainProfileIds
+      type: object
+info:
+  contact:
+    name: Netskope Inc.
+  description:
+    Remediation enforcement service provides APIs which can perform remediation
+    actions against specific entities.
+  title: Remediation Enforcement Service
+  version: 1.0.0
+openapi: 3.0.1
+paths:
+  /casbapi/remediation/actions:
+    post:
+      requestBody:
+        content:
+          application/json:
+            example:
+              notification:
+                email:
+                  emails:
+                    - toUser1@toDomain.com
+                    - toUser2@toDomain.com
+                  fromUser: fromUser@fromDomain.com
+                  interval: 0
+                  templates:
+                    - collaborators: 0
+                      emails: 0
+                      owner: 0
+                  toUsers:
+                    - owner
+                    - collaborators
+                    - emails
+              remediations:
+                - action:
+                    revokeSpecificDomains:
+                      domainProfileIds:
+                        - "2"
+                  app: sharepoint
+                  entityID: sharepoint_entityID
+                  entityType: File
+                  instance: sharepoint_instance
+            schema:
+              $ref: "#/components/schemas/enforceRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Successfully triggered remediation actions.:
+                  value:
+                    message: Successfully triggered remediation actions.
+              schema:
+                $ref: "#/components/schemas/messageResponse"
+          description: Remediation actions triggered.
+        "400":
+          content:
+            application/json:
+              examples:
+                Invalid request format:
+                  value:
+                    error:
+                      'request body has an error: doesn''t match schema #/components/schemas/enforceRequest:
+                      Error at "/remediations": value must be an array'
+              schema:
+                $ref: "#/components/schemas/errorResponse"
+          description: Bad request, possibly caused by an incorrect format.
+        "403":
+          content:
+            application/json:
+              examples:
+                Remediation request is forbidden.:
+                  value: {}
+              schema:
+                $ref: "#/components/schemas/emptyObject"
+          description: Remediation request is forbidden.
+      summary: Trigger remediation actions
+    x-netskope-params:
+      apiGroup: casbapi
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: enforcer
+      version: 2

@@ -1,0 +1,578 @@
+openapi: 3.0.0
+paths:
+  /reporting/admin/preferences:
+    get:
+      operationId: AdminPreferencesController_getAdminPreferenceData
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Find all preference data by page, feature
+      description: Find all preference data by page, feature
+      parameters:
+        - name: page
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: feature
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Find all preference data by page, feature
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminPreferenceResponseDto"
+      tags:
+        - Admin Preferences
+    post:
+      operationId: AdminPreferencesController_createAdminPreferenceData
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Create admin preference
+      description: Create admin preference
+      parameters: []
+      requestBody:
+        required: true
+        description: The preference data in certain page and feature
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAdminPreferenceDto"
+      responses:
+        "201":
+          description: Saved admin preference
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminPreferenceResponseDto"
+      tags:
+        - Admin Preferences
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/embed/ssourl:
+    post:
+      operationId: EmbedController_createSsoUrl
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns a signed url for a looker iframe
+      description: This API returns a signed url for a looker iframe
+      parameters:
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmbedSsoUrlRequestDTO"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmbedSsoUrlResponseDTO"
+      tags:
+        - Embed
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/{folderid}/ancestors:
+    get:
+      operationId: FolderController_getFolderAncestors
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the ancestors folder data
+      description: This API returns the ancestors folder data
+      parameters:
+        - name: folderid
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FolderResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/{folderid}/children:
+    get:
+      operationId: FolderController_getFolderChildren
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the children folder data
+      description: This API returns the children folder data
+      parameters:
+        - name: folderid
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetFolderChildrenResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/{folderid}/dashboards:
+    get:
+      operationId: FolderController_getFolderDashboards
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the dashboards under a certain folder
+      description: This API returns the dashboards under a certain folder
+      parameters:
+        - name: folderid
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetFolderDashboardsResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/{folderid}/looks:
+    get:
+      operationId: FolderController_getFolderLooks
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the looks under a certain folder
+      description: This API returns the looks under a certain folder
+      parameters:
+        - name: folderid
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetFolderLooksResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/group/root:
+    get:
+      operationId: FolderController_getGroupRootFolder
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the Root folder ID of the current group
+      description: This API returns the Root folder ID of the current group
+      parameters:
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/folder/personal/root:
+    get:
+      operationId: FolderController_getPersonalRootFolder
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: This API returns the Root folder ID of the current user
+      description: This API returns the Root folder ID of the current user
+      parameters:
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderResponseDTO"
+      tags:
+        - Folder
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/lookmlmodel/explores:
+    get:
+      operationId: LookmlModelController_getExploreDataCollections
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary:
+        This API returns the NAA collection data types that current user is
+        entitled to in explore page
+      parameters: []
+      responses:
+        "200":
+          description: Successfully retrieved explores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExploresResponseDTO"
+      tags:
+        - LookmlModel
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+  /reporting/retention:
+    get:
+      operationId: DataRetentionController_getTenantDataStorage
+      x-netskope-route-params:
+        hiddenFromUI: true
+      summary: Get data storage details of the tenant
+      parameters:
+        - name: reportmode
+          required: true
+          in: query
+          schema:
+            enum:
+              - aa
+              - er
+            type: string
+      responses:
+        "200":
+          description: Get data storage details of the tenant
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RetentionDataDto"
+      tags:
+        - Data Retention
+    x-netskope-params:
+      apiGroup: ms-reporting
+      customerFacing: true
+      serviceConfig: ms-reporting
+      version: 2
+info:
+  title: ms-reporting open api
+  description: ms-reporting api specification
+  version: "1.0"
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    FolderResponseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: folder name
+        id:
+          type: string
+          example: "123"
+      required:
+        - name
+        - id
+    UserResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "151"
+        email:
+          type: string
+          example: developer@company.com
+      required:
+        - id
+        - email
+    GetFolderChildrenResponseDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          example: folder name
+        id:
+          type: string
+          example: "123"
+        can:
+          type: object
+          example:
+            index: true
+            show: true
+            edit_content: true
+        creator_id:
+          type: string
+          example: "12"
+        creator:
+          $ref: "#/components/schemas/UserResponseDTO"
+      required:
+        - name
+        - id
+        - can
+        - creator_id
+        - creator
+    GetFolderDashboardsResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123"
+        title:
+          type: string
+          example: Sales Dashboard
+        last_accessed_at:
+          format: date-time
+          type: string
+          example: null
+        user_id:
+          type: string
+          example: "695"
+        can:
+          type: object
+          example:
+            index: true
+            show: true
+            edit_content: true
+        user:
+          $ref: "#/components/schemas/UserResponseDTO"
+      required:
+        - id
+        - title
+        - last_accessed_at
+        - user_id
+        - can
+        - user
+    GetFolderLooksResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "123"
+        title:
+          type: string
+          example: Sales Widget
+        last_accessed_at:
+          format: date-time
+          type: string
+          example: null
+        user_id:
+          type: string
+          example: "695"
+        can:
+          type: object
+          example:
+            index: true
+            show: true
+            edit_content: true
+        user:
+          $ref: "#/components/schemas/UserResponseDTO"
+      required:
+        - id
+        - title
+        - last_accessed_at
+        - user_id
+        - can
+        - user
+    ExploresResponseDTO:
+      type: object
+      properties:
+        description:
+          type: string
+          example: null
+        label:
+          type: string
+          example: Page Events
+        hidden:
+          type: boolean
+          example: false
+        group_label:
+          type: string
+          example: Netskope
+        name:
+          type: string
+          example: page_event
+      required:
+        - description
+        - label
+        - hidden
+        - group_label
+        - name
+    AdminPreferenceResponseDto:
+      type: object
+      properties:
+        page:
+          type: string
+          example: explore
+        feature:
+          type: string
+          example: explore_page_welcome_popup_seen
+        preference_data:
+          type: string
+          example: "1"
+      required:
+        - page
+        - feature
+        - preference_data
+    CreateAdminPreferenceDto:
+      type: object
+      properties:
+        preference_data:
+          type: string
+        page:
+          type: string
+        feature:
+          type: string
+      required:
+        - preference_data
+        - page
+        - feature
+    RetentionDataDto:
+      type: object
+      properties:
+        event_type:
+          type: string
+          example: ALERTS
+        retention_days:
+          type: number
+          example: 427
+        storage_capacity:
+          type: number
+          example: 0
+        storage_used:
+          type: number
+          example: 11.382197705097497
+      required:
+        - event_type
+        - retention_days
+        - storage_capacity
+        - storage_used
+    EmbedSsoUrlRequestDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        type:
+          type: string
+          enum:
+            - dashboard
+            - look
+            - explore
+        timezone:
+          type: string
+          example: Asia/Taipei
+      required:
+        - id
+        - type
+        - timezone
+    EmbedSsoUrlResponseDTO:
+      type: object
+      properties:
+        url:
+          type: string
+          example: https://analytics-developer.vbox/login/embed/%2Fembed%2Flooks%2F1786?permissions=...
+      required:
+        - url

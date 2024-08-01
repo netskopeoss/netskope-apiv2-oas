@@ -1,0 +1,250 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      type: object
+    NetworkProfileCreateRequest:
+      properties:
+        name:
+          type: string
+        values:
+          items:
+            $ref: "#/components/schemas/NetworkProfileValue"
+          type: array
+      required:
+        - name
+        - values
+      type: object
+    NetworkProfileDeleteResponse:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+      type: object
+    NetworkProfileResponse:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        values:
+          items:
+            $ref: "#/components/schemas/NetworkProfileValue"
+          type: array
+      type: object
+    NetworkProfileValue:
+      properties:
+        value:
+          type: string
+      required:
+        - value
+      type: object
+info:
+  contact: {}
+  description: Network Location Profile API specification
+  title: Network Location Profile APIs
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /profiles/networks:
+    get:
+      operationId: NetworkProfileController_readAllNWLocs
+      parameters:
+        - example: id,name,values
+          in: query
+          name: fields
+          required: false
+          schema:
+            items:
+              type: string
+            type: array
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/NetworkProfileResponse"
+                type: array
+          description: The record(s) have been successfully retrieved.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Get all Network Location Profiles.
+      tags:
+        - network-location-profiles
+    post:
+      operationId: NetworkProfileController_createNWLoc
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetworkProfileCreateRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkProfileResponse"
+          description: The record has been successfully created.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Create a Network Location Profile
+      tags:
+        - network-location-profiles
+    x-netskope-params:
+      apiGroup: network-location-profiles
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 4
+        writeRoutes:
+          second: 1
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /profiles/networks/{id}:
+    delete:
+      operationId: NetworkProfileController_deleteByID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkProfileDeleteResponse"
+          description: The record has been successfully deleted.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          description: Internal server error.
+      summary: Delete one Network Location Profile
+      tags:
+        - network-location-profiles
+    get:
+      operationId: NetworkProfileController_getById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkProfileResponse"
+          description: The record has been successfully retrieved.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Get one Network Location Profile
+      tags:
+        - network-location-profiles
+    patch:
+      operationId: NetworkProfileController_updateById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NetworkProfileCreateRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkProfileResponse"
+          description: The record has been successfully created.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          description: Internal server error.
+      summary: Update one Network Location Profile
+      tags:
+        - network-location-profiles
+    x-netskope-params:
+      apiGroup: network-location-profiles
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 4
+        writeRoutes:
+          second: 1
+      serviceConfig: ms-rtp-shim
+      version: 2
+servers: []
+tags:
+  - description: ""
+    name: network-location-profiles

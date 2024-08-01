@@ -1,0 +1,2108 @@
+openapi: 3.0.0
+info:
+  title: Fingerprinting Management Service
+  description: Management page for 2.0 fingerprints
+  contact:
+    name: Wayne Xin
+    url: https://waynexin.com/
+  version: "1.0"
+servers:
+  - url: http://localhost:8080
+    description: 8080 server on localhost
+  - url: http://localhost:28090
+    description: 28080 server on localhost
+paths:
+  /services/dlp/classifiers/custom:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    get:
+      description: >-
+        This API supports pagination and a reverse ordered list by classifier
+        update time is returned
+      summary: Get all custom classifiers
+      operationId: gwGetAllTyocClassesV2
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            Each classifier is returned with a classifier ID (id). This id can
+            be used for classifier specific APIs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocClassArrayDto"
+              examples:
+                Only custom classifiers:
+                  value: ' {   "customClassifiers": [     {       "id": "4212644500771208587",       "name": "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV五万",       "status": "error",       "type": "image",       "description": "Wayne-update",       "version": 12,       "region": null,       "modifyBy": "wxin@netskope.com",       "isPredefined": false,       "threshold": 0.6000000238418579,       "created": 1703049910671,       "updated": 1706653679436,       "lastTrained": 1706653632971,       "thresholdLevel": null,       "overallStatus": {         "invalid": 0,         "valid": 8,         "negative": 0,         "errMsg": "Insufficient artifacts in training"       }     },     {       "id": "6195603838228410235",       "name": "_overlay_loan_agreement",       "status": "ready",       "type": "text",       "description": "test V2 on Dec 19",       "version": 10,       "region": null,       "modifyBy": "wxin@netskope.com",       "isPredefined": true,       "threshold": 0.8999999761581421,       "created": 1703004950701,       "updated": 1704842628528,       "lastTrained": 1706642371271,       "thresholdLevel": "medium",       "overallStatus": {         "invalid": 2,         "valid": 1,         "negative": 1,         "errMsg": null       }     },     {       "id": "6350643165821845660",       "name": "_overlay_whiteboard",       "status": "ready",       "type": "image",       "description": "Updated Jan 7th",       "version": 13,       "region": null,       "modifyBy": "wxin@netskope.com",       "isPredefined": true,       "threshold": 0.8999999761581421,       "created": 1704668208996,       "updated": 1704668208996,       "lastTrained": 1706032326860,       "thresholdLevel": "medium-high",       "overallStatus": {         "invalid": 1,         "valid": 1,         "negative": 1,         "errMsg": null       }     }   ] } '
+                Mixed classifiers:
+                  value: >-
+                    {   "customClassifiers": [     {       "id":
+                    "4212644500771208587",       "name":
+                    "WayneImageUpdate79",       "status": "error",       "type":
+                    "image",       "description": "Xin update Dec19
+                    update",       "version": 11,       "region": null,      
+                    "modifyBy": "wxin@netskope.com",       "isPredefined":
+                    false,       "threshold": 0.7900000214576721,      
+                    "created" : 1703049910671,       "updated" :
+                    1703050052813,       "lastTrained": 1703054175597,      
+                    "thresholdLevel": null,       "overallStatus": {        
+                    "invalid": 0,         "valid": 8,         "negative":
+                    0,         "errMsg": "Insufficient artifacts in
+                    training"       }     },     {       "id":
+                    "144294124833494081",       "name":
+                    "_overlay_medical_image",       "status": "ready",      
+                    "type": "image",       "description": "test threshold level
+                    change",       "version": 1,       "region": null,      
+                    "modifyBy": "wxin@netskope.com",       "isPredefined":
+                    true,       "threshold": 0,       "created" :
+                    1702782844179,       "updated" : 1703047822861,      
+                    "lastTrained": 1703101168724,       "thresholdLevel":
+                    "medium-high",       "overallStatus": {         "invalid":
+                    0,         "valid": 1,         "negative": 1,        
+                    "errMsg": null       }     },     {       "id":
+                    "6195603838228410235",       "name":
+                    "_overlay_loan_agreement",       "status": "created",      
+                    "type": "image",       "description": "test V2 on Dec
+                    19",       "version": 0,       "region": null,      
+                    "modifyBy": "wxin@netskope.com",       "isPredefined":
+                    true,       "threshold": 0,       "created" :
+                    1703004950701,       "updated" : 1703047696392,      
+                    "lastTrained": 0,       "thresholdLevel": "medium",      
+                    "overallStatus": {         "invalid": 0,         "valid":
+                    0,         "negative": 0,         "errMsg": null       }    
+                    },     {       "id": "7055188584674019609",       "name":
+                    "Bob Xray Chest",       "status": "ready",       "type":
+                    "image",       "description": "test V2 on Nov 1st",      
+                    "version": 1,       "region": null,       "modifyBy":
+                    "wxin@netskope.com",       "isPredefined": false,      
+                    "threshold": 0.4000000059604645,       "created" :
+                    1698878808044,       "updated" : 1698878808044,      
+                    "lastTrained": 1698878920776,       "thresholdLevel":
+                    null,       "overallStatus": {         "invalid": 0,        
+                    "valid": 30,         "negative": 0,         "errMsg":
+                    null       }     }   ] }
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: offset
+          description: offset of a large result, default to 0
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 2147483647
+        - name: limit
+          description: >-
+            Batch size of each result, default to 0. If no 'limit' is provided
+            or a 0 value is given, the full list is returned.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 2147483647
+        - name: customOnly
+          description: >-
+            whether to limit to custom classifiers only, default to false
+            meaning retrieve both custom and predefined classifiers
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: boolean
+    post:
+      description: >-
+        Creating a custom classifier requires a unique name for a given tenant
+        and a classifier ID will be returned for future reference
+      summary: Create new custom classifier
+      operationId: gwCreateTyocClassV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TyocUserDto"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            A classifier ID is returned and this could be used for classifier
+            specific API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocClassifierDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "id": "5555383037969464020",   "name": "ApiGateway Late night Jul13",   "status": "created",   "type": "image",   "description": "test update",   "version": 0,   "region": null,   "modifyBy": "john.smith@netskope.com",   "threshold": 0.8500000238418579,   "created": 1689376598488,   "updated": 1689376598488,   "lastTrained": 0 } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /services/dlp/classifiers/custom/{id}:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    get:
+      description: >-
+        The required classifier ID is obtained from create/update and retrieval
+        APIs such as GET /dlp/custom/classifiers offered by this service
+      summary: Get single custom classifier by its ID
+      operationId: gwGetTyocClassV2
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            An custom classifier object where 'created', 'lastUploaded', and
+            'lastTrained' are milliseconds from the epoch
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocClassifierPresentDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "id": "5811976269388497234",   "name": "WayneImageUpdate9",   "status": "ready",   "type": "image",   "description": "Xin update Oct26 update",   "version": 2,   "region": null,   "modifyBy": "wxin@netskope.com",   "isPredefined": false,   "threshold": 0.5,   "created": 1698879272474,   "updated": 1699639990193,   "lastTrained": 1698956670760,   "overallStatus": {     "invalid": 0,     "valid": 30,     "negative": 0,     "errMsg": null   } } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            Custom classifier ID obtained from an classifier retrieval API such
+            as GET /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+    put:
+      description: >-
+        Updating a custom classifer. A classifier ID is obtained from GET API's
+        such as GET /dlp/custom/classifiers. One cannot convert a pre-defined to
+        custom or vice versa. 'isPredefined' is not editable for a created
+        classifier
+      summary: Update a custom classifier by classifier ID
+      operationId: gwUpdateTyocClassV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TyocUserDto"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: An updated custom classifier is returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocClassifierDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "tenantId": null,   "id": "5811976269388497234",   "name": "WayneImageUpdate9",   "status": "ready",   "type": "image",   "description": "Xin update Oct26 update",   "version": 2,   "region": null,   "modifyBy": "wxin@netskope.com",   "isPredefined": false,   "threshold": 0.5,   "created": 1698879272474,   "updated": 1699639990193,   "lastTrained": 1698956670760,   "profiles": null }     '
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            Classifier ID obtained from classifier retrieval APIs such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+    delete:
+      description: >-
+        The custom classifier and all its uploaded artifact features will be
+        deleted
+      summary: Delete a custom classifier by classifier ID
+      operationId: gwDeleteTyocClassV2
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: "'FP deleted' indicates the number all valid uploaded files deleted"
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                Successful Response_1:
+                  value: ' {     "result": "deleted 2400_1419617902758911195, FP deleted: 0" }     '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "405":
+          description: Method Not Allowed
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            classifier ID obtained from classifier retrieval APIs such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/custom/{id}/files/{key}:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    delete:
+      description: A particular file with a given key is deleted
+      summary: Delete a file for a custom classifier
+      operationId: gwDeleteTyocFile
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                Successful Response_1:
+                  value: ' {     "result": "deleted file: 244852157440 for group: 8547030565787252272" } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            classifier ID obtained from classifier retrieval APIs such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+        - name: key
+          description: >-
+            file key obtained from file retrieval API GET
+            /dlp/custom/classifier/{id}/files.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/custom/{id}/files:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          second: 20
+        writeRoutes:
+          second: 20
+      apiGroup: tyoc
+    get:
+      description: >-
+        A list of file objects will be returned where each record has a
+        'fileKey' that could be used for file specific API such as deletion
+        DELETE /dlp/classifiers/custom/{id}/files/{key}.
+      summary: Get valid files by classifier ID
+      operationId: gwGetTyocFiles
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            Each file will have a file key and this key could be used for file
+            specific API such as deletion:
+            /dlp/classifiers/custom/{id}/files/{key}.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocFileArrayDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "validFiles": [     {       "classId": "6323942457079302848",       "filename": "/tmp/test/test-data-ref/NSCloud_Screenshot_Original.png",       "fileKey": "298313634560",       "hash": "000c825648667614ffbb57a0f5db8d74",       "isFalPos": false,       "created": 1697677369754,       "updated": 1697677369754     },     {       "classId": "6323942457079302848",       "filename": "/tmp/test/test-data-ref/DL_Rotate5.png",       "fileKey": "298313378560",       "hash": "3059d97bf9c12dd722692bfc1dfd7a7c",       "isFalPos": false,       "created": 1697677368751,       "updated": 1697677368751     },     {       "classId": "6323942457079302848",       "filename": "/tmp/test/test-data-ref/example.jpg",       "fileKey": "298313108224",       "hash": "5f9f9eca4befb025913ea8f984ec1a4f",       "isFalPos": false,       "created": 1697677367709,       "updated": 1697677367709     },     {       "classId": "6323942457079302848",       "filename": "/tmp/test/test-data-ref/LoanApp_Filled_David_Scan1.jpg",       "fileKey": "298311064320",       "hash": "a294aeb94e0d256dcb09cf6d42a0ad4d",       "isFalPos": false,       "created": 1697677359913,       "updated": 1697677359913     }   ],   "invalidFiles": [     {       "classId": "6323942457079302848",       "filename": "/tmp/ENG-431735/file/medical_form_high.json",       "uploadFile": "/tmp/ENG-431735/file/medical_form_high.json",       "msg": "No image embedding",       "isFalPos": false,       "lastUpdate": 1711139672793     },     {       "classId": "6323942457079302848",       "filename": "/tmp/ENG-431735/file/medical_form_high.json",       "uploadFile": "/tmp/ENG-431735/file/medical_form_high.json",       "msg": "No image embedding",       "isFalPos": false,       "lastUpdate": 1711139672793     },     {       "classId": "6323942457079302848",       "filename": "/tmp/ENG-431735/file/offer_letter_medium",       "uploadFile": "/tmp/ENG-431735/file/offer_letter_medium",       "msg": "No image embedding",       "isFalPos": false,       "lastUpdate": 1711139673967     },     {       "classId": "6323942457079302848",       "filename": "/tmp/ENG-431735/file/offer_letter_medium",       "uploadFile": "/tmp/ENG-431735/file/offer_letter_medium",       "msg": "No image embedding",       "isFalPos": false,       "lastUpdate": 1711139673967     }   ] } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Custom classifier ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+        - name: offset
+          description: offset of a large result, default to 0
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: limit
+          description: >-
+            Batch size of each result, default to 0. If no 'limit' is provided
+            or a 0 value is given, the full list is returned.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: folderPrefix
+          description: >-
+            This is the case-sensitive filtering folder used for narrowing down
+            the valid files. It has to be the full path prefix meaning if you're
+            getting files under  'folder2' under root 'folder1', the query needs
+            to be 'folderPrefix=/folder1/folder2/'
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: fileSig
+          description: >-
+            This is the case-sensitive filtering string for any valid file. This
+            call could be slow since it will go through all the files for a
+            given classifier.  'fileSig=xyz', will match
+            '/folder1/folder2/abcxyz.jpg'.  'fileSig=folder2' will match
+            '/folder1/folder2/abcxyz.jpg'.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: status
+          description: >-
+            This parameter checks for file status. Currently only 'valid' or
+            'invalid' are allowed status values.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            $ref: "#/components/schemas/FileStatusEnum_String"
+        - name: category
+          description: >-
+            This optional parameter indicates the category of the file.
+            Currently only 'positive' or 'negative' are allowed category values.
+            If parameter is missing, both positive and negative files are
+            returned
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: isOutlier
+          description: >-
+            This optional boolean parameter checks whether the file is an
+            outlier. An outlier is a file that's not similar enough to the rest
+            of the files in the training set.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+    post:
+      description: >-
+        Optional parameters:
+        ?txid=transmit_id&ssid=session_id&negative=false&sessionend=true where
+        'name' in multipart body is the full path of the uploading file
+      summary: Upload raw file for custom classifier by ID
+      operationId: gwTyocUploadV2
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            Classifier ID obtained from an classifier retrieval API such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+        - name: txid
+          description: transmit ID which is tied to a specific file upload
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: ssid
+          description: >-
+            session ID of a upload session where a few uploads are logically
+            grouped together.
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: negative
+          description: whether uploaded sample artifact is negative. Default is false
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: boolean
+        - name: sessionend
+          description: >-
+            whether this tansmit is the last of the session, if yes, training
+            will be triggered. Default is false
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: boolean
+    delete:
+      description: >-
+        If no payload is provided all files will be deleted otherwise only the
+        ones in the payload will be deleted
+      summary: Delete files for a custom classifier
+      operationId: gwDeleteAllTyocFile
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileKeyDto"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                Successful Response_1:
+                  value: ' {   "result": "deleted files: 1 for class/group: 36762005058187445" } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            classifier ID obtained from classifier retrieval APIs such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/predefined:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    get:
+      description: >-
+        The pre-defined classifiers will not have an internal assigned ID. The
+        classifier names (ids) are unique among all pre-defined classifiers
+      summary: Get all predefined classifiers
+      operationId: gwGetAllPredClasses
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            The response has 2 lists, 'predefinedClassifiers' is a list of raw
+            pre-defined classifiers and 'overlayCustomClassifiers' is a list of
+            overlay custom classifiers each corresponds to a pre-defined
+            classifier
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredefinedClassifiersWithOverlayDto"
+              examples:
+                Successful Response_1:
+                  value: >-
+                    {   "predefinedClassifiers": {     "categories": [      
+                    {         "id": "nsFINANCIAL",         "label":
+                    "Financial"       },       {         "id": "nsHR",        
+                    "label": "HR"       },       {         "id":
+                    "nsLEGAL",         "label": "Legal"       },       {        
+                    "id": "nsMEDICAL",         "label": "Medical"       },      
+                    {         "id": "nsMISCELLANEOUS",         "label":
+                    "Miscellaneous"       },       {         "id":
+                    "nsPERSONALID",         "label": "Personal
+                    Identifiers"       },       {         "id":
+                    "nsSOURCECODE",         "label": "Source Code"       }    
+                    ],     "classifiers": [       {         "category_ref":
+                    "nsPERSONALID",         "description": "Detects images of
+                    driver licenses and state ID cards issued within the United
+                    States.",         "dlp_license": "advanced",         "id":
+                    "driver_license-us",         "label": "Driver License (US)
+                    ",         "model_type": "image",         "search_refs":
+                    [           "search/drivlic",           "search/us"        
+                    ]       },       {         "category_ref":
+                    "nsPERSONALID",         "description": "Detects passport
+                    books issued by a variety of different countries.",        
+                    "dlp_license": "advanced",         "id": "passport",        
+                    "label": "Passport Book",         "model_type":
+                    "image",         "search_tags": "passports"       },      
+                    {         "category_ref": "nsMISCELLANEOUS",        
+                    "description": "Detects screenshots or captures.",        
+                    "dlp_license": "advanced",         "id":
+                    "screenshot",         "label": "Screenshot",        
+                    "model_type": "image",         "search_tags": "screen,screen
+                    capture,screen
+                    grab,screencapture,screengrab,screenshot"       },      
+                    {         "category_ref": "nsHR",         "description":
+                    "Detects résumés in English.",         "dlp_license":
+                    "standard",         "id": "resume-en_us",         "label":
+                    "Résumé",         "model_type": "text",        
+                    "search_tags": "employees,english,hr,human
+                    resources,resumes,résumés"       },       {        
+                    "category_ref": "nsLEGAL",         "description": "Detects
+                    merger and acquisition filings.",         "dlp_license":
+                    "advanced",         "id": "ma_form-en_us",         "label":
+                    "Mergers and Acquisitions Form [M&A] ",        
+                    "model_type": "text",         "search_tags":
+                    "acquisition,english,m&a,merger,mergers"       },      
+                    {         "category_ref": "nsFINANCIAL",        
+                    "description": "Detects tax forms used in the United
+                    States.",         "dlp_license": "advanced",         "id":
+                    "tax_form-en_us",         "label": "Tax Form (US) ",        
+                    "model_type": "text",         "search_refs": [          
+                    "search/us"         ],         "search_tags":
+                    "1040,irs,tax,tax form"       },       {        
+                    "category_ref": "nsPERSONALID",         "description":
+                    "Detects images of Social Security Cards issued in the
+                    United States.",         "dlp_license": "advanced",        
+                    "id": "social_security_card-us",         "label": "Social
+                    Security Card (US) ",         "model_type": "image",        
+                    "search_refs": [           "search/ssn",          
+                    "search/us"         ]       },       {        
+                    "category_ref": "nsFINANCIAL",         "description":
+                    "Detects images of payment cards, including credit and debit
+                    cards.",         "dlp_license": "advanced",         "id":
+                    "payment_card",         "label": "Payment Card (Credit,
+                    Debit) ",         "model_type": "image",        
+                    "search_refs": [           "search/pan"         ]      
+                    },       {         "category_ref":
+                    "nsMISCELLANEOUS",         "description": "Detects images of
+                    whiteboards.",         "dlp_license": "advanced",        
+                    "id": "whiteboard",         "label": "Whiteboard",        
+                    "model_type": "image"       },       {        
+                    "category_ref": "nsHR",         "description": "Detects
+                    employment offer letters.",         "dlp_license":
+                    "advanced",         "id": "offer_letter",         "label":
+                    "Offer Letter",         "model_type": "text",        
+                    "search_tags": "employees,employment,english,hr,human
+                    resources,job offer,offer,offer letter"       },      
+                    {         "category_ref": "nsLEGAL",         "description":
+                    "Detects consulting agreements.",         "dlp_license":
+                    "advanced",         "id": "consulting_agreement",        
+                    "label": "Consulting Agreement",         "model_type":
+                    "text",         "search_tags":
+                    "agreements,consulting,contracts,english,service
+                    contracts"       },       {         "category_ref":
+                    "nsLEGAL",         "description": "Detects partner
+                    agreements.",         "dlp_license": "advanced",        
+                    "id": "partner_agreement",         "label": "Partner
+                    Agreement",         "model_type": "text",        
+                    "search_tags": "agreements,contracts,english,joint
+                    venture,partner,partnership"       },       {        
+                    "category_ref": "nsLEGAL",         "description": "Detects
+                    nondisclosure agreements in English.",        
+                    "dlp_license": "advanced",         "id": "nda",        
+                    "label": "NDA (English ",         "model_type":
+                    "text",         "search_tags": "agreements,cda,confidential
+                    disclosure
+                    agreement,confidentiality,english,nda,ndas,non-disclosure,nondisclosure,nondisclosure
+                    agreement,proprietary information agreement,secrecy
+                    agreement"       },       {         "category_ref":
+                    "nsLEGAL",         "description": "Detects patent
+                    filings.",         "dlp_license": "advanced",         "id":
+                    "patent-en_us",         "label": "Patent",        
+                    "model_type": "text",         "search_tags":
+                    "english,filings,patents,trademark,uspto"       },      
+                    {         "category_ref": "nsFINANCIAL",        
+                    "description": "Detects bank statements.",        
+                    "dlp_license": "advanced",         "id":
+                    "bank_statement",         "label": "Bank Statement",        
+                    "model_type": "text",         "search_refs": [          
+                    "search/ban",           "search/us"         ],        
+                    "search_tags": "bank statements,statement"       },      
+                    {         "category_ref": "nsFINANCIAL",        
+                    "description": "Detects stock purchase agreements between
+                    seller and buyer parties.",         "dlp_license":
+                    "advanced",         "id":
+                    "stock_purchase_agreement",         "label": "Stock Purchase
+                    Agreement",         "model_type": "text",        
+                    "search_tags":
+                    "agreement,assets,certificates,purchase,shares,stock
+                    market,stocks"       },       {         "category_ref":
+                    "nsSOURCECODE",         "description": "Detects any type of
+                    recognizable source code.",         "dlp_license":
+                    "standard",         "id": "source_code",         "label":
+                    "Source Code (All) ",         "model_type": "text",        
+                    "search_refs": [           "search/srccode"        
+                    ],         "search_tags": "asm,assembly,c code,c
+                    plus,c++,c-plus,cpp,java,javascript,python"       },      
+                    {         "category_ref": "nsMEDICAL",        
+                    "description": "Detects medical power of attorney (POA)
+                    documents, which may include advance directives and living
+                    wills.",         "dlp_license": "advanced",         "id":
+                    "medical_poa",         "label": "Medical Power of
+                    Attorney",         "model_type": "text",        
+                    "search_tags": "advance directives,ahd,durable power of
+                    attorney,english,health care proxy,healthcare
+                    proxy,legal,living wills,medical,poa,power of
+                    attorney,powers of attorney"       },       {        
+                    "category_ref": "nsPERSONALID",         "description":
+                    "Detects images of healthcare ID cards.",        
+                    "dlp_license": "advanced",         "id":
+                    "healthcare_id_card",         "label": "Healthcare ID
+                    Card",         "model_type": "image",         "search_tags":
+                    "health,health care,health
+                    insurance,healthcare,insurance,medical,patient,patient
+                    id,social insurance"       },       {        
+                    "category_ref": "nsFINANCIAL",         "description":
+                    "Detects various forms of financial instruments such as
+                    personal, business, and bank checks and drafts.",        
+                    "dlp_license": "advanced",         "id": "check",        
+                    "label": "Check",         "model_type": "image",        
+                    "search_tags":
+                    "bank,cashier's,cashiers,check,cheque,draft,money
+                    order,negotiable,teller's,tellers,traveler's,travelers,traveller's,travellers"      
+                    },       {         "category_ref": "nsPERSONALID",        
+                    "description": "Detects images of driver licenses and state
+                    ID cards.",         "dlp_license": "advanced",         "id":
+                    "driver_license",         "label": "Driver License (All)
+                    ",         "model_type": "image",         "search_refs":
+                    [           "search/drivlic"         ]       },      
+                    {         "category_ref": "nsPERSONALID",        
+                    "description": "Detects images of various types of photo
+                    IDs.",         "dlp_license": "advanced",         "id":
+                    "photo_id",         "label": "Photo ID",        
+                    "model_type": "image"       },       {        
+                    "category_ref": "nsMEDICAL",         "description": "Detects
+                    medical forms.",         "dlp_license": "advanced",        
+                    "id": "medical_form",         "label": "Medical
+                    Form",         "model_type": "text",         "search_tags":
+                    "english,health,health
+                    care,healthcare,hipaa,history,insurance,medical,patient,patient
+                    data,patient info,patient registration,phi"       },      
+                    {         "category_ref": "nsFINANCIAL",        
+                    "description": "Detects loan agreements.",        
+                    "dlp_license": "advanced",         "id":
+                    "loan_agreement",         "label": "Loan Agreement",        
+                    "model_type": "text",         "search_tags": "auto
+                    loan,bank,bank loan,borrower,contracts,credit
+                    union,english,finance,financial,heloc,home
+                    loans,housing,lender,loan agreements,mortgage,student
+                    loan"       },       {         "category_ref":
+                    "nsMEDICAL",         "description": "Detects medical
+                    radiological images, such as x-rays and CT/MRI
+                    scans.",         "dlp_license": "advanced",         "id":
+                    "medical_image",         "label": "Medical Image",        
+                    "model_type": "image",         "search_tags": "computed
+                    tomography,ct scans,diagnostic,healthcare,imaging,magnetic
+                    resonance,medical,mri,patient,radiographic,radiography,radiology,ultrasound,x
+                    rays,x-rays,xrays"       },       {         "category_ref":
+                    "nsFINANCIAL",         "description": "Detects consumer
+                    housing loan applications.",         "dlp_license":
+                    "advanced",         "id": "loan_application",        
+                    "label": "Loan Application",         "model_type":
+                    "text",         "search_tags":
+                    "applications,bank,borrower,contracts,credit
+                    union,english,fannie mae,finance,financial,freddie mac,home
+                    loans,housing,lender,loan applications,mortgage,uhla"      
+                    }     ],     "search_data": [       {         "data":
+                    "united states,america,american,usa,u.s.,us",         "id":
+                    "search/us"       },       {         "data": "bank account
+                    numbers,account numbers,acct,bankacct,bankaccount,bank
+                    account",         "id": "search/ban"       },      
+                    {         "data":
+                    "driver,driving,drivers,driver's,dl,license,licence,license
+                    number,licence number,driverlicense,driver license,driving
+                    license",         "id": "search/drivlic"       },      
+                    {         "data": "payment,payment card,credit,credit
+                    card,debit,debit card,atm,ccn,card numbers",         "id":
+                    "search/pan"       },       {         "data":
+                    "social,security,socsec,ssn,social security,social security
+                    numbers",         "id": "search/ssn"       },      
+                    {         "data": "sourcecode,source
+                    code,language,scripts,code,programming",         "id":
+                    "search/srccode"       }     ]   },  
+                    "overlayCustomClassifiers": [     {       "created" :
+                    1699672486759,       "description": "Wayne-Test-Predefined
+                    Nov 11",       "id": "1953637428836194417",      
+                    "isPredefined": true,       "lastTrained": 0,      
+                    "lastUploaded": 0,       "modifyBy":
+                    "wxin@netskope.com",       "name":
+                    "_overlay_healthcare_id_card",       "overallStatus":
+                    {         "invalid": 0,         "negative": 0,        
+                    "valid": 0       },       "profiles": null,       "region":
+                    null,       "status": "created",       "threshold":
+                    0.5,       "type": "image",       "updated" :
+                    1699672486759,       "version": 0     }   ] }
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+    put:
+      description: >-
+        Creating a custom classifier to overlay a predefined classifier requires
+        the name to be the same as predefined classifier for a given tenant and
+        a classifier ID will be returned for future reference
+      summary: >-
+        Create or update an overlay custom classifier for a predefined
+        classifier
+      operationId: gwCreateUpdatePredefined
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PredefinedClassifierUserDto"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            A classifier object is returned where the classifier ID (id) could
+            be used for classifier specific API. When a custom classifier is
+            created for a predefined classifier, 'isPredefined' will be set to
+            'true'.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PredefinedOverlayDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "tenantId": null,   "id": "144294124833494081",   "name": "_overlay_medical_image",   "status": "created",   "type": "image",   "description": "test threshold level change",   "version": 0,   "region": null,   "modifyBy": "wxin@netskope.com",   "isPredefined": true,   "threshold": 0,   "created": 1702782844179,   "updated": 1702921702261,   "lastTrained": 0,   "profiles": null,   "thresholdLevel": "low" } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /services/dlp/classifiers/custom/{id}/modeleval:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: false
+      apiGroup: tyoc
+    get:
+      description: >-
+        Retrieve model data including evaluation result for a given classifier
+        ID
+      summary: Get custom classifier model data
+      operationId: gwGetTyocClassModelEval
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            precision, recall and f1-score are from last evaluation and delta is
+            the f1-score percent difference compared with last result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelResultDto"
+              examples:
+                Successful Response_1:
+                  value: >-
+                    {   "id": "5811976269388497234",   "evaluationQuota": 5,  
+                    "lastEvaluated": 1693420832685,   "precision": 0.8,  
+                    "recall": 0.9,   "f1Score": 0.9,   "precDelta": 0.1,  
+                    "recallDelta": 0.0,   "f1Delta": 0.05,   "isEvalCurrent":
+                    true,   "msg": "False positive rate is too high" }
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Custom classifier ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+    post:
+      description: >-
+        Trigger a model evaluation for a given classifier ID. This is a block
+        call and evaluation could take a long time. If timed out, try the GET
+        method to retrieve latest evaluation.
+      summary: Trigger a custom classifier model evaluation
+      operationId: gwPostTyocClassModelEval
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            precision, recall and f1-score are from last evaluation and delta is
+            the f1-score percent difference compared with last result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelResultDto"
+              examples:
+                Successful Response_1:
+                  value: >-
+                    {   "id": "5811976269388497234",   "evaluationQuota": 5,  
+                    "lastEvaluated": 1693420832685,   "precision": 0.8,  
+                    "recall": 0.9,   "f1Score": 0.9,   "precDelta": 0.1,  
+                    "recallDelta": 0.0,   "f1Delta": 0.05,   "msg": "False
+                    positive rate is too high" }
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Custom classifier ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/custom/{id}/reseteval:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: false
+      apiGroup: tyoc
+    post:
+      description: >-
+        Reset evaluation quota to a default value that is defined by backend.
+        Client is not allowed to set the value itself but allowed to reset the
+        quota. This reminds user the operation is resource intensive and 
+        shouldn't be abused.
+      summary: Reset evaluation quota to default
+      operationId: gwPostTyocClassResetEval
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: New quota is returned in the response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModelEvalResetDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "id": "5811976269388497234",   "evaluationQuota": 10 } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Custom classifier ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/custom/{id}/hashes:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    post:
+      description: >-
+        User may split a large hash file into smaller files (by line) and upload
+        one at a time to avoid exceeding API upload limits. Use one session with
+        multiple transmits. Optional parameters:
+        ?txid=transmit_id&ssid=session_id&negative=false&sessionend=true where
+        'name' in multipart body is the full path of the uploading file
+      summary: Upload hash file for custom classifier by ID
+      operationId: gwTyocHashUpload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+              format: binary
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: >-
+            Classifier ID obtained from an classifier retrieval API such as GET
+            /dlp/custom/classifiers.
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+        - name: txid
+          description: transmit ID is tied to a specific file upload
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: ssid
+          description: >-
+            session ID of a upload session where multiple uploads are logically
+            grouped together
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: string
+        - name: negative
+          description: whether uploaded hashes are negative. Default is false
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: boolean
+        - name: sessionend
+          description: >-
+            whether this tansmit is the last of the session, if yes, all
+            uploaded files will be processed. Default is false
+          in: query
+          required: false
+          deprecated: false
+          schema:
+            type: boolean
+  /services/dlp/classifiers/custom/{id}/getuploadstatus:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          second: 20
+        writeRoutes:
+          second: 20
+      apiGroup: tyoc
+    post:
+      description: >-
+        The classifier ID is obtained from classifier retrieval API's such as
+        GET /dlp/custom/classifiers and the filename in payload should be the
+        full path retrieved from file retrieval API such as GET
+        /dlp/custom/classifiers/{id}/files.
+      summary: Check custom classifier artifact upload status with given file name
+      operationId: gwCheckTyocUploadV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FileUploadQuery"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: >-
+            Since the uploaded file could be an archive, check for
+            'fingerprints' array for individual file upload status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocUploadStatusListDto"
+              examples:
+                Successful Response_1:
+                  value: >-
+                    {   "uploads": [     {       "id":
+                    "9095141720424589398",       "msg": null,       "txid":
+                    "2342343234324",       "ssid": "0",       "status":
+                    null,       "isFalPos": null,       "lastUpdate":
+                    1693437483230,       "uploadFile":
+                    "/tmp/demo/training/Bose_A20_Aviation_headset.jpeg",      
+                    "fingerprints": [         {           "filename":
+                    "/tmp/demo/training/Bose_A20_Aviation_headset.jpeg",          
+                    "status": "created",           "type": "image"        
+                    }       ]     }   ] }
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Classifier ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+  /services/dlp/classifiers/custom/{id}/profiles:
+    x-netskope-params:
+      serviceConfig: dlp-fp-config
+      version: 2
+      customerFacing: true
+      apiGroup: tyoc
+    post:
+      description: >-
+        set the referenced profiles of a class so that when class delete is
+        requested, an integrity check is performed. The 'id' is obtained from
+        classifier retrieval API's such as GET /dlp/custom/classifiers.
+      summary: set profiles for a given custom classifier
+      operationId: gwSetProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GroupProfileDto"
+      tags:
+        - tyoc-v2
+      responses:
+        "200":
+          description: The profile ID list is returned as property of the classifier object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TyocClassifierDto"
+              examples:
+                Successful Response_1:
+                  value: ' {   "tenantId": null,   "id": "9095141720424589398",   "name": "ApiGateway_Wayne_Demo_Test",   "status": "created",   "type": "image",   "description": "test for demo",   "version": 0,   "region": null,   "modifyBy": "wxin@netskope.com",   "threshold": 0.75,   "created": 1692898965370,   "updated": 1692898965370,   "lastTrained": 0,   "profiles": [     "1",     "2",     "3"   ] } '
+        "404":
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal Server Error
+          content:
+            text/plain:
+              schema:
+                type: string
+      parameters:
+        - name: id
+          description: Class ID
+          in: path
+          required: true
+          deprecated: false
+          schema:
+            type: string
+components:
+  schemas:
+    FileStatusEnum_String:
+      type: string
+      enum:
+        - valid
+        - invalid
+    TyocUploadStatusListDto:
+      type: object
+      properties:
+        uploads:
+          type: array
+          description: List of uploads
+          items:
+            $ref: "#/components/schemas/TyocUploadStatusDto"
+      required:
+        - uploads
+    TyocUploadStatusDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Custom classifier ID
+        msg:
+          type: string
+          description: Descriptive message given to an upload
+        txid:
+          type: string
+          description: Upload transmit ID
+        ssid:
+          type: string
+          description: Upload session ID
+        status:
+          type: string
+          description: Upload status - successful or error
+        isFalPos:
+          type: boolean
+          description: Is the upload for negative samples
+        lastUpdate:
+          type: integer
+          description: Last updated time for this upload, milliseconds since the epoch
+        uploadFile:
+          type: string
+          description: Upload file name with full path
+        fingerprints:
+          type: array
+          description: Generated fingerprint details
+          items:
+            $ref: "#/components/schemas/TyocStatusFingerprintPresentDto"
+      required:
+        - id
+    TyocStatusFingerprintPresentDto:
+      type: object
+      properties:
+        filename:
+          type: string
+          description: File name uploaded artifact
+        status:
+          type: string
+          description: Status of an artifact - active or inactive
+        type:
+          type: string
+          description: Type of an artifact - image, text, etc.
+      required:
+        - filename
+    TyocOverallStatus:
+      type: object
+      properties:
+        invalid:
+          type: integer
+          description: Count of invalid training files
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        valid:
+          type: integer
+          description: Count of valid training files
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        negative:
+          type: integer
+          description: Count of negative training files
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        errMsg:
+          type: string
+          description: Error message if any
+      required:
+        - valid
+        - negative
+    ModelResultDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Class ID
+        evaluationQuota:
+          type: integer
+          description: >-
+            Quota left for classifier model adjustment; This value could be
+            reset to max
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        lastEvaluated:
+          type: integer
+          description: >-
+            When custom classifier was last evaluated, milliseconds since the
+            epoch
+          default: 0
+        precision:
+          type: number
+          format: float
+          description: Model precision from evaluation
+          default: 0
+        recall:
+          type: number
+          format: float
+          description: Model recall from evaluation
+          default: 0
+        f1Score:
+          type: number
+          format: float
+          description: Model F1 score from evaluation
+          default: 0
+        f1Delta:
+          type: number
+          format: float
+          description: >-
+            F1 score delta percentage (0.0 - 1.0) compared with last value; A
+            negative value indicates a worse result
+          default: 0
+        precDelta:
+          type: number
+          format: float
+          description: >-
+            Precision score delta percentage (0.0 - 1.0) compared with last
+            value; A negative value indicates a worse result
+          default: 0
+        recallDelta:
+          type: number
+          format: float
+          description: >-
+            Recall score delta percentage (0.0 - 1.0) compared with last value;
+            A negative value indicates a worse result
+          default: 0
+        isEvalCurrent:
+          type: boolean
+          description: Boolean value to indicate if evaluation result is current
+          default: false
+        msg:
+          type: string
+          description: Evaluation result message to indicate if there's a problem
+      required:
+        - id
+        - precision
+        - recall
+        - f1Score
+        - f1Delta
+        - precDelta
+        - recallDelta
+        - isEvalCurrent
+        - msg
+    TyocClassifierPresentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Custom classifier ID
+        name:
+          type: string
+          description: Custom classifier name
+        status:
+          type: string
+          description: Custom classifier status - active, error, etc.
+        type:
+          description: >-
+            Custom classifier type - image or text, other options are for
+            backwards compatibility and will be removed in the future
+          $ref: "#/components/schemas/GroupTypeEnum_String"
+        description:
+          type: string
+          description: Custom classifier description
+        version:
+          type: integer
+          description: >-
+            Custom classifier version (user cannot modify) - an update will
+            increment it
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        region:
+          type: string
+          description: Custom classifier deploy region
+        modifyBy:
+          type: string
+          description: User who last modified the custom class
+        isPredefined:
+          type: boolean
+          description: Whether the class is pre-defined
+          default: false
+        threshold:
+          type: number
+          format: float
+          description: Lookup threshold for custom class
+          default: 0
+        created:
+          type: integer
+          description: When was the custom classifier created, milliseconds since the epoch
+          default: 0
+        updated:
+          type: integer
+          description: >-
+            When was the custom classifier last updated, milliseconds since the
+            epoch
+          default: 0
+        lastTrained:
+          type: integer
+          description: >-
+            When custom classifier was last trained, milliseconds since the
+            epoch
+          default: 0
+        overallStatus:
+          description: The overall status object
+          $ref: "#/components/schemas/TyocOverallStatus"
+        modelEval:
+          description: The Model evaluation result
+          $ref: "#/components/schemas/ModelResultDto"
+      required:
+        - id
+        - name
+        - threshold
+    TyocUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Custom classifier name
+        type:
+          description: >-
+            Custom classifier type - image or text, other options are for
+            backwards compatibility and will be removed in the future
+          default: image
+          $ref: "#/components/schemas/GroupTypeEnum_String"
+        description:
+          type: string
+          description: Custom classifier description
+        modifyBy:
+          type: string
+          description: The last user who modified the custom classifier
+        threshold:
+          type: number
+          format: float
+          description: Lookup threshold of custom classifier
+          default: 0
+      required:
+        - name
+        - type
+        - threshold
+    TyocClassArrayDto:
+      type: object
+      properties:
+        customClassifiers:
+          type: array
+          description: List of custom classifiers
+          items:
+            $ref: "#/components/schemas/TyocClassifierPresentDto"
+      required:
+        - customClassifiers
+    FpDto:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: Tenant ID
+        fpGroupId:
+          type: string
+          description: Fingerprint group ID
+        status:
+          type: string
+          description: Fingerprint status - active or inactive
+        type:
+          type: string
+          description: Fingerprint type - image or text
+        filename:
+          type: string
+          description: Fingerprint file full path
+        fpKey:
+          type: string
+          description: Fingerprint file unique key
+        imageEmbedding:
+          type: array
+          description: Fingerprint image embedding
+          items:
+            type: number
+            format: float
+        textEmbedding:
+          type: array
+          description: Fingerprint text embedding - ML model hash
+          items:
+            type: number
+            format: float
+        simhash:
+          type: array
+          description: Fingerprint simhash list - size of 4
+          items:
+            type: integer
+            format: int64
+        pHash:
+          type: array
+          description: Image fingerprint pHash - size of 4 for 4 straight directions
+          items:
+            type: integer
+            format: int64
+        md5:
+          type: string
+          description: Fingerprint file MD5
+        contentMD5:
+          type: string
+          description: Fingerprint text content MD5
+        isFalPos:
+          type: boolean
+          description: Whether a file is negative sample
+        created:
+          type: integer
+          description: When the fingerprint is created
+          default: 0
+        updated:
+          type: integer
+          description: When the fingerprint was last updated
+          default: 0
+        xxhash:
+          type: integer
+          format: int64
+          description: XXhash of the fingerprint original file
+        contentXXH:
+          type: integer
+          format: int64
+          description: XXhash of the text content
+      required:
+        - tenantId
+        - fpGroupId
+        - filename
+        - fpKey
+        - md5
+    TyocClassifierDto:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: Tenant ID
+        id:
+          type: string
+          description: Custom classifier ID
+        name:
+          type: string
+          description: Custom classifier name
+        status:
+          type: string
+          description: Custom classifier status - active, error, etc.
+        type:
+          description: >-
+            Custom classifier type - image or text, other options are for
+            backwards compatibility and will be removed in the future
+          $ref: "#/components/schemas/GroupTypeEnum_String"
+        description:
+          type: string
+          description: Custom classifier description
+        version:
+          type: integer
+          description: >-
+            Custom classifier version (user cannot modify) - an update will
+            increment it
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        region:
+          type: string
+          description: Custom classifier deploy region
+        modifyBy:
+          type: string
+          description: Last user modified custom classifier
+        isPredefined:
+          type: boolean
+          description: Whether classifier is pre-defined
+          default: false
+        threshold:
+          type: number
+          format: float
+          description: Lookup threshold
+          default: 0
+        created:
+          type: integer
+          description: When custom classifier was created, milliseconds since the epoch
+          default: 0
+        updated:
+          type: integer
+          description: >-
+            When custom classifier was last updated, milliseconds since the
+            epoch
+          default: 0
+        lastTrained:
+          type: integer
+          description: >-
+            When custom classifier was last trained, milliseconds since the
+            epoch
+          default: 0
+        profiles:
+          type: array
+          description: "Referenced profiles for the custom classifier "
+          items:
+            type: string
+      required:
+        - id
+        - threshold
+    FpgDto:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: tenant ID
+        fpGroupId:
+          type: string
+          description: Fingerprint group ID
+        fpGroupName:
+          type: string
+          description: Fingerprint group Name
+        status:
+          type: string
+          description: Fingerprint group status - active, error, etc.
+        type:
+          description: Fingerprint group type - image, text, etc.
+          $ref: "#/components/schemas/GroupTypeEnum_String"
+        description:
+          type: string
+          description: Fingerprint group description
+        version:
+          type: integer
+          description: >-
+            Fingerprint group version (user cannot modify) - updates will
+            increment the version
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        region:
+          type: string
+          description: Fingerprint group used region
+        modifyBy:
+          type: string
+          description: Fingerprint group modified by which user
+        isPredefined:
+          type: boolean
+          description: >-
+            Where the fingerprint-group/custom-classifier is pre-defined or
+            custom
+          default: false
+        threshold:
+          type: number
+          format: float
+          description: Lookup threshold of a given fingerprint-group/custom-classifier
+          default: 0
+        created:
+          type: integer
+          description: Fingerprint group create time in milliseconds since the epoch
+          default: 0
+        updated:
+          type: integer
+          description: Fingerprint group last update time in milliseconds since the epoch
+          default: 0
+        lastTrained:
+          type: integer
+          description: >-
+            Fingerprint-group/custom-classifier last trained time in
+            milliseconds since the epoch
+          default: 0
+        lastUploaded:
+          type: integer
+          description: Last time artifacts were uploaded
+          default: 0
+        profiles:
+          type: array
+          description: Referencing DLP profiles
+          items:
+            type: string
+      required:
+        - fpGroupId
+    PredefinedClassesDto:
+      type: object
+      properties:
+        classifiers:
+          type: array
+          description: List of classifier entries
+          items:
+            $ref: "#/components/schemas/PredefinedClassEntryDto"
+        categories:
+          type: array
+          items:
+            $ref: "#/components/schemas/PredefinedClassCategoryDto"
+        search_data:
+          type: array
+          items:
+            $ref: "#/components/schemas/PredefinedClassSearchDataDto"
+      required:
+        - classifiers
+    FileKeyDto:
+      type: object
+      properties:
+        fileKeys:
+          type: array
+          description: List of file keys
+          items:
+            type: string
+      required:
+        - fileKeys
+    PredefinedThreshLevelEnum_String:
+      type: string
+      enum:
+        - low
+        - medium
+        - medium-high
+        - high
+    ModelEvalResetDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Class ID
+        evaluationQuota:
+          type: integer
+          description: >-
+            Quota left for classifier model adjustment; This value could be
+            reset to max
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+      required:
+        - id
+    FileUploadQuery:
+      type: object
+      properties:
+        filename:
+          type: string
+          description: Uploaded file name in full path
+      required:
+        - filename
+    GroupTypeEnum_String:
+      type: string
+      enum:
+        - image
+        - text
+        - simclr
+        - simhash
+        - mlv1
+    PredefinedClassifiersWithOverlayDto:
+      type: object
+      properties:
+        predefinedClassifiers:
+          description: Detailed information about pre-defined classifiers
+          $ref: "#/components/schemas/PredefinedClassesDto"
+        overlayCustomClassifiers:
+          type: array
+          description: >-
+            A list overlay (hidden) custom classifiers each corresponding to a
+            pre-defined classifier
+          items:
+            $ref: "#/components/schemas/PredefinedOverlayDto"
+      required:
+        - predefinedClassifiers
+    PredefinedClassCategoryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Category ID
+        label:
+          type: string
+          description: Category label
+      required:
+        - id
+    PredefinedClassifierNameEnum_String:
+      type: string
+      enum:
+        - driver_license-us
+        - passport
+        - screenshot
+        - resume-en_us
+        - ma_form-en_us
+        - tax_form-en_us
+        - social_security_card-us
+        - payment_card
+        - whiteboard
+        - offer_letter
+        - consulting_agreement
+        - partner_agreement
+        - nda
+        - patent-en_us
+        - bank_statement
+        - stock_purchase_agreement
+        - source_code
+        - medical_poa
+        - healthcare_id_card
+        - check
+        - driver_license
+        - photo_id
+        - medical_form
+        - loan_agreement
+        - medical_image
+        - loan_application
+    PredefinedClassEntryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique name for this pre-defined classifier
+        category_ref:
+          type: string
+          description: Category reference code
+        label:
+          type: string
+          description: Short description
+        model_type:
+          type: string
+          description: image, text, etc.
+        dlp_license:
+          type: string
+          description: DLP license level
+        description:
+          type: string
+        search_tags:
+          type: string
+          description: Category search tag
+        search_refs:
+          type: array
+          description: Referenced search key list
+          items:
+            type: string
+      required:
+        - id
+    GroupProfileDto:
+      type: object
+      properties:
+        profiles:
+          type: array
+          description: List of referenced profiles
+          items:
+            type: string
+      required:
+        - profiles
+    PredefinedClassSearchDataDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Search key ID
+        data:
+          type: string
+          description: Search token list separated by comma
+      required:
+        - id
+    PredefinedOverlayDto:
+      type: object
+      properties:
+        tenantId:
+          type: string
+          description: Tenant ID
+        id:
+          type: string
+          description: Custom classifier ID
+        name:
+          type: string
+          description: Custom classifier name
+        status:
+          type: string
+          description: Custom classifier status - active, error, etc.
+        type:
+          description: >-
+            Custom classifier type - image or text, other options are for
+            backwards compatibility and will be removed in the future
+          $ref: "#/components/schemas/GroupTypeEnum_String"
+        description:
+          type: string
+          description: Custom classifier description
+        version:
+          type: integer
+          description: >-
+            Custom classifier version (user cannot modify) - an update will
+            increment it
+          default: 0
+          minimum: 0
+          maximum: 2147483647
+        region:
+          type: string
+          description: Custom classifier deploy region
+        modifyBy:
+          type: string
+          description: Last user modified custom classifier
+        isPredefined:
+          type: boolean
+          description: Whether classifier is pre-defined
+          default: false
+        threshold:
+          type: number
+          format: float
+          description: Lookup threshold
+          default: 0
+        created:
+          type: integer
+          description: When custom classifier was created, milliseconds since the epoch
+          default: 0
+        updated:
+          type: integer
+          description: >-
+            When custom classifier was last updated, milliseconds since the
+            epoch
+          default: 0
+        lastTrained:
+          type: integer
+          description: >-
+            When custom classifier was last trained, milliseconds since the
+            epoch
+          default: 0
+        profiles:
+          type: array
+          description: "Referenced profiles for the custom classifier "
+          items:
+            type: string
+        thresholdLevel:
+          description: >-
+            Lookup threshold level of predefined classifier - low, medium,
+            medium-high and high
+          $ref: "#/components/schemas/PredefinedThreshLevelEnum_String"
+        overallStatus:
+          description: The overall status object
+          $ref: "#/components/schemas/TyocOverallStatus"
+      required:
+        - id
+        - threshold
+        - thresholdLevel
+    PredefinedClassifierUserDto:
+      type: object
+      properties:
+        name:
+          description: Predefined classifier name
+          $ref: "#/components/schemas/PredefinedClassifierNameEnum_String"
+        description:
+          type: string
+          description: Predefined classifier description
+        modifyBy:
+          type: string
+          description: The last user who modified the predefined classifier
+        thresholdLevel:
+          description: >-
+            Lookup threshold level of predefined classifier - low, medium,
+            medium-high and high
+          default: medium
+          $ref: "#/components/schemas/PredefinedThreshLevelEnum_String"
+      required:
+        - name
+        - thresholdLevel
+    TyocQueryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Custom classifier ID
+        filename:
+          type: string
+          description: Uploaded file name in full path
+      required:
+        - id
+        - filename
+    TyocFileArrayDto:
+      type: object
+      properties:
+        validFiles:
+          type: array
+          description: Valid file list
+          items:
+            $ref: "#/components/schemas/TyocFileDto"
+        invalidFiles:
+          type: array
+          description: Invalid file list
+          items:
+            $ref: "#/components/schemas/TyocInvalidFileDto"
+      required:
+        - validFiles
+    TyocFileDto:
+      type: object
+      properties:
+        classId:
+          type: string
+          description: Custom classifier ID
+        filename:
+          type: string
+          description: Filename of the uploaded artifact
+        fileKey:
+          type: string
+          description: Unique key to identify a trained file
+        hash:
+          type: string
+          description: File hash, default to MD5
+        isFalPos:
+          type: boolean
+          description: Whether the file is a negative sample
+        created:
+          type: integer
+          description: >-
+            When the file was created (first uploaded), milliseconds since the
+            epoch
+          default: 0
+        updated:
+          type: integer
+          description: When the file was last updated, milliseconds since the epoch
+          default: 0
+      required:
+        - classId
+        - filename
+        - fileKey
+        - isFalPos
+    TyocInvalidFileDto:
+      type: object
+      properties:
+        classId:
+          type: string
+          description: Custom classifier ID
+        filename:
+          type: string
+          description: Filename of the artifact
+        uploadFile:
+          type: string
+          description: Filename of the uploaded file which could be an archive file
+        msg:
+          type: string
+          description: Error message the states why the file is invalid
+        isFalPos:
+          type: boolean
+          description: Whether the file is a negative sample
+          default: false
+        lastUpdate:
+          type: integer
+          description: When the file was uploaded, milliseconds since the epoch
+          default: 0
+      required:
+        - classId
+        - filename
+        - uploadFile

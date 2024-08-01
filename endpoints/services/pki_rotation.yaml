@@ -1,0 +1,538 @@
+components:
+  schemas:
+    error-response-400:
+      properties:
+        datetime:
+          description: the time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: Unique error code for troubleshooting {service}{category}{detail}
+          example: "101"
+          type: string
+        message:
+          description: Human readable error message, could be general or specific
+          example:
+            "Invalid Input Data: value is not a valid enumeration member; permitted:
+            'current', 'deprecated', 'provisioned'"
+          type: string
+        trace_id:
+          description: Trace id for troubleshooting {service}{category}{detail}
+          example: bsbg4m9ru4bb3qstvkl0
+          type: string
+      type: object
+    error-response-404:
+      properties:
+        datetime:
+          description: The time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: Unique error code for troubleshooting {service}{category}{detail}
+          example: "301"
+          type: string
+        message:
+          description: Human readable error message, could be general or specific
+          example: "Not Found: tenant is not existed"
+          type: string
+        trace_id:
+          description: Trace id for troubleshooting {service}{category}{detail}
+          example: bsbg4m9ru4bb3qstvkl0
+          type: string
+      type: object
+    error-response-409:
+      properties:
+        datetime:
+          description: The time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: Unique error code for troubleshooting {service}{category}{detail}
+          example: "306"
+          type: string
+        message:
+          description: Human readable error message, could be general or specific
+          example: "Conficted: cert activation status is invalid to invoke this endpoint"
+          type: string
+        trace_id:
+          description: Trace id for troubleshooting {service}{category}{detail}
+          example: bsbg4m9ru4bb3qstvkl0
+          type: string
+      type: object
+    error-response-500:
+      properties:
+        datetime:
+          description: The time error occured
+          example: "2022-08-31T11:14:23.187Z"
+          type: string
+        err_code:
+          description: Unique error code for troubleshooting {service}{category}{detail}
+          example: "701"
+          type: string
+        message:
+          description: Human readable error message, could be general or specific
+          example: database query error / internal error
+          type: string
+        trace_id:
+          description: Trace id for troubleshooting {service}{category}{detail}
+          example: bsbg4m9ru4bb3qstvkl0
+          type: string
+      type: object
+    root_certificate_purpose:
+      enum:
+        - explicit_proxy_root_ca
+        - ns_root_ca
+      type: string
+    root_certificate_with_state:
+      properties:
+        certificate:
+          description: Certificate as pem
+          example:
+            '-----BEGIN CERTIFICATE----- MIIEEDCCAvigAwIBAgICAT4wDQYJKoZIhvcNAQELBQAwgaExCzAJBgNVBAYTAlVT
+            MQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxFjAUBgNVBAoTDU5ldHNr /pqgw4aesr69bRfpaD3IjTUIMhKxEpUTM29x9IJvKpVbF7BrUl07g2GM44ra9442
+            y0kAyR4+Q3mnoIL4t8CZzKNrVFYMmPh9J7pxdEYlzWAIn4U2wjVgxxfARlmIgX7N ZcCuh9byNE0BQtTXzm+BniTEdALsxQ8j4irWVjqj3iew1I8A
+            -----END CERTIFICATE-----"
+
+            '
+          type: string
+        purpose:
+          $ref: "#/components/schemas/root_certificate_purpose"
+        state:
+          $ref: "#/components/schemas/rotation_state"
+      type: object
+    root_certificates:
+      properties:
+        certificates:
+          items:
+            $ref: "#/components/schemas/root_certificate_with_state"
+          type: array
+      type: object
+    rotation_state:
+      enum:
+        - current
+        - provisioned
+        - deprecated
+      type: string
+    server_certificate_with_state:
+      properties:
+        certificate:
+          description: Certificate as pem
+          example:
+            '-----BEGIN CERTIFICATE----- MIIEEDCCAvigAwIBAgICAT4wDQYJKoZIhvcNAQELBQAwgaExCzAJBgNVBAYTAlVT
+            MQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxFjAUBgNVBAoTDU5ldHNr /pqgw4aesr69bRfpaD3IjTUIMhKxEpUTM29x9IJvKpVbF7BrUl07g2GM44ra9442
+            y0kAyR4+Q3mnoIL4t8CZzKNrVFYMmPh9J7pxdEYlzWAIn4U2wjVgxxfARlmIgX7N ZcCuh9byNE0BQtTXzm+BniTEdALsxQ8j4irWVjqj3iew1I8A
+            -----END CERTIFICATE-----"
+
+            '
+          type: string
+        purpose:
+          $ref: "#/components/schemas/servercertificate_purpose"
+        state:
+          $ref: "#/components/schemas/rotation_state"
+      type: object
+    server_certificates:
+      properties:
+        certificates:
+          items:
+            $ref: "#/components/schemas/server_certificate_with_state"
+          type: array
+      type: object
+    servercertificate_purpose:
+      enum:
+        - cp_cert
+        - encryption_client
+        - encryption_server
+        - log_encryption_cert
+        - saml_cert
+        - sf_cert
+      type: string
+    state:
+      enum:
+        - current
+        - deprecated
+        - provisioned
+      type: string
+    subordinateca_purpose:
+      enum:
+        - tenant_ca
+      type: string
+    subordinates_certificate_with_state:
+      properties:
+        certificate:
+          description: Certificate as pem
+          example:
+            '-----BEGIN CERTIFICATE----- MIIEEDCCAvigAwIBAgICAT4wDQYJKoZIhvcNAQELBQAwgaExCzAJBgNVBAYTAlVT
+            MQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxFjAUBgNVBAoTDU5ldHNr /pqgw4aesr69bRfpaD3IjTUIMhKxEpUTM29x9IJvKpVbF7BrUl07g2GM44ra9442
+            y0kAyR4+Q3mnoIL4t8CZzKNrVFYMmPh9J7pxdEYlzWAIn4U2wjVgxxfARlmIgX7N ZcCuh9byNE0BQtTXzm+BniTEdALsxQ8j4irWVjqj3iew1I8A
+            -----END CERTIFICATE-----"
+
+            '
+          type: string
+        issuer:
+          description: Certificate as pem
+          example:
+            '-----BEGIN CERTIFICATE----- MIIEEDCCAvigAwIBAgICAT4wDQYJKoZIhvcNAQELBQAwgaExCzAJBgNVBAYTAlVT
+            MQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxFjAUBgNVBAoTDU5ldHNr /pqgw4aesr69bRfpaD3IjTUIMhKxEpUTM29x9IJvKpVbF7BrUl07g2GM44ra9442
+            y0kAyR4+Q3mnoIL4t8CZzKNrVFYMmPh9J7pxdEYlzWAIn4U2wjVgxxfARlmIgX7N ZcCuh9byNE0BQtTXzm+BniTEdALsxQ8j4irWVjqj3iew1I8A
+            -----END CERTIFICATE-----"
+
+            '
+          type: string
+        purpose:
+          $ref: "#/components/schemas/subordinateca_purpose"
+        state:
+          $ref: "#/components/schemas/rotation_state"
+      type: object
+    subordinates_certificates:
+      properties:
+        certificates:
+          items:
+            $ref: "#/components/schemas/subordinates_certificate_with_state"
+          type: array
+      type: object
+    tenant_rotation_state:
+      enum:
+        - ready
+        - current
+        - working
+        - current_with_revert
+      type: string
+info:
+  description:
+    "PKI rotation service provides the API endpoint to retrieve and manage
+    deprecation of tenant certificates
+
+    "
+  title: "PKI rotation service.
+
+    "
+  version: 0.0.1
+openapi: 3.0.3
+paths:
+  /services/certs/activate:
+    post:
+      operationId: activate_tenant_certs_hierarchy
+      responses:
+        "202":
+          description:
+            Accepted, the request is acknoledged. Please invoke /certs/status
+            to check the status
+        "409":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-409"
+          description:
+            Conficted, the request can't be accepted due to cert status
+            required to be "ready" to invoke this endpoint
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary: deprecate current certificate and activate new certificate
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+  /services/certs/revert:
+    post:
+      operationId: revert_tenant_certs_hierarchy
+      responses:
+        "202":
+          description:
+            Accepted, the request is acknoledged. Please invoke /certs/status
+            to check the status
+        "409":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-409"
+          description:
+            Conficted, the request can't be accepted due to cert status
+            required to be "current_with_revert" to invoke this endpoint
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary:
+        revert activation operation, deactivate new certificate and change
+        deprecated certificates to current
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+  /services/certs/roots:
+    get:
+      operationId: get_rootca
+      parameters:
+        - description:
+            This parameter works as a filter, if ommit then all certs with
+            every kinds of purpose will be returned
+          in: query
+          name: purpose
+          required: false
+          schema:
+            $ref: "#/components/schemas/root_certificate_purpose"
+        - description:
+            This parameter works as a filter, if ommit then all certs in
+            every kinds of state will be returned
+          in: query
+          name: state
+          required: false
+          schema:
+            $ref: "#/components/schemas/state"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/root_certificates"
+          description: Successfully retrieved
+        "400":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-400"
+          description: Invalid parameters
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary: fetch all root ca with different kinds of purpose with status
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+  /services/certs/servercerts:
+    get:
+      operationId: get_servercert
+      parameters:
+        - description:
+            This parameter works as a filter, if ommit then all certs with
+            every kinds of purpose will be returned
+          in: query
+          name: purpose
+          required: false
+          schema:
+            $ref: "#/components/schemas/servercertificate_purpose"
+        - description:
+            This parameter works as a filter, if ommit then all certs in
+            every kinds of state will be returned
+          in: query
+          name: state
+          required: false
+          schema:
+            $ref: "#/components/schemas/state"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/server_certificates"
+          description: Successfully retrieved
+        "400":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-400"
+          description: Invalid parameters
+        "404":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-404"
+          description: Tenant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary: fetch all server certificates with different kinds of purpose and status
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+  /services/certs/status:
+    get:
+      operationId: get_cert_status
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  rotation:
+                    properties:
+                      error_message:
+                        description: The error message will be empty string if has_error=false
+                        example: Internal error occurred while activating new certificate
+                        type: string
+                      forced_rotated:
+                        description:
+                          Indicate if the certificate has been forced rotated
+                          by Netskope
+                        example: false
+                        type: boolean
+                      forced_rotation_scheduled_at:
+                        description:
+                          Unix timestamp of the scheduled certificate forced
+                          rotation event occurred
+                        example: 1689309447
+                        format: int64
+                        type: integer
+                      has_error:
+                        description:
+                          Indicate if there is error happened on the background
+                          job
+                        example: false
+                        type: boolean
+                      job_id:
+                        description:
+                          The latest job that modify the status which be
+                          used as a debug field
+                        example: 1be237f1-4da2-4975-8267-c34cd09439af
+                        type: string
+                      provisioned_at:
+                        description:
+                          Unix timestamp of the tenant certificate been
+                          provisioned
+                        example: 1689309446
+                        format: int64
+                        type: integer
+                      status:
+                        $ref: "#/components/schemas/tenant_rotation_state"
+                      updated_at:
+                        description: Unix timestamp of the status get updated
+                        example: 1689309446
+                        format: int64
+                        type: integer
+                    type: object
+                type: object
+          description:
+            Successfully retrieved, certificate rotation activation status
+            of tenant
+        "404":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-404"
+          description: Tenant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary:
+        get certificate activation status to check if it's ready to activate
+        new certificate hierarchy
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+  /services/certs/subordinates:
+    get:
+      operationId: get_subordinateca
+      parameters:
+        - description:
+            This parameter works as a filter, if ommit then all certs with
+            every kinds of purpose will be returned
+          in: query
+          name: purpose
+          required: false
+          schema:
+            $ref: "#/components/schemas/subordinateca_purpose"
+        - description:
+            This parameter works as a filter, if ommit then all certs in
+            every kinds of state will be returned
+          in: query
+          name: state
+          required: false
+          schema:
+            $ref: "#/components/schemas/state"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/subordinates_certificates"
+          description: Successfully retrieved
+        "400":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-400"
+          description: Invalid parameters
+        "404":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-404"
+          description: Tenant not found
+        "500":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/error-response-500"
+          description: Internal server error
+      summary:
+        fetch all subordinate certificates with different kinds of purpose
+        and status
+      tags:
+        - certificate
+    x-netskope-params:
+      apiGroup: pki_rotation
+      customerFacing: true
+      nsBeta: true
+      serviceConfig: pki-rotation-manager
+      version: 2
+servers:
+  - description: Development server
+    url: http://<tenant>.goskope.com/api/v2
+tags:
+  - description: PKI rotation service and certificate management
+    name: pki-rotation

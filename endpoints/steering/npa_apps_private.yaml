@@ -20,6 +20,7 @@ components:
                 format: int32
                 type: integer
               app_name:
+                x-speakeasy-terraform-ignore: true
                 type: string
               app_option:
                 type: object
@@ -145,7 +146,6 @@ components:
             type: string
           type: array
         app_name:
-          x-speakeasy-name-override: private_app_name
           type: string
         app_option:
           type: object
@@ -251,9 +251,8 @@ components:
               format: int32
               example: 1
             app_name:
-              x-speakeasy-terraform-ignore: true
               type: string
-              example: "[webserver]"
+              example: "webserver"
             app_option:
               type: object
             clientless_access:

@@ -1,0 +1,121 @@
+components:
+  schemas:
+    transaction_events_metrics_200:
+      description:
+        "1.Transaction events metrics data per metric type. \n\n2. API\
+        \ will return hourly buckets equivalent to hours parameter value. Default\
+        \ value is 24 Hours, Maximum Value is one week: 168 Hours. \n\n 3. Time Series\
+        \ buckets maintains the ascending order i.e. latest hour data will be the\
+        \ last data point."
+      properties:
+        ok:
+          default: 1
+          enum:
+            - 0
+            - 1
+          type: integer
+        result:
+          properties:
+            subscription/backlog_message_count:
+              description:
+                "1. Number of messages that have been sent to a subscription\
+                \ but have not yet been acknowledged by any consumer. \n\n2. Results\
+                \ are further categorized per partition number. \n\n3. Each partition\
+                \ results are hourly buckets in the ascending order. \n\n4. Value\
+                \ is number of unacknowledged messages."
+              type: object
+            subscription/oldest_unacked_message_age:
+              description:
+                "1. The age of the oldest unacknowledged message in a subscription.\
+                \ \n\n2. Results are further categorized per partition number \n\n\
+                3. Each partition results are hourly buckets in the ascending order.\
+                \ \n\n4. Value is oldest unacknowledged message age formatted in hours\
+                \ and minutes"
+              type: object
+          type: object
+      type: object
+    transaction_events_metrics_400:
+      description:
+        "1.Tenant ID is missing or not an interger. \n\n2.Hours parameter\
+        \ value is invalid."
+      properties:
+        message:
+          type: string
+      type: object
+    transaction_events_metrics_403:
+      description:
+        "Customer is not authorized to get transaction events metrics.\
+        \ \n\nThis is a licensed feature, please contact Netskope support to purchase"
+      properties:
+        message:
+          type: string
+      type: object
+    transaction_events_metrics_500:
+      description: API failed unexpectedly
+      properties:
+        message:
+          type: string
+      type: object
+info:
+  description: ""
+  title: ""
+  version: ""
+openapi: 3.0.0
+paths:
+  /events/metrics/transactionevents:
+    get:
+      description:
+        "API returns data for the following PubSubLite metrics: \n\n 1.\
+        \ subscription/backlog_message_count - Number of messages that have been sent\
+        \ to a subscription but have not yet been acknowledged by any consumer. \n\
+        \n 2. subscription/oldest_unacked_message_age - The age of the oldest unacknowledged\
+        \ message in a subscription i.e. how long the oldest unacknowledged message\
+        \ has been waiting for acknowledgment."
+      parameters:
+        - description: Max number of hourly buckets returned. Valid range is 1-168 hours.
+          in: query
+          name: hours
+          required: false
+          schema:
+            default: 24
+            maximum: 168
+            minimum: 1
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transaction_events_metrics_200"
+          description: Successful response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transaction_events_metrics_400"
+          description: Invalid request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transaction_events_metrics_403"
+          description:
+            This is a licensed feature, please contact Netskope support
+            to purchase
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/transaction_events_metrics_500"
+          description: Internal server error
+      summary: Get metrics for transaction events stored in PubSubLite
+    x-netskope-params:
+      apiGroup: transaction_metrics
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          second: 1
+        writeRoutes:
+          second: 1
+      serviceConfig: queryservice
+      version: 2

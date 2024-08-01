@@ -1,0 +1,2281 @@
+components:
+  schemas:
+    AdminPreferenceResponse:
+      properties:
+        feature:
+          type: string
+        page:
+          type: string
+        preference_data:
+          type: string
+      required:
+        - page
+        - feature
+        - preference_data
+      type: object
+    AdminRolesEntity:
+      properties:
+        last_edited:
+          format: date-time
+          type: string
+        role_description:
+          type: string
+        role_id:
+          type: number
+        role_name:
+          type: string
+      required:
+        - role_id
+        - role_name
+        - role_description
+        - last_edited
+      type: object
+    AdminRolesV2Entity:
+      properties:
+        id:
+          type: number
+        last_edited:
+          format: date-time
+          type: string
+        role_description:
+          type: string
+        role_name:
+          type: string
+        role_type:
+          type: string
+      required:
+        - id
+        - role_type
+        - role_name
+        - role_description
+        - last_edited
+      type: object
+    ApiErrorResponse:
+      properties:
+        error:
+          example: Bad Request
+          type: string
+        message:
+          example: Validation failed (numeric string is expected)
+          type: string
+        statusCode:
+          example:
+            - 400
+            - 404
+            - 500
+          type: number
+      required:
+        - statusCode
+        - message
+        - error
+      type: object
+    CreateAdminPreferenceDto:
+      properties:
+        preference_data:
+          type: string
+      required:
+        - preference_data
+      type: object
+    CustomAdminRolesV2Entity:
+      properties:
+        last_edited:
+          format: date-time
+          type: string
+        obfuscation_type:
+          type: string
+        permissions:
+          items:
+            $ref: "#/components/schemas/RolePermissionsEntity"
+          type: array
+        role_description:
+          type: string
+        role_id:
+          type: number
+        role_name:
+          type: string
+        role_type:
+          type: string
+      required:
+        - role_id
+        - role_type
+        - role_name
+        - role_description
+        - last_edited
+        - obfuscation_type
+        - permissions
+      type: object
+    IdpCertificateResponse:
+      properties:
+        data:
+          type: string
+        expiryUtcSec:
+          type: number
+        isExpired:
+          type: boolean
+        isExpiring:
+          type: boolean
+      required:
+        - data
+        - expiryUtcSec
+        - isExpired
+        - isExpiring
+      type: object
+    MetadataResponse:
+      properties:
+        isMigrated:
+          type: boolean
+      required:
+        - isMigrated
+      type: object
+    NameIdResponse:
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+      required:
+        - id
+        - name
+      type: object
+    NetskopeUserRequestSchemaDTO:
+      properties:
+        apiAccessToken:
+          allOf:
+            - $ref: "#/components/schemas/TokenGenerationRequestDTO"
+        isLocked:
+          type: boolean
+        mfaEnabled:
+          type: boolean
+        provisionedBy:
+          enum:
+            - LOCAL
+            - SCIM
+            - SAML
+          type: string
+        recordType:
+          enum:
+            - USER
+            - SERVICE_ACCOUNT
+          type: string
+        role:
+          $ref: "#/components/schemas/RoleDTO"
+        sendAdminVerificationEmail:
+          type: boolean
+      required:
+        - recordType
+        - provisionedBy
+        - role
+      type: object
+    NetskopeUserResponseSchemaDTO:
+      properties:
+        apiAccessToken:
+          $ref: "#/components/schemas/TokenDetailsDTO"
+        isLocked:
+          type: boolean
+        isVerified:
+          type: boolean
+        lastLogin:
+          format: date-time
+          type: string
+        mfaEnabled:
+          type: boolean
+        provisionedBy:
+          enum:
+            - LOCAL
+            - SCIM
+            - SAML
+          type: string
+        recordType:
+          enum:
+            - USER
+            - SERVICE_ACCOUNT
+          type: string
+        role:
+          $ref: "#/components/schemas/RoleDTO"
+      required:
+        - recordType
+        - provisionedBy
+        - role
+        - apiAccessToken
+        - lastLogin
+        - mfaEnabled
+      type: object
+    PatchNetskopeUserSchemaDTO:
+      properties:
+        apiAccessToken:
+          allOf:
+            - $ref: "#/components/schemas/TokenGenerationRequestDTO"
+        isLocked:
+          type: boolean
+        mfaEnabled:
+          type: boolean
+        role:
+          $ref: "#/components/schemas/RoleDTO"
+        sendAdminVerificationEmail:
+          type: boolean
+      required:
+        - role
+      type: object
+    PatchUserOperationDTO:
+      properties:
+        op:
+          enum:
+            - Replace
+            - Remove
+          type: string
+        path:
+          type: string
+        value:
+          $ref: "#/components/schemas/PatchUserValueDTO"
+      required:
+        - op
+      type: object
+    PatchUserRequestDTO:
+      properties:
+        Operations:
+          items:
+            $ref: "#/components/schemas/PatchUserOperationDTO"
+          type: array
+        schemas:
+          items:
+            type: string
+          type: array
+      required:
+        - schemas
+        - Operations
+      type: object
+    PatchUserValueDTO:
+      properties:
+        active:
+          type: boolean
+        externalId:
+          type: string
+        urn:ietf:params:scim:schemas:netskope:2.0:User:
+          allOf:
+            - $ref: "#/components/schemas/PatchNetskopeUserSchemaDTO"
+      required:
+        - active
+        - urn:ietf:params:scim:schemas:netskope:2.0:User
+      type: object
+    RoleDTO:
+      properties:
+        value:
+          type: number
+      required:
+        - value
+      type: object
+    RolePermissionsEntity:
+      properties:
+        id:
+          type: number
+        permission:
+          type: string
+        role_function_sub_function_assoc_page_assoc_id:
+          type: number
+        role_id:
+          type: number
+      required:
+        - id
+        - role_id
+        - role_function_sub_function_assoc_page_assoc_id
+        - permission
+      type: object
+    SCIMResourceTypeDTO:
+      properties:
+        description:
+          type: string
+        endpoint:
+          type: string
+        id:
+          type: string
+        meta:
+          $ref: "#/components/schemas/SCIMResourceTypeMetadataDTO"
+        name:
+          type: string
+        schema:
+          type: string
+        schemaExtensions:
+          items:
+            $ref: "#/components/schemas/SCIMSchemaExtensionDTO"
+          type: array
+        schemas:
+          items:
+            type: string
+          type: array
+      required:
+        - schemas
+        - id
+        - name
+        - endpoint
+        - description
+        - schema
+        - schemaExtensions
+        - meta
+      type: object
+    SCIMResourceTypeMetadataDTO:
+      properties:
+        location:
+          type: string
+        resourceType:
+          type: string
+      required:
+        - location
+        - resourceType
+      type: object
+    SCIMResourceTypesListDTO:
+      properties:
+        Resources:
+          items:
+            $ref: "#/components/schemas/SCIMResourceTypeDTO"
+          type: array
+        itemsPerPage:
+          type: number
+        schemas:
+          items:
+            type: string
+          type: array
+        startIndex:
+          type: number
+        totalResults:
+          type: number
+      required:
+        - schemas
+        - totalResults
+        - itemsPerPage
+        - startIndex
+        - Resources
+      type: object
+    SCIMSchemaAttributeDTO:
+      properties:
+        canonicalValues:
+          items:
+            type: string
+          type: array
+        caseExact:
+          type: boolean
+        description:
+          type: string
+        multiValued:
+          type: boolean
+        mutability:
+          type: string
+        name:
+          type: string
+        required:
+          type: boolean
+        returned:
+          type: string
+        subAttributes:
+          items:
+            $ref: "#/components/schemas/SCIMSchemaAttributeDTO"
+          type: array
+        type:
+          type: string
+        uniqueness:
+          type: string
+      required:
+        - name
+        - type
+        - multiValued
+        - required
+        - caseExact
+        - mutability
+        - returned
+        - uniqueness
+        - description
+        - canonicalValues
+        - subAttributes
+      type: object
+    SCIMSchemaDTO:
+      properties:
+        attributes:
+          items:
+            $ref: "#/components/schemas/SCIMSchemaAttributeDTO"
+          type: array
+        description:
+          type: string
+        id:
+          type: string
+        meta:
+          $ref: "#/components/schemas/SCIMSchemaMetadataDTO"
+        name:
+          type: string
+      required:
+        - id
+        - name
+        - description
+        - attributes
+        - meta
+      type: object
+    SCIMSchemaExtensionDTO:
+      properties:
+        required:
+          type: boolean
+        schema:
+          type: string
+      required:
+        - schema
+        - required
+      type: object
+    SCIMSchemaMetadataDTO:
+      properties:
+        location:
+          type: string
+        resourceType:
+          type: string
+      required:
+        - location
+        - resourceType
+      type: object
+    SCIMSchemasListDTO:
+      properties:
+        Resources:
+          items:
+            $ref: "#/components/schemas/SCIMSchemaDTO"
+          type: array
+        itemsPerPage:
+          type: number
+        schemas:
+          items:
+            type: string
+          type: array
+        startIndex:
+          type: number
+        totalResults:
+          type: number
+      required:
+        - schemas
+        - totalResults
+        - itemsPerPage
+        - startIndex
+        - Resources
+      type: object
+    SCIMUserDTO:
+      properties:
+        active:
+          type: boolean
+        externalId:
+          type: string
+        id:
+          type: string
+        metadata:
+          $ref: "#/components/schemas/SCIMUserMetadataDTO"
+        schemas:
+          items:
+            type: string
+          type: array
+        urn:ietf:params:scim:schemas:netskope:2.0:User:
+          allOf:
+            - $ref: "#/components/schemas/NetskopeUserResponseSchemaDTO"
+        username:
+          type: string
+      required:
+        - schemas
+        - id
+        - username
+        - externalId
+        - active
+        - urn:ietf:params:scim:schemas:netskope:2.0:User
+        - metadata
+      type: object
+    SCIMUserMetadataDTO:
+      properties:
+        created:
+          format: date-time
+          type: string
+        lastModified:
+          format: date-time
+          type: string
+        location:
+          type: string
+      required:
+        - created
+        - lastModified
+        - location
+      type: object
+    SCIMUsersPageDTO:
+      properties:
+        Resources:
+          items:
+            type: string
+          type: array
+        itemsPerPage:
+          type: number
+        schemas:
+          items:
+            type: string
+          type: array
+        startIndex:
+          type: number
+        totalResults:
+          type: number
+      required:
+        - schemas
+        - totalResults
+        - itemsPerPage
+        - startIndex
+        - Resources
+      type: object
+    SavedFilterResponse:
+      properties:
+        id:
+          type: number
+        isOwner:
+          type: boolean
+        isShared:
+          enum:
+            - 0
+            - 1
+          type: number
+        name:
+          type: string
+        page:
+          type: string
+        query:
+          type: string
+        type:
+          enum:
+            - 0
+            - 1
+          type: number
+      required:
+        - id
+        - page
+        - name
+        - type
+        - query
+        - isOwner
+        - isShared
+      type: object
+    SavedFiltersCreateUpdateRequest:
+      properties:
+        isShared:
+          enum:
+            - 0
+            - 1
+          type: number
+        name:
+          type: string
+        page:
+          type: string
+        query:
+          type: string
+        type:
+          enum:
+            - 0
+            - 1
+          type: number
+      required:
+        - page
+        - name
+        - type
+        - query
+        - isShared
+      type: object
+    SavedFiltersRenameRequest:
+      properties:
+        name:
+          type: string
+      required:
+        - name
+      type: object
+    ServiceProviderConfigAuthenticationSchemaPropDTO:
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        primary:
+          type: boolean
+        type:
+          type: string
+      required:
+        - name
+        - description
+        - type
+        - primary
+      type: object
+    ServiceProviderConfigBulkPropDTO:
+      properties:
+        maxOperations:
+          type: number
+        maxPayloadSize:
+          type: number
+        supported:
+          type: boolean
+      required:
+        - supported
+        - maxOperations
+        - maxPayloadSize
+      type: object
+    ServiceProviderConfigChangePasswordPropDTO:
+      properties:
+        supported:
+          type: boolean
+      required:
+        - supported
+      type: object
+    ServiceProviderConfigDTO:
+      properties:
+        authenticationSchemes:
+          items:
+            $ref: "#/components/schemas/ServiceProviderConfigAuthenticationSchemaPropDTO"
+          type: array
+        bulk:
+          $ref: "#/components/schemas/ServiceProviderConfigBulkPropDTO"
+        changePassword:
+          $ref: "#/components/schemas/ServiceProviderConfigChangePasswordPropDTO"
+        etag:
+          $ref: "#/components/schemas/ServiceProviderConfigEtagPropDTO"
+        filter:
+          $ref: "#/components/schemas/ServiceProviderConfigFilterPropDTO"
+        meta:
+          $ref: "#/components/schemas/ServiceProviderConfigMetadataPropDTO"
+        patch:
+          $ref: "#/components/schemas/ServiceProviderConfigPatchPropDTO"
+        schemas:
+          items:
+            type: string
+          type: array
+        sort:
+          $ref: "#/components/schemas/ServiceProviderConfigSortPropDTO"
+      required:
+        - schemas
+        - patch
+        - bulk
+        - filter
+        - changePassword
+        - sort
+        - authenticationSchemes
+        - etag
+        - meta
+      type: object
+    ServiceProviderConfigEtagPropDTO:
+      properties:
+        supported:
+          type: boolean
+      required:
+        - supported
+      type: object
+    ServiceProviderConfigFilterPropDTO:
+      properties:
+        maxResults:
+          type: number
+        supported:
+          type: boolean
+      required:
+        - supported
+        - maxResults
+      type: object
+    ServiceProviderConfigMetadataPropDTO:
+      properties:
+        created:
+          format: date-time
+          type: string
+        lastModified:
+          format: date-time
+          type: string
+        location:
+          type: string
+        resourceType:
+          type: string
+        version:
+          type: string
+      required:
+        - location
+        - resourceType
+        - created
+        - lastModified
+        - version
+      type: object
+    ServiceProviderConfigPatchPropDTO:
+      properties:
+        supported:
+          type: boolean
+      required:
+        - supported
+      type: object
+    ServiceProviderConfigSortPropDTO:
+      properties:
+        supported:
+          type: boolean
+      required:
+        - supported
+      type: object
+    SsoIdpAccountCreateRequest:
+      properties:
+        allowedRoles:
+          items:
+            type: number
+          type: array
+        alternativeUserEmailAttribute:
+          type: string
+        domainMapping:
+          items:
+            type: number
+          type: array
+        idpCertificate:
+          type: string
+        idpEntityId:
+          type: string
+        idpSloUrl:
+          type: string
+        idpUrl:
+          type: string
+        isAdfsSlo:
+          type: boolean
+        isEnabled:
+          type: boolean
+        isSloEnabled:
+          type: boolean
+        isSloSigned:
+          type: boolean
+        isSsoSigned:
+          type: boolean
+        isStrictSso:
+          type: boolean
+        name:
+          type: string
+        shouldForceAuthn:
+          type: boolean
+        status:
+          enum:
+            - draft
+            - complete
+          type: string
+      required:
+        - name
+        - isEnabled
+        - idpUrl
+        - idpEntityId
+        - idpCertificate
+        - alternativeUserEmailAttribute
+        - isSsoSigned
+        - shouldForceAuthn
+        - isStrictSso
+        - isSloEnabled
+        - isSloSigned
+        - idpSloUrl
+        - isAdfsSlo
+        - allowedRoles
+        - domainMapping
+        - status
+      type: object
+    SsoIdpAccountResponse:
+      properties:
+        allowedRoles:
+          items:
+            $ref: "#/components/schemas/NameIdResponse"
+          type: array
+        alternateUserEmailAttribute:
+          type: string
+        domainMapping:
+          items:
+            $ref: "#/components/schemas/NameIdResponse"
+          type: array
+        externalKey:
+          type: string
+        id:
+          type: string
+        idpCertificate:
+          allOf:
+            - $ref: "#/components/schemas/IdpCertificateResponse"
+        idpEntityId:
+          type: string
+        idpSloUrl:
+          type: string
+        idpUrl:
+          type: string
+        isAdfsSlo:
+          type: boolean
+        isEnabled:
+          type: boolean
+        isSloEnabled:
+          type: boolean
+        isSloSigned:
+          type: boolean
+        isSsoSigned:
+          type: boolean
+        isStrictSso:
+          type: boolean
+        metadata:
+          allOf:
+            - $ref: "#/components/schemas/MetadataResponse"
+        name:
+          type: string
+        shouldForceAuthn:
+          type: boolean
+        spAcsUrl:
+          type: string
+        spEntityId:
+          type: string
+        spSloRequestUrl:
+          type: string
+        spSloResponseUrl:
+          type: string
+        status:
+          type: string
+      required:
+        - id
+        - externalKey
+        - name
+        - isEnabled
+        - isSsoSigned
+        - shouldForceAuthn
+        - isStrictSso
+        - isSloEnabled
+        - isSloSigned
+        - isAdfsSlo
+        - spEntityId
+        - spAcsUrl
+        - spSloRequestUrl
+        - spSloResponseUrl
+        - metadata
+        - status
+        - domainMapping
+      type: object
+    SsoIdpAccountUpdateRequest:
+      properties:
+        allowedRoles:
+          items:
+            type: number
+          type: array
+        alternativeUserEmailAttribute:
+          type: string
+        domainMapping:
+          items:
+            type: number
+          type: array
+        id:
+          type: string
+        idpCertificate:
+          type: string
+        idpEntityId:
+          type: string
+        idpSloUrl:
+          type: string
+        idpUrl:
+          type: string
+        isAdfsSlo:
+          type: boolean
+        isEnabled:
+          type: boolean
+        isSloEnabled:
+          type: boolean
+        isSloSigned:
+          type: boolean
+        isSsoSigned:
+          type: boolean
+        isStrictSso:
+          type: boolean
+        name:
+          type: string
+        shouldForceAuthn:
+          type: boolean
+        status:
+          enum:
+            - draft
+            - complete
+          type: string
+      required:
+        - name
+        - isEnabled
+        - idpUrl
+        - idpEntityId
+        - idpCertificate
+        - alternativeUserEmailAttribute
+        - isSsoSigned
+        - shouldForceAuthn
+        - isStrictSso
+        - isSloEnabled
+        - isSloSigned
+        - idpSloUrl
+        - isAdfsSlo
+        - allowedRoles
+        - domainMapping
+        - status
+        - id
+      type: object
+    TokenDetailsDTO:
+      properties:
+        expiresOn:
+          format: date-time
+          type: string
+        issuedOn:
+          format: date-time
+          type: string
+        value:
+          type: string
+      required:
+        - expiresOn
+        - issuedOn
+        - value
+      type: object
+    TokenGenerationRequestDTO:
+      properties:
+        expiresOn:
+          format: date-time
+          type: string
+        generate:
+          type: boolean
+      type: object
+    UserCreationRequestDTO:
+      properties:
+        active:
+          type: boolean
+        externalId:
+          type: string
+        schemas:
+          items:
+            type: string
+          type: array
+        urn:ietf:params:scim:schemas:netskope:2.0:User:
+          allOf:
+            - $ref: "#/components/schemas/NetskopeUserRequestSchemaDTO"
+        userName:
+          type: string
+      required:
+        - schemas
+        - userName
+        - active
+        - urn:ietf:params:scim:schemas:netskope:2.0:User
+      type: object
+    UserUpdationRequestDTO:
+      properties:
+        active:
+          type: boolean
+        externalId:
+          type: string
+        id:
+          type: string
+        schemas:
+          items:
+            type: string
+          type: array
+        urn:ietf:params:scim:schemas:netskope:2.0:User:
+          allOf:
+            - $ref: "#/components/schemas/NetskopeUserRequestSchemaDTO"
+      required:
+        - schemas
+        - id
+        - active
+        - urn:ietf:params:scim:schemas:netskope:2.0:User
+      type: object
+info:
+  contact: {}
+  description: ms-platform api specification
+  title: ms-platform open api
+  version: 3.0.3
+openapi: 3.0.0
+paths:
+  /platform/admin/preferences:
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Find all preference data by page, feature
+      operationId: AdminPreferenceController_getData
+      parameters:
+        - description: page admin preferences belong to
+          in: query
+          name: page
+          required: false
+          schema:
+            type: string
+        - description: feature admin preferences belong to
+          in: query
+          name: feature
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/AdminPreferenceResponse"
+                type: array
+          description: Find all preference data by page, feature
+      summary: Find all preference data by page, feature
+      tags:
+        - admin/preferences
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/admin/preferences/{page}/{feature}:
+    delete:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Delete preference
+      operationId: AdminPreferenceController_deleteData
+      parameters:
+        - in: path
+          name: page
+          required: true
+          schema:
+            type: string
+        - description: feature admin preferences belong to
+          in: path
+          name: feature
+          required: false
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted preference
+        "400":
+          description: Validation Error Response
+      summary: Delete preference
+      tags:
+        - admin/preferences
+    post:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Create admin preference
+      operationId: AdminPreferenceController_create
+      parameters:
+        - in: path
+          name: page
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: feature
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAdminPreferenceDto"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminPreferenceResponse"
+          description: Saved admin preference
+        "400":
+          description: Validation Error Response
+      summary: Create admin preference
+      tags:
+        - admin/preferences
+    put:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Update admin preference
+      operationId: AdminPreferenceController_update
+      parameters:
+        - in: path
+          name: page
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: feature
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAdminPreferenceDto"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminPreferenceResponse"
+          description: Updated admin preference
+        "400":
+          description: Validation Error Response
+      summary: Update admin preference
+      tags:
+        - admin/preferences
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/adminaccessdomains:
+    get:
+      description: Get a list of admin domains
+      operationId: AdminAccessDomainsControllerV1_retrieveAllAccessDomains
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/NameIdResponse"
+                type: array
+          description: List of admin domains
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Permission Error Response
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Unsuccessful Response
+      summary: Get a list of admin domains
+      tags: []
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/Me:
+    get:
+      description: Get current authenticated user
+      operationId: SCIMController_getCurrentUser
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: User
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Backend error occurred
+      summary: Get current authenticated user
+      tags:
+        - admins
+    patch:
+      description: Patch current authenticated user
+      operationId: SCIMController_patchCurrentUser
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchUserRequestDTO"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "404":
+          description: User not found
+        "500":
+          description: Backend error occurred
+      summary: Patch current authenticated user
+      tags:
+        - admins
+    put:
+      description: Updates current authenticated user
+      operationId: SCIMController_updateCurrentUser
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdationRequestDTO"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Backend error occurred
+      summary: Updates current authenticated user
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/ResourceTypes:
+    get:
+      description: SCIM Resource Types
+      operationId: SCIMController_getResourceTypes
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMResourceTypesListDTO"
+          description: Success Response
+      summary: SCIM Resource Types
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/ResourceTypes/{id}:
+    get:
+      description: SCIM Resource Type
+      operationId: SCIMController_getOneResourceType
+      parameters:
+        - description: Scim Resource Type Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMResourceTypeDTO"
+          description: Success Response
+        "404":
+          description: Resource Type not found
+      summary: SCIM Resource Type
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/Schemas:
+    get:
+      description: SCIM Schema
+      operationId: SCIMController_getSchemas
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMSchemasListDTO"
+          description: Success Response
+      summary: SCIM Schema
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/Schemas/{id}:
+    get:
+      description: SCIM Schema
+      operationId: SCIMController_getOneSchema
+      parameters:
+        - description: Scim Schema Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMSchemaDTO"
+          description: Success Response
+        "404":
+          description: Schema not found
+      summary: SCIM Schema
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/ServiceProviderConfig:
+    get:
+      description: SCIM Service Provider Config
+      operationId: SCIMController_getServiceProviderConfig
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProviderConfigDTO"
+          description: Success Response
+      summary: SCIM Service Provider Config
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/Users:
+    get:
+      description: Gets all Admin users
+      operationId: SCIMController_findAllUsers
+      parameters:
+        - description: Specifies the desired maximum number of query results per page
+          in: query
+          name: count
+          required: false
+          schema:
+            type: number
+        - description:
+            The 1-based index of the first query result.  A value less than
+            1 SHALL be interpreted as 1
+          in: query
+          name: startIndex
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUsersPageDTO"
+          description: Gets all admin users
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Backend error occurred
+      summary: Gets all Admin Users
+      tags:
+        - admins
+    post:
+      description: Creates a new Admin User or Service Account
+      operationId: SCIMController_createUser
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserCreationRequestDTO"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Backend error occurred
+      summary: Create a new Admin User or Service Account.
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/scim/Users/{id}:
+    delete:
+      description: Delete user by id
+      operationId: SCIMController_deleteUser
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Successfully deleted user
+        "403":
+          description: Permission Error Response
+        "404":
+          description: User not found
+        "500":
+          description: Backend error occurred
+      summary: Delete user by id
+      tags:
+        - admins
+    get:
+      description: Gets User by id
+      operationId: SCIMController_findOneUser
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: User
+        "403":
+          description: Permission Error Response
+        "404":
+          description: User not found
+        "500":
+          description: Backend error occurred
+      summary: Get User by id
+      tags:
+        - admins
+    patch:
+      description: Partially update existing user
+      operationId: SCIMController_partialUpdateUser
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatchUserRequestDTO"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "404":
+          description: User not found
+        "500":
+          description: Backend error occurred
+      summary: Partially update existing User
+      tags:
+        - admins
+    put:
+      description: Update existing user
+      operationId: SCIMController_updateUser
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdationRequestDTO"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SCIMUserDTO"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "404":
+          description: User not found
+        "500":
+          description: Backend error occurred
+      summary: Updates User
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/users/{id}/resetmfa:
+    post:
+      description: Reset MFA of user
+      operationId: AdminUsersController_resetMFA
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Validation Error Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Permission Error Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: User not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Unsuccessful Response
+      summary: Reset MFA of user
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/administration/users/{id}/resetpassword:
+    post:
+      description: Send a link to reset password
+      operationId: AdminUsersController_resetPassword
+      parameters:
+        - description: SCIM User Id
+          in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Validation Error Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Permission Error Response
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: User not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Unsuccessful Response
+      summary: Reset password
+      tags:
+        - admins
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: false
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/customroles:
+    get:
+      description: Get all custom roles
+      operationId: CustomRolesController_getRoles
+      parameters:
+        - description: must be asc or desc
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: limit should be between 1 and 500
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+        - description: offset as the page start
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: number
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+          description: Custom v2 roles
+        "500":
+          description: backend eror occured
+      summary: Get all custom roles
+    post:
+      description: Create custom role
+      operationId: CustomRolesController_createRole
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+          description: Custom v2 role
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: adminRole is not correct
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: adminRole is required
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: backend error occured
+      summary: Create custom role
+    put:
+      description: Update custom role
+      operationId: CustomRolesController_updateRole
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+          description: Custom v2 role
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: adminRole is not corect
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: adminRole is required
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: backend error occured
+      summary: Update custom role
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/customroles/{role_id}:
+    delete:
+      description: Delete custom role by id
+      operationId: CustomRolesController_deleteRole
+      parameters:
+        - in: path
+          name: role_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Http Status ok
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: roleid is not correct
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: roleid not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: backend error occured
+      summary: Delete custom role by id
+    get:
+      description: Get custom role by id
+      operationId: CustomRolesController_getRole
+      parameters:
+        - in: path
+          name: role_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomAdminRolesV2Entity"
+          description: Custom v2 role by id
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role_id is required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: backend error occured
+      summary: Get custom role by id
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/roles:
+    get:
+      description: Find all predefined roles
+      operationId: RolesController_getRoles
+      parameters:
+        - description: must be asc or desc
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: limit should be between 1 and 100
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+        - description: offset as the page start
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: number
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/AdminRolesEntity"
+                type: array
+          description: Get all predefined v2 roles
+        "500":
+          description: backend eror occured
+      summary: Find all predefined roles
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/roles/{role_id}:
+    get:
+      description: Predefined role by id
+      operationId: RolesController_getRole
+      parameters:
+        - in: path
+          name: role_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminRolesEntity"
+          description: Predefined v2 role by id
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role_id is required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role not found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: general backend error occured
+      summary: Predefined role by id
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/rolesv2:
+    get:
+      description: All predefined v2 roles
+      operationId: Rolesv2Controller_getRoles
+      parameters:
+        - description: must be asc or desc
+          in: query
+          name: sortorder
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: sortby
+          required: false
+          schema:
+            type: string
+        - description: limit should be between 1 and 500
+          in: query
+          name: limit
+          required: false
+          schema:
+            default: 10
+            type: number
+        - description: offset as the page start
+          in: query
+          name: offset
+          required: false
+          schema:
+            default: 0
+            type: number
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/AdminRolesEntity"
+                type: array
+          description: Get all predefined v2 roles
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: backend eror occured
+      summary: All predefined v2 roles
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/rolesv2/{role_id}:
+    get:
+      description: Get predefined v2 by id
+      operationId: Rolesv2Controller_getRole
+      parameters:
+        - in: path
+          name: role_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminRolesV2Entity"
+          description: Predefined Role By Id
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role_id is required
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: role not found
+        "500":
+          description: backend eror occured
+      summary: Get predefined v2 roles by id
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/savedfilters:
+    get:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Find all saved filters by page
+      operationId: SavedFiltersController_getSavedFiltersByPage
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SavedFilterResponse"
+                type: array
+          description: Saved filters by page
+        "400":
+          description: Page name is required
+      summary: Find all saved filters by page
+      tags:
+        - saved-filters
+    post:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Create saved filter
+      operationId: SavedFiltersController_create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SavedFiltersCreateUpdateRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedFilterResponse"
+          description: Saved filters created
+        "400":
+          description: Validation Error Response
+      summary: Create saved filter
+      tags:
+        - saved-filters
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/savedfilters/{id}:
+    delete:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Delete a saved filter
+      operationId: SavedFiltersController_delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: ""
+      summary: Delete a saved filter
+      tags:
+        - saved-filters
+    put:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Update a saved filter
+      operationId: SavedFiltersController_update
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SavedFiltersCreateUpdateRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedFilterResponse"
+          description: Saved filters updated
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Forbidden from update
+      summary: Update a saved filter
+      tags:
+        - saved-filters
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/savedfilters/{id}/rename:
+    patch:
+      x-netskope-route-params:
+        hiddenFromUI: true
+      description: Rename a saved filter
+      operationId: SavedFiltersController_rename
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SavedFiltersRenameRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedFilterResponse"
+          description: Filter name modified
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Forbidden from update
+      summary: Rename a saved filter
+      tags:
+        - saved-filters
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/ssoconfig/idpaccounts:
+    get:
+      description: Get a list of all IDP accounts configured for SSO
+      operationId: SsoConfigControllerV1_retrieveAllIdpAccounts
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/SsoIdpAccountResponse"
+                type: array
+          description: List of SAML IDP Accounts
+        "403":
+          description: Permission Error Response
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Unsuccessful Response
+      summary: Get a list of all IDP accounts configured for SSO
+      tags: []
+    post:
+      description:
+        Create a new Identity Provider (IDP) account for Single Sign-On
+        (SSO) configurations
+      operationId: SsoConfigControllerV1_createIdpAccount
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SsoIdpAccountCreateRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SsoIdpAccountResponse"
+          description: Success Response
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Validation Error Response
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Permission Error Response
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+          description: Unsuccessful Response
+      summary: Create a new IDP account for SSO.
+      tags: []
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+  /platform/ssoconfig/idpaccounts/{id}:
+    delete:
+      description:
+        Delete an existing Identity Provider (IDP) account for Single Sign-On
+        (SSO) configurations
+      operationId: SsoConfigControllerV1_delete
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        "204":
+          description: Delete SAML IDP Account by ID
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Unsuccessful Response
+      summary: Delete an existing IDP account for SSO.
+      tags: []
+    patch:
+      description:
+        Partial update an existing Identity Provider (IDP) account for
+        Single Sign-On (SSO) configurations
+      operationId: SsoConfigControllerV1_patchIdpAccount
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SsoIdpAccountUpdateRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SsoIdpAccountResponse"
+          description: Success Response
+        "400":
+          description: Validation Error Response
+        "403":
+          description: Permission Error Response
+        "500":
+          description: Unsuccessful Response
+      summary: Partial update an existing IDP account for SSO.
+      tags: []
+    x-netskope-params:
+      apiGroup: ms-platform
+      customerFacing: true
+      nsBeta: false
+      serviceConfig: ms-platform
+      version: 2
+servers:
+  - description: Development Server
+    url: http://localhost:3008
+  - description: Development Server2
+    url: http://localhost:3000/api/v2/platform
+tags:
+  - description: " "
+    name: ms-platform

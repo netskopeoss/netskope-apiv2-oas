@@ -1,0 +1,395 @@
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        message:
+          type: string
+      required:
+        - message
+      type: object
+    NotificationsCreateRequest:
+      properties:
+        ackButtonText:
+          description:
+            This acknowledge button will dismiss the customized block notification
+            displayed to the end user. This is required if 'templateActionType' is
+            'block' but not allowed when 'templateActionType' is 'useralert'.
+          maxLength: 14
+          type: string
+        footerMessage:
+          maxLength: 160
+          type: string
+        logoImageName:
+          type: string
+        logoSize:
+          enum:
+            - small
+            - medium
+            - large
+          type: string
+        message:
+          description:
+            In addition to text, this field accepts the following variables.
+            'NS_APP', 'NS_CATEGORY', 'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME',
+            'NS_USER', 'NS_APP_INSTANCE', 'NS_FILENAME'.
+          maxLength: 256000
+          type: string
+        name:
+          maxLength: 256
+          type: string
+        proceedButtonText:
+          description:
+            This button will allow user to proceed with the activity. This
+            is required if 'templateActionType' is 'useralert' but not allowed when
+            'templateActionType' is 'block'.
+          maxLength: 14
+          type: string
+        redirectUrl:
+          description:
+            Redirects end users to the specified URL automatically. This
+            field accepts the following variables as well. 'NS_APP', 'NS_CATEGORY',
+            'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME', 'NS_USER', 'NS_APP_INSTANCE',
+            'NS_FILENAME'
+          type: string
+        stopButtonText:
+          description:
+            This button will dismiss the user alert notification displayed
+            to the end user. The user will be stopped from performing the action.
+            This is required if 'templateActionType' is 'useralert' but not allowed
+            when 'templateActionType' is 'block'.
+          maxLength: 14
+          type: string
+        stripeColor:
+          description: "A valid hexadecimal color code. For example: #A659B1"
+          type: string
+        subtitle:
+          description:
+            In addition to text, this field accepts the following variables.
+            'NS_APP', 'NS_CATEGORY', 'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME',
+            'NS_USER', 'NS_APP_INSTANCE', 'NS_FILENAME'
+          maxLength: 80
+          type: string
+        templateActionType:
+          default: block
+          description:
+            There are 2 action types ('block', 'useralert') supported.This
+            configures the action button displayed on user notification. 'block' action
+            type template requires 'ackButtonText' to be specified. 'useralert' action
+            type template requires 'stopButtonText' and 'proceedButtonText' to be
+            specified. Default action type is 'block'.
+          enum:
+            - block
+            - useralert
+          type: string
+        title:
+          maxLength: 60
+          type: string
+      required:
+        - name
+        - title
+        - message
+      type: object
+    NotificationsDeleteResponse:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      required:
+        - id
+        - name
+      type: object
+    NotificationsReadAllResponse:
+      properties:
+        result:
+          items:
+            $ref: "#/components/schemas/NotificationsResponse"
+          type: array
+        totalCount:
+          type: number
+      required:
+        - totalCount
+        - result
+      type: object
+    NotificationsResponse:
+      properties:
+        ackButtonText:
+          description:
+            This acknowledge button will dismiss the customized block notification
+            displayed to the end user. This is required if 'templateActionType' is
+            'block' but not allowed when 'templateActionType' is 'useralert'.
+          maxLength: 14
+          type: string
+        footerMessage:
+          maxLength: 160
+          type: string
+        id:
+          type: string
+        logoImageName:
+          type: string
+        logoSize:
+          enum:
+            - small
+            - medium
+            - large
+          type: string
+        message:
+          description:
+            In addition to text, this field accepts the following variables.
+            'NS_APP', 'NS_CATEGORY', 'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME',
+            'NS_USER', 'NS_APP_INSTANCE', 'NS_FILENAME'.
+          maxLength: 256000
+          type: string
+        name:
+          maxLength: 256
+          type: string
+        proceedButtonText:
+          description:
+            This button will allow user to proceed with the activity. This
+            is required if 'templateActionType' is 'useralert' but not allowed when
+            'templateActionType' is 'block'.
+          maxLength: 14
+          type: string
+        redirectUrl:
+          description:
+            Redirects end users to the specified URL automatically. This
+            field accepts the following variables as well. 'NS_APP', 'NS_CATEGORY',
+            'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME', 'NS_USER', 'NS_APP_INSTANCE',
+            'NS_FILENAME'
+          type: string
+        stopButtonText:
+          description:
+            This button will dismiss the user alert notification displayed
+            to the end user. The user will be stopped from performing the action.
+            This is required if 'templateActionType' is 'useralert' but not allowed
+            when 'templateActionType' is 'block'.
+          maxLength: 14
+          type: string
+        stripeColor:
+          description: "A valid hexadecimal color code. For example: #A659B1"
+          type: string
+        subtitle:
+          description:
+            In addition to text, this field accepts the following variables.
+            'NS_APP', 'NS_CATEGORY', 'NS_URL', 'NS_HOST', 'NS_ACTIVITY', 'NS_POLICY_NAME',
+            'NS_USER', 'NS_APP_INSTANCE', 'NS_FILENAME'.
+          maxLength: 80
+          type: string
+        templateActionType:
+          default: block
+          description:
+            There are 2 action types ('block', 'useralert') supported.This
+            configures the action button displayed on user notification. 'block' action
+            type template requires 'ackButtonText' to be specified. 'useralert' action
+            type template requires 'stopButtonText' and 'proceedButtonText' to be
+            specified. Default action type is 'block'.
+          enum:
+            - block
+            - useralert
+          type: string
+        title:
+          maxLength: 60
+          type: string
+      required:
+        - name
+        - title
+        - message
+        - id
+      type: object
+info:
+  contact: {}
+  description: User notifications API specification
+  title: User notifications APIs
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /notifications/user/templates:
+    get:
+      operationId: NotificationsController_readAllNotificationTemplates
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsReadAllResponse"
+          description: The record(s) have been successfully retrieved.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Gets all available notification templates.
+      tags:
+        - user-notifications-templates
+    post:
+      operationId: NotificationsController_createHttpHeaderProfile
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationsCreateRequest"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+          description: The record has been successfully created.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Creates a notification template.
+      tags:
+        - user-notifications-templates
+    x-netskope-params:
+      apiGroup: user-notifications-templates
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 4
+        writeRoutes:
+          second: 1
+      serviceConfig: ms-rtp-shim
+      version: 2
+  /notifications/user/templates/{id}:
+    delete:
+      operationId: NotificationsController_deleteByID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsDeleteResponse"
+          description: The record has been successfully deleted.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Deletes one notification template with given ID.
+      tags:
+        - user-notifications-templates
+    get:
+      operationId: NotificationsController_getById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+          description: The record has been successfully retrieved.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Gets one notification template with given ID.
+      tags:
+        - user-notifications-templates
+    patch:
+      operationId: NotificationsController_updateById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NotificationsCreateRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+          description: The record has been successfully updated.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad request.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not found.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Updates one notification template with given ID.
+      tags:
+        - user-notifications-templates
+    x-netskope-params:
+      apiGroup: user-notifications-templates
+      customerFacing: true
+      nsPartner: true
+      rateLimit:
+        readRoutes:
+          second: 4
+        writeRoutes:
+          second: 1
+      serviceConfig: ms-rtp-shim
+      version: 2
+servers: []
+tags:
+  - name: user-notifications-templates

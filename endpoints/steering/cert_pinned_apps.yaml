@@ -1,0 +1,211 @@
+components:
+  schemas:
+    BypassSetting:
+      properties:
+        action:
+          enum:
+            - Mixed
+            - Not configured
+            - Bypass
+            - Block
+          type: string
+        bypass_settings_id:
+          type: string
+        config_id:
+          type: string
+        config_name:
+          type: string
+        dynamic_steering_mode:
+          description: "'-1' for Not dynamic, '0' for on-prem, '1' for off-prem"
+          type: string
+        ou_or_group_name:
+          type: string
+      type: object
+    ErrorResponse:
+      properties:
+        errorCode:
+          type: string
+        errors:
+          items:
+            type: string
+        status:
+          type: string
+        warnings:
+          items:
+            type: string
+      type: object
+    SuccessResponse:
+      properties:
+        bypass_settings:
+          items:
+            $ref: "#/components/schemas/BypassSetting"
+          type: array
+        ou_or_group:
+          description: "'0' for Group, '1' for OU, '-1' for only default config
+            exists"
+          type: string
+      type: object
+info:
+  description: Cert Pinned App API specification
+  title: Cert Pinned App APIs
+  version: "1.0"
+openapi: 3.0.0
+paths:
+  /steering/certpinnedapps/{id}/bypasssettings:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - description:
+            "Retrieve exceptions based on whether steering config is dynamic.
+
+            - -1: Under non dynamic steering.
+
+            - 0: Under on-premise dynamic steering
+
+            - 1: Under off-premise dynamic steering
+
+            "
+          in: query
+          name: dynamicSteering
+          required: false
+          schema:
+            enum:
+              - "0"
+              - "-1"
+              - "1"
+            type: string
+        - description:
+            "Retrieve exceptions based on whether exception is under certain
+            action
+
+            - Block: Block on all platforms
+
+            - Bypass: Bypass on all platforms
+
+            - Not Configured: Hasn't been configured
+
+            - Mixed: Block or Bypass on different platforms
+
+            "
+          in: query
+          name: action
+          required: false
+          schema:
+            enum:
+              - Block
+              - Bypass
+              - Not Configured
+              - Mixed
+            type: string
+        - description: "The config name to search for.
+
+            "
+          in: query
+          name: configName
+          required: false
+          schema:
+            type: string
+        - description:
+            "Required when configName is filled. \nSpecifies the search mode,\
+            \ either 'equal' for an exact match or 'like' for a substring match.\n"
+          in: query
+          name: searchMode
+          required: false
+          schema:
+            enum:
+              - equal
+              - like
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                Success example:
+                  summary: Success Example
+                  value:
+                    data:
+                      bypass_settings:
+                        - action: Mixed
+                          bypass_settings_id: 4
+                          config_id: 2
+                          config_name: Test
+                          dynamic_steering_mode: "-1"
+                          ou_or_group_name: Test Group
+                        - action: Not configured
+                          bypass_settings_id: 1
+                          config_id: 1
+                          config_name: Pizza
+                          dynamic_steering_mode: "0"
+                          ou_or_group_name: nikhil.local
+                        - action: Mixed
+                          bypass_settings_id: 2
+                          config_id: 1
+                          config_name: Pizza
+                          dynamic_steering_mode: "1"
+                          ou_or_group_name: nikhil.local
+                        - action: Mixed
+                          bypass_settings_id: 3
+                          config_id: 0
+                          config_name: Default tenant config
+                          dynamic_steering_mode: "-1"
+                          ou_or_group_name: All Users
+                      ou_or_group: 0
+                    msg: ""
+                    status: success
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/SuccessResponse"
+          description: The record has been successfully retrieved
+        "400":
+          content:
+            application/json:
+              examples:
+                Error example:
+                  summary: Error Example
+                  value:
+                    errorCode: General Error
+                    errors:
+                      - Query parameters are invalid
+                    status: error
+                    warnings:
+                      - ""
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/ErrorResponse"
+          description: Query parameters are invalid
+        "404":
+          content:
+            application/json:
+              examples:
+                Error example:
+                  summary: Error Example
+                  value:
+                    errorCode: General Error
+                    errors:
+                      - App doesn't exist
+                    status: error
+                    warnings:
+                      - ""
+              schema:
+                anyOf:
+                  - $ref: "#/components/schemas/ErrorResponse"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Internal server error.
+      summary: Get all bypass settings by cert pinned app
+    x-netskope-params:
+      apiGroup: cert_pinned_apps
+      customerFacing: false
+      serviceConfig: ms-steering
+      version: 2
+tags:
+  - name: cert-pinned-app

@@ -1,0 +1,355 @@
+components:
+  schemas:
+    lbroker_config_put_request:
+      properties:
+        hostname:
+          type: string
+      type: object
+    lbroker_config_response:
+      properties:
+        data:
+          properties:
+            hostname:
+              type: string
+          type: object
+        status:
+          enum:
+            - success
+            - not found
+          type: string
+      type: object
+    lbroker_post_request:
+      properties:
+        name:
+          type: string
+      type: object
+    lbroker_put_request:
+      properties:
+        name:
+          type: string
+      type: object
+    lbroker_response:
+      properties:
+        data:
+          properties:
+            common_name:
+              type: string
+            id:
+              format: int32
+              type: integer
+            name:
+              type: string
+            registered:
+              type: boolean
+          type: object
+        status:
+          enum:
+            - success
+            - not found
+          type: string
+      type: object
+    lbroker_response_400:
+      properties:
+        result:
+          type: string
+        status:
+          example: 400
+          type: integer
+      type: object
+    lbrokers_get_response:
+      properties:
+        data:
+          items:
+            properties:
+              common_name:
+                type: string
+              id:
+                format: int32
+                type: integer
+              name:
+                type: string
+              registered:
+                type: boolean
+            type: object
+          type: array
+        status:
+          enum:
+            - success
+            - not found
+          type: string
+        total:
+          format: int32
+          type: integer
+      type: object
+info:
+  description: NPA Local Broker CRUD operations.
+  title: npa_local_broker
+  version: 1.0.1
+openapi: 3.0.0
+paths:
+  /infrastructure/lbrokers:
+    get:
+      description: Get list of local brokers objects
+      parameters:
+        - description: Return values only from specified fields
+          in: query
+          name: fields
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbrokers_get_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Get list of local brokers objects
+    post:
+      description: Create a local broker
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lbroker_post_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Create a local broker
+    x-netskope-params:
+      apiGroup: npa_lbrokers
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          hour: 1000
+          second: 30
+        writeRoutes:
+          hour: 1000
+          second: 30
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+  /infrastructure/lbrokers/brokerconfig:
+    get:
+      description: get local broker hostname config
+      parameters: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_config_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Get local broker hostname config
+    post:
+      description: Create local broker hostname config
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lbroker_config_put_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_config_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Create local broker hostname config
+    put:
+      description: Update local broker hostname config
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lbroker_config_put_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_config_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Update local broker hostname config
+    x-netskope-params:
+      apiGroup: npa_lbrokers
+      customerFacing: true
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+  /infrastructure/lbrokers/{id}:
+    delete:
+      description: Delete a local broker based on local broker id
+      parameters:
+        - description: Local broker id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  status:
+                    enum:
+                      - success
+                      - error
+                    type: string
+                type: object
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Delete a local broker
+    get:
+      description: get a local broker based on local broker id
+      parameters:
+        - description: local broker id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Get a local broker
+    put:
+      description: update a local broker based on local broker id
+      parameters:
+        - description: Local broker id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/lbroker_put_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response"
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Update a local broker
+    x-netskope-params:
+      apiGroup: npa_lbrokers
+      customerFacing: true
+      rateLimit:
+        readRoutes:
+          hour: 1000
+          second: 30
+        writeRoutes:
+          hour: 1000
+          second: 30
+      serviceConfig: provisioner-pycore-ws
+      version: 2
+  /infrastructure/lbrokers/{id}/registrationtoken:
+    post:
+      description: Generate and retrieve a token for local broker registration
+      parameters:
+        - description: local broker id
+          in: path
+          name: id
+          required: true
+          schema:
+            format: int32
+            type: integer
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      token:
+                        type: string
+                    type: object
+                  status:
+                    enum:
+                      - success
+                      - not found
+                    type: string
+                type: object
+          description: successful operation
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/lbroker_response_400"
+          description: Invalid request
+      summary: Generate and retrieve a token for local broker registration
+    x-netskope-params:
+      apiGroup: npa_lbrokers
+      customerFacing: true
+      serviceConfig: provisioner-pycore-ws
+      version: 2

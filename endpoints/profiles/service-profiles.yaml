@@ -1,0 +1,626 @@
+components:
+  schemas:
+    ServiceProfileList:
+      type: object
+      properties:
+        total:
+          type: integer
+          default: 1
+        services:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceProfile"
+    ServiceProfile:
+      type: object
+      properties:
+        create_by:
+          type: string
+          example: "APITokenName"
+        create_time:
+          type: string
+          example: "2022-08-31T11:14:23Z"
+        description:
+          type: string
+          example: "my service description"
+        id:
+          type: string
+          example: "123"
+        modify_by:
+          type: string
+          example: "APITokenName"
+        modify_time:
+          type: string
+          example: "2022-08-31T11:14:23Z"
+        name:
+          type: string
+          example: "my service"
+        protocols:
+          type: object
+          properties:
+            icmp:
+              type: boolean
+              example: true
+            tcp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+            tcp_udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+
+            udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+        status:
+          type: string
+          enum:
+            - pending-apply
+            - applied
+          example: applied
+        type:
+          type: string
+          enum:
+            - custom
+            - predefine
+          example: custom
+    ServiceProfileRequest:
+      type: object
+      required:
+        - description
+        - name
+        - protocols
+      properties:
+        description:
+          type: string
+          example: my service description
+        name:
+          type: string
+          example: my service
+        protocols:
+          type: object
+          properties:
+            icmp:
+              type: boolean
+              example: true
+            tcp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+            tcp_udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+            udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+    ServiceProfileUpdateRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          example: my service description
+        name:
+          type: string
+          example: my service
+        protocols:
+          type: object
+          properties:
+            icmp:
+              type: boolean
+              example: true
+            tcp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+            tcp_udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+            udp:
+              type: array
+              items:
+                type: string
+              example:
+                - "80"
+                - "8080-9090"
+
+    ServicesErrorResponse:
+      type: object
+      properties:
+        datetime:
+          type: string
+          example: "2022-08-31T11:14:23Z"
+        err_code:
+          type: string
+          example: "310101"
+        message:
+          type: string
+          example: "some error happened"
+        trace_id:
+          type: string
+          example: "547c581b-b779-4770-8b73-aeece0742252"
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+    ServiceDeployRequest:
+      type: object
+      required:
+        - change_note
+        - ids
+      properties:
+        change_note:
+          type: string
+          example: add custom ftp service
+        ids:
+          type: array
+          items:
+            type: string
+          example:
+            - "1"
+            - "2"
+            - "3"
+
+openapi: 3.0.3
+info:
+  description: "Service profile configuration API provides the API endpoints
+    for CRUD operations on Service profile resource, the Service profile would be referenced
+    by multiple resources such as real time protection policy"
+  title: "Service profile configuration API."
+  version: 0.0.1
+paths:
+  /profiles/serviceobjects:
+    x-netskope-params:
+      apiGroup: services
+      customerFacing: false
+      serviceConfig: qos
+      version: 2
+    get:
+      summary: >
+        Get a subset of Service Profiles restricted by offset, limit, and filter. The returned profiles can be filtered by one or more attributes.
+      parameters:
+        - name: filter
+          in: query
+          description: |
+            <p>The basic syntax is:</p>
+            <ol>
+              <li>Attribute <code>operator</code> "Value"</li>
+              <li><code>Attribute in ("value1", "value2")</code> for "in" attribute operator.</li>
+            </ol>
+            <br>
+            <ol>
+              <li>Supported attributes (case-insensitive): <code>id</code>, <code>name</code>, <code>status</code>, <code>type</code>, and <code>description</code>.</li>
+              <li>Supported attribute operators (case-insensitive): <code>eq</code> (equals), <code>sw</code> (starts with), <code>in</code>, and <code>co</code> (contains).</li>
+              <li>Supported value type (case-insensitive): string, which must be enclosed with double quotes.</li>
+              <li>Supported logical operators (case-insensitive): <code>and</code>.</li>
+            </ol>
+            <br>
+            <p>For example, to filter returned profiles to only show records with ID 1, 2, or 3: <br>
+            <code> ?filter=id in ("1","2","3")</code>.</p>
+            <br>
+            <p>You can also filter multiple attributes by adding an <code>and</code> logical operator and another attribute in the same format as the previous example.</p>
+            <br>
+            <p>For example, to show records whose name start with "prod" and whose description contain "service": <code><br>?filter=name sw "prod" and description co "service"</code>.</p>
+
+          required: false
+          schema:
+            type: string
+            example: name sw "prod" and description co "service"
+        - name: limit
+          in: query
+          description: Max number of items to retrieve. Default to 10.
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: offset
+          in: query
+          description: The (zero-based) offset of the first item in the list to retrieve. Default to 0.
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: fields
+          in: query
+          description: comma separated fields names.
+          required: false
+          schema:
+            type: string
+        - name: sortby
+          in: query
+          description: comma separated fields names.
+          required: false
+          schema:
+            type: string
+        - name: sortorder
+          in: query
+          description: asc or desc
+          required: false
+          schema:
+            type: string
+            default: asc
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfileList"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+    post:
+      summary: Create a Service Profile by given name and values.
+      parameters:
+        - name: interactive
+          in: query
+          description: If interactive is set to true, the changes made by API calls will be in pending status. Need to manually call 'deploy' API to make changes take effect. Default to false.
+          required: false
+          schema:
+            type: boolean
+            default: False
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceProfileRequest"
+      responses:
+        "201":
+          description: The service profile is created and deployed (interactive = false)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "202":
+          description: The service profile is created but not deployed (interactive = true)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "409":
+          description: Error response 409
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+
+  /profiles/serviceobjects/{id}:
+    x-netskope-params:
+      apiGroup: services
+      customerFacing: false
+      serviceConfig: qos
+      version: 2
+    get:
+      summary: Get a Service Profile by given ID
+      parameters:
+        - name: id
+          in: path
+          description: Service profile ID
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: comma separated fields names.
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "404":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+    patch:
+      summary: Update a service Profile by given ID.
+      parameters:
+        - name: id
+          in: path
+          description: Service profile ID
+          required: true
+          schema:
+            type: string
+        - name: interactive
+          in: query
+          description: If interactive is set to true, the changes made by API calls will be in pending status. Need to manually call 'deploy' API to make changes take effect. Default to false.
+          required: false
+          schema:
+            type: boolean
+            default: False
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceProfileUpdateRequest"
+      responses:
+        "200":
+          description: The specified service profile is updated and deployed (interactive = false)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "202":
+          description: The specified service profile is updated but not deployed (interactive = true)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "404":
+          description: Error response 404
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "409":
+          description: Error response 409
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+    delete:
+      summary: Delete a Service Profile by given ID.
+      parameters:
+        - name: id
+          in: path
+          description: Service profile ID
+          required: true
+          schema:
+            type: string
+        - name: interactive
+          in: query
+          description: If interactive is set to true, the changes made by API calls will be in pending status. Need to manually call 'deploy' API to make changes take effect. Default to false.
+          required: false
+          schema:
+            type: boolean
+            default: False
+      responses:
+        "200":
+          description: The specified service profile is deleted (interactive = false)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "202":
+          description: The specified service profile is in pending delete state (interactive = true)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "404":
+          description: Error response 404
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+
+  /profiles/serviceobjects/deploy:
+    x-netskope-params:
+      apiGroup: services
+      customerFacing: false
+      serviceConfig: qos
+      version: 2
+    post:
+      summary: Deploy pending Service Profile changes.
+      parameters:
+        - name: all
+          in: query
+          description: Value must be true or false. If true, all the pending service profiles will be deployed. If false, a request body must be provided, which gives a list of service profile IDs to be deployed. Defaults to false.
+          required: false
+          schema:
+            type: boolean
+            default: False
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceDeployRequest"
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfileList"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+
+  /profiles/serviceobjects/{id}/versions/{identifier}:
+    x-netskope-params:
+      apiGroup: services
+      customerFacing: false
+      serviceConfig: qos
+      version: 2
+    get:
+      summary: Get the previous version of a Service Profile by given ID
+      parameters:
+        - name: id
+          in: path
+          description: Service profile ID
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: path
+          description: The version identifier. Currently only support the latest applied version which called 'applied'.
+          required: true
+          schema:
+            type: string
+            enum:
+              - applied
+      responses:
+        "200":
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceProfile"
+        "400":
+          description: Error response 400
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "403":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "404":
+          description: Error response 403
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+        "500":
+          description: Error response 500
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServicesErrorResponse"
+
+servers:
+  - description: Development server
+    url: http://localhost:3000/api/v2

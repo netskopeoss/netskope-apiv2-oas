@@ -1,0 +1,1105 @@
+components:
+  schemas:
+    common_global_settings_params:
+      properties:
+        bypassDomains:
+          description: Domains to bypass authentication
+          items:
+            example: abc.com
+            type: string
+          type: array
+        cookieSurrogateIPs:
+          description: Cookie Surrogate IP Address list
+          items:
+            description: IP Address
+            example: 1.1.1.1
+            type: string
+          type: array
+        enableCookieSurrogate:
+          example: "true"
+          type: boolean
+        allowUnauthenticatedTraffic:
+          example: "true"
+          type: boolean
+      type: object
+    get_global_settings_params:
+      properties:
+        authRefreshInterval:
+          default: 7d:00h:00m
+          description:
+            Authentication Refresh Interval in format <num_days>d:<num_hours>h:<num_minutes>m.
+            Minimum interval is 1 hour and maximum interval is 180 days.
+          example: 7d:00h:00m
+          type: string
+        domainRefreshInterval:
+          default: 7d:00h:00m
+          description:
+            User Authentication Domain Refresh Interval in format <num_days>d:<num_hours>h:<num_minutes>m.
+            Minimum interval is 1 hour and maximum interval is 180 days.
+          example: 7d:00h:00m
+          type: string
+        bypassEgressIpAddressLocations:
+          description:
+            List of Network Location objects to be used for Egress IP Address
+            Bypass
+          items:
+            $ref: "#/components/schemas/network_location"
+          type: array
+        bypassUserIpAddressLocations:
+          description:
+            List of Network Location objects to be used for User IP Address
+            Bypass
+          items:
+            $ref: "#/components/schemas/network_location"
+          type: array
+        bypassWebCategories:
+          description: List of Web Category objects to be used for Web Category Bypass
+          items:
+            properties:
+              id:
+                description: ID of Web Category Object
+                example: "20"
+                type: string
+              name:
+                description: Name of Web Category Object
+                example: Test Web category
+                type: string
+            type: object
+          type: array
+      type: object
+    refresh_interval:
+      properties:
+        d:
+          description: Number of Days
+          example: 7
+          type: string
+        h:
+          description: Number of Hours
+          example: 5
+          type: string
+        m:
+          description: Number of Minutes
+          example: 0
+          type: string
+      type: object
+    get_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/idp_details"
+        - $ref: "#/components/schemas/idp_netskope_settings"
+        - properties:
+            id:
+              description: IDP Account ID
+              example: "1"
+              type: string
+            idpCertificateInfo:
+              properties:
+                data:
+                  description: IDP Certificate
+                  example:
+                    '-----BEGIN CERTIFICATE----- MIIEczCCA1ugAwIBAgIBADANBgkqhkiG9w0BAQQFAD
+                    VQQLEy5DbGFzcyAxIFB1YmxpYyBQcmltYXJ5IENlcn OfljiQIDAQABo4HnMIHkMB0GA1UdDgQWBBQ8urMCRL
+                    BMAV7Gzdc4VspS6ljrAhbiiawdBiQlQmsBeFz9JkF4  -----END CERTIFICATE-----"
+
+                    '
+                  type: string
+                expiryDate:
+                  example: 1610879162
+                  type: number
+                isExpired:
+                  description: Status on IDP Certificate expiry
+                  example: false
+                  type: boolean
+                isExpiring:
+                  description:
+                    True if IDP Certificate is going to expire in next 6
+                    Months
+                  example: true
+                  type: boolean
+              type: object
+            priorityOrder:
+              example: "1"
+              type: string
+            greSpecificTunnels:
+              description: List of GRE Specific Tunnels
+              items:
+                properties:
+                  id:
+                    description: ID of the GRE Tunnel
+                    example: "5"
+                    type: string
+                  name:
+                    description: Name of the GRE Tunnel
+                    example: GRE Tunnel 1
+                    type: string
+                type: object
+              type: array
+            ipSecSpecificTunnels:
+              description: List of IPSec Specific Tunnels
+              items:
+                properties:
+                  id:
+                    description: ID of the IPSec Tunnel
+                    example: "3"
+                    type: string
+                  name:
+                    description: Name of the IPSec Tunnel
+                    example: IPSec Tunnel 1
+                    type: string
+                type: object
+              type: array
+            networkLocations:
+              description: ""
+              items:
+                $ref: "#/components/schemas/network_location"
+              type: array
+            isConfigComplete:
+              description: Indicates whether IDP configuration is in complete or incomplete state
+              type: boolean
+              example: true
+            isOrgKeyMasked:
+              description: Indicates whether OrgKey in SAML netskope settings is masked
+              type: boolean
+              example: false
+            protocol:
+              description: Protocol of IDP account
+              type: string
+              example: saml
+            testURL:
+              description: SAML IDP Test URL
+              type: string
+              example: https://abc.com/test/authenticate
+    post_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/idp_details"
+        - $ref: "#/components/schemas/post_put_common_idp_details"
+      required:
+        - name
+    put_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/idp_details"
+        - $ref: "#/components/schemas/post_put_common_idp_details"
+        - properties:
+            enableLegacyAcsUrl:
+              description: Enable Legacy ACS URL format
+              example: false
+              type: boolean
+    post_put_common_idp_details:
+      properties:
+        greSpecificTunnels:
+          description: List of GRE Specific Tunnels
+          items:
+            example: "1"
+            type: string
+          type: array
+        ipSecSpecificTunnels:
+          description: List of IPSec Specific Tunnels
+          items:
+            example: "1"
+            type: string
+          type: array
+        networkLocations:
+          description: List of Network Location IDs
+          items:
+            example: "1"
+            type: string
+          type: array
+        idpCertificate:
+          description: IDP Certificate
+          type: string
+          example:
+            '-----BEGIN CERTIFICATE----- MIIEczCCA1ugAwIBAgIBADANBgkqhkiG9w0BAQQFAD
+            VQQLEy5DbGFzcyAxIFB1YmxpYyBQcmltYXJ5IENlcn OfljiQIDAQABo4HnMIHkMB0GA1UdDgQWBBQ8urMCRL
+            BMAV7Gzdc4VspS6ljrAhbiiawdBiQlQmsBeFz9JkF4  -----END CERTIFICATE-----"
+
+            '
+    idp_details:
+      properties:
+        name:
+          description: Name of the IDP Account
+          example: test
+          type: string
+        accessMethod:
+          description: List of Access Methods
+          items:
+            enum:
+              - all
+              - ipsec-gateway
+              - gre-gateway
+              - client-enrollment
+              - explicit
+            example: all
+            type: string
+          type: array
+        alternateUserIdField:
+          default: NameID
+          description:
+            Alternate User ID Field. Name of the SAML Attribute to look
+            at for user identification
+          example: abc
+          type: string
+        enabled:
+          description: Status of IDP
+          example: true
+          type: boolean
+        idpEntityId:
+          description: Identity Provider Entity ID
+          example: https://okta.com/jhfvjfhbvjfbvj
+          type: string
+        idpURL:
+          description: Identity Provider SSO URL
+          example: https://okta.com/app/app_name/jhfdvjd/sso/saml
+          type: string
+        samlBindingMethod:
+          description: SAML Binding Method.
+          enum:
+            - httppost
+            - redirect
+          example: httppost
+          type: string
+        userAuthenticationDomain:
+          description: User Authentication Domain
+          example: foo.com
+          type: string
+      type: object
+    idp_netskope_settings:
+      properties:
+        nsSamlAcsFullURL:
+          description: Netskope SAML ACS URL
+          example: https://abc.com/example/acs
+          type: string
+        nsSamlEntityIdURL:
+          description: Netskope SAML Entity ID
+          example: https://abc.com/example
+          type: string
+      type: object
+    network_location:
+      properties:
+        id:
+          description: ID of Network Location Object
+          example: "10"
+          type: string
+        name:
+          description: Name of Network Location object
+          example: Test Location
+          type: string
+      type: object
+    get_oidc_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/oidc_common_params"
+        - properties:
+            id:
+              description: IDP Account ID
+              example: "1"
+              type: string
+            priorityOrder:
+              example: "1"
+              type: string
+            greSpecificTunnels:
+              description: List of GRE Specific Tunnels
+              items:
+                properties:
+                  id:
+                    description: ID of the GRE Tunnel
+                    example: "5"
+                    type: string
+                  name:
+                    description: Name of the GRE Tunnel
+                    example: GRE Tunnel 1
+                    type: string
+                type: object
+              type: array
+            ipSecSpecificTunnels:
+              description: List of IPSec Specific Tunnels
+              items:
+                properties:
+                  id:
+                    description: ID of the IPSec Tunnel
+                    example: "3"
+                    type: string
+                  name:
+                    description: Name of the IPSec Tunnel
+                    example: IPSec Tunnel 1
+                    type: string
+                type: object
+              type: array
+            networkLocations:
+              description: ""
+              items:
+                $ref: "#/components/schemas/network_location"
+              type: array
+            isConfigComplete:
+              description: Indicates whether IDP configuration is in complete or incomplete state
+              type: boolean
+              example: true
+            protocol:
+              description: Protocol of IDP account
+              type: string
+              example: oidc
+            callbackURL:
+              description: Netskope OIDC Callback URL
+              example: https://abc.com/oidc/callback
+              type: string
+    post_oidc_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/oidc_common_params"
+        - $ref: "#/components/schemas/post_put_common_oidc_params"
+      required:
+        - name
+    put_oidc_idp_details:
+      allOf:
+        - $ref: "#/components/schemas/oidc_common_params"
+        - $ref: "#/components/schemas/post_put_common_oidc_params"
+    post_put_common_oidc_params:
+      properties:
+        greSpecificTunnels:
+          description: List of GRE Specific Tunnels
+          items:
+            example: "1"
+            type: string
+          type: array
+        ipSecSpecificTunnels:
+          description: List of IPSec Specific Tunnels
+          items:
+            example: "1"
+            type: string
+          type: array
+        networkLocations:
+          description: List of Network Location IDs
+          items:
+            example: "1"
+            type: string
+          type: array
+    oidc_common_params:
+      properties:
+        name:
+          description: Name of the IDP Account
+          example: test
+          type: string
+        accessMethod:
+          description: List of Access Methods
+          items:
+            enum:
+              - all
+              - ipsec-gateway
+              - gre-gateway
+              - client-enrollment
+              - explicit
+            example: all
+            type: string
+          type: array
+        enabled:
+          description: Status of IDP
+          example: true
+          type: boolean
+        userAuthenticationDomain:
+          description: User Authentication Domain
+          example: foo.com
+          type: string
+        clientID:
+          description: Client ID
+          example: hfvjdfvk
+          type: string
+        clientSecret:
+          description: Client Secret
+          example: jhdbfvjdbvfmbdv
+          type: string
+        idpIssuerId:
+          description: OIDC IDP Issuer ID
+          example: siefjjbnvfkj
+          type: string
+        idpAuthURL:
+          description: OIDC IDP Authorization URL
+          example: https://abc.com/oauth2/v1/authorize
+          type: string
+        idpTokenURL:
+          description: OIDC IDP Token URL
+          example: https://abc.com/oauth2/v1/token
+          type: string
+        idpJwksURL:
+          description: OIDC IDP JWKS URL
+          example: https://abc.com/oauth2/v1/keys
+          type: string
+      type: object
+  parameters:
+    sortorderParam:
+      description: Sorting order of the list
+      in: query
+      name: sortorder
+      required: false
+      schema:
+        default: asc
+        enum:
+          - asc
+          - desc
+        type: string
+    sortbyParam:
+      description: Field name which is used for sorting
+      in: query
+      name: sortby
+      required: false
+      schema:
+        default: priorityOrder
+        enum:
+          - priorityOrder
+        type: string
+    limitParam:
+      description: Maximum number of IDP Accounts to be retrieved
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 10
+        maximum: 100
+        minimum: 10
+        type: integer
+    offsetParam:
+      description: Zero based offset of the fist element in the list
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        minimum: 0
+        type: integer
+    enabledParam:
+      description: List of IDP Accounts will be filtered based on enabled field
+        value
+      in: query
+      name: enabled
+      required: false
+      schema:
+        example: true
+        type: boolean
+    accessMethodParam:
+      description:
+        List of IDP Accounts will be filtered based on accessmethod field
+        value
+      in: query
+      name: accessmethod
+      required: false
+      schema:
+        enum:
+          - all
+          - ipsec-gateway
+          - gre-gateway
+          - client-enrollment
+          - explicit
+        example: all
+        type: string
+    nameParam:
+      description: Get IDP Account by Name
+      in: query
+      name: name
+      required: false
+      schema:
+        example: abc
+        type: string
+info:
+  description: REST APIs exposed by the Forward Proxy / AuthService
+  title: Forward Proxy
+  version: 1.0.0
+openapi: 3.0.3
+paths:
+  /forwardproxy/auth/globalsettings:
+    get:
+      description: Get Forward Proxy Global settings
+      operationId: forward_proxy_get_global_settings
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/common_global_settings_params"
+                  - $ref: "#/components/schemas/get_global_settings_params"
+          description: Forward Proxy Global settings
+        "500":
+          description: Internal Server Error
+      summary: Get Forward Proxy Global settings
+    patch:
+      description: Update Forward Proxy Global settings
+      operationId: forward_proxy_update_global_settings
+      requestBody:
+        description: Forward Proxy Global settings
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/common_global_settings_params"
+                - properties:
+                    authRefreshInterval:
+                      description: Authentication Refresh Interval.
+                        Minimum interval is 1 hour and maximum interval is 180 days.
+                        Defaults to 7 days
+                      $ref: "#/components/schemas/refresh_interval"
+                    domainRefreshInterval:
+                      description: User Authentication Domain Refresh Interval.
+                        Minimum interval is 1 hour and maximum interval is 180 days.
+                        Defaults to 7 days
+                      $ref: "#/components/schemas/refresh_interval"
+                    bypassEgressIpAddressLocations:
+                      description: List of Network Location IDs to be used for Egress IP Address Bypass
+                      type: array
+                      items:
+                        type: string
+                        example: "1"
+                    bypassUserIpAddressLocations:
+                      description: List of Network Location IDs to be used for User IP Address Bypass
+                      type: array
+                      items:
+                        type: string
+                        example: "20"
+                    bypassWebCategories:
+                      description: List of Web Category IDs to be used for Web Category Bypass
+                      type: array
+                      items:
+                        type: string
+                        example: "15"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/common_global_settings_params"
+                  - $ref: "#/components/schemas/get_global_settings_params"
+          description: Forward Proxy Global settings
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: domainRefreshInterval needs to be at least 1hr
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Update Forward Proxy Global settings
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/saml/idpaccounts:
+    get:
+      description:
+        Get Forward proxy SAML IDP accounts configured. By default number of
+        IDP accounts retrieved will be limited to 10
+      operationId: forward_proxy_get_all_idp
+      parameters:
+        - $ref: "#/components/parameters/sortorderParam"
+        - $ref: "#/components/parameters/sortbyParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/enabledParam"
+        - $ref: "#/components/parameters/accessMethodParam"
+        - $ref: "#/components/parameters/nameParam"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/get_idp_details"
+                type: array
+          description: List of SAML IDP Account details
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid Query Parameters
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary:
+        Get Forward proxy SAML IDP accounts configured. By default number of IDP
+        accounts retrieved will be limited to 10
+    post:
+      description: Create new Forward proxy SAML IDP account
+      operationId: forward_proxy_create_saml_idp
+      requestBody:
+        description: SAML IDP Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/post_idp_details"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_idp_details"
+          description: IDP Account details of the newly created account
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: IDP account with same name already exists
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Create new Forward proxy SAML IDP account
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/saml/idpaccounts/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          example: "1"
+          type: string
+    get:
+      description:
+        Get IDP account configuration details by IDP id which are configured
+        under Forward Proxy
+      operationId: forward_proxy_get_idp_by_id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_idp_details"
+          description: IDP Account details of the given IDP ID
+        "404":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid IDP Account ID
+                    type: string
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get Forward proxy SAML IDP account by IDP id
+    delete:
+      description: Delete Forward proxy SAML IDP account by IDP id
+      operationId: forward_proxy_delete_saml_idp_by_id
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid IDP Account ID
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Delete Forward proxy SAML IDP account by IDP id
+    patch:
+      description: Update Forward proxy SAML IDP account Configuration by IDP id
+      operationId: forward_proxy_update_saml_idp_by_id
+      requestBody:
+        description: SAML IDP Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/put_idp_details"
+            examples:
+              Enable IDP Account:
+                value:
+                  enabled: true
+              Disable IDP Account:
+                value:
+                  enabled: false
+              Modify config:
+                value:
+                  name: test
+                  accessMethod: ["ipsec-gateway"]
+                  ipSecSpecificTunnels: ["1"]
+                  networkLocations: ["12"]
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_idp_details"
+          description: IDP account updated successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: IDP account with same name already exists
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Update Forward proxy SAML IDP account Configuration
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/idpaccounts/reorder:
+    post:
+      description: Reorder IDP Accounts
+      operationId: forward_proxy_reorder_idpaccounts
+      requestBody:
+        description: List of all IDP Account IDs in the desired priority order (with first being the highest priority)
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                description: IDP Account ID
+                example: 1
+                type: string
+            examples:
+              Reorder 4 IDP Accounts:
+                value: ["2", "1", "4", "3"]
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid request body format
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Reorder IDP Accounts
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/oidc/idpaccounts:
+    get:
+      description:
+        Get Forward proxy OIDC IDP accounts configured. By default number of
+        IDP accounts retrieved will be limited to 10
+      operationId: forward_proxy_get_all_oidc_idp
+      parameters:
+        - $ref: "#/components/parameters/sortorderParam"
+        - $ref: "#/components/parameters/sortbyParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/enabledParam"
+        - $ref: "#/components/parameters/accessMethodParam"
+        - $ref: "#/components/parameters/nameParam"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/get_oidc_idp_details"
+                type: array
+          description: List of OIDC IDP Account details
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid Query Parameters
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary:
+        Get Forward proxy OIDC IDP accounts configured. By default number of IDP
+        accounts retrieved will be limited to 10
+    post:
+      description: Create new Forward proxy OIDC IDP account
+      operationId: forward_proxy_create_oidc_idp
+      requestBody:
+        description: OIDC IDP Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/post_oidc_idp_details"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_oidc_idp_details"
+          description: IDP Account details of the newly created account
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: IDP account with same name already exists
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Create new Forward proxy OIDC IDP account
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/oidc/idpaccounts/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          example: "1"
+          type: string
+    get:
+      description:
+        Get OIDC IDP account configuration details by IDP id which are configured
+        under Forward Proxy
+      operationId: forward_proxy_get_oidc_idp_by_id
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_oidc_idp_details"
+          description: OIDC IDP Account details of the given IDP ID
+        "404":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid IDP Account ID
+                    type: string
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get Forward proxy OIDC IDP account by IDP id
+    patch:
+      description: Update Forward proxy OIDC IDP account Configuration by IDP id
+      operationId: forward_proxy_update_oidc_idp_by_id
+      requestBody:
+        description: OIDC IDP Configuration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/put_oidc_idp_details"
+            examples:
+              Enable IDP Account:
+                value:
+                  enabled: true
+              Disable IDP Account:
+                value:
+                  enabled: false
+              Modify config:
+                value:
+                  name: test
+                  accessMethod: ["ipsec-gateway"]
+                  ipSecSpecificTunnels: ["1"]
+                  networkLocations: ["12"]
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/get_oidc_idp_details"
+          description: IDP account updated successfully
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: IDP account with same name already exists
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Update Forward proxy OIDC IDP account Configuration
+    delete:
+      description: Delete Forward proxy OIDC IDP account by IDP id
+      operationId: forward_proxy_delete_oidc_idp_by_id
+      responses:
+        "204":
+          description: No Content
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid IDP Account ID
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary: Delete Forward proxy OIDC IDP account by IDP id
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/idpaccounts:
+    get:
+      description:
+        Get Forward proxy SAML and OIDC IDP accounts configured. By default number of
+        IDP accounts retrieved will be limited to 10
+      operationId: forward_proxy_get_both_saml_oidc_idp
+      parameters:
+        - $ref: "#/components/parameters/sortorderParam"
+        - $ref: "#/components/parameters/sortbyParam"
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/offsetParam"
+        - $ref: "#/components/parameters/enabledParam"
+        - $ref: "#/components/parameters/accessMethodParam"
+        - $ref: "#/components/parameters/nameParam"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/get_idp_details"
+                    - $ref: "#/components/schemas/get_oidc_idp_details"
+                type: array
+                example:
+                  - name: "saml_example"
+                    accessMethod: ["ipsec-gateway"]
+                    alternateUserIdField: "abc"
+                    enabled: false
+                    idpEntityId: "https://okta.com/jhfvjfhbvjfbvj"
+                    idpURL: "https://okta.com/app/app_name/jhfdvjd/sso/saml"
+                    samlBindingMethod: "httppost"
+                    userAuthenticationDomain: "foo.com"
+                    nsSamlAcsFullURL: "https://abc.com/example/acs"
+                    nsSamlEntityIdURL: "https://abc.com/example"
+                    id: "1"
+                    priorityOrder: "1"
+                    greSpecificTunnels: []
+                    ipSecSpecificTunnels: []
+                    networkLocations: []
+                    isConfigComplete: false
+                    isOrgKeyMasked: false
+                    protocol: "saml"
+                    testURL: "https://abc.com/test/authenticate"
+                  - name: "oidc_example"
+                    accessMethod: ["gre-gateway"]
+                    enabled: true
+                    userAuthenticationDomain: "foo.com"
+                    clientID: "hfvjdfvk"
+                    clientSecret: "jhdbfvjdbvfmbdv"
+                    idpIssuerId: "siefjjbnvfkj"
+                    idpAuthURL: "https://abc.com/oauth2/v1/authorize"
+                    idpTokenURL: "https://abc.com/oauth2/v1/token"
+                    idpJwksURL: "https://abc.com/oauth2/v1/keys"
+                    id: "2"
+                    priorityOrder: "2"
+                    greSpecificTunnels: []
+                    ipSecSpecificTunnels: []
+                    networkLocations: []
+                    isConfigComplete: true
+                    protocol: "oidc"
+                    callbackURL: "https://abc.com/oidc/callback"
+          description: List of SAML IDP Account details
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid Query Parameters
+                    type: string
+          description: Bad request
+        "500":
+          description: Internal Server Error
+      summary:
+        Get Forward proxy SAML and OIDC IDP accounts configured. By default number of IDP
+        accounts retrieved will be limited to 10
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/saml/netskopesettings/downloadcertificate:
+    get:
+      description: Download SAML Certificate
+      operationId: forward_proxy_download_certificate
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: fghdjhvhjd
+          description: File Downloaded
+        "500":
+          description: Internal Server Error
+      summary: Download SAML Certificate
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
+  /forwardproxy/saml/idpaccounts/{id}/downloadmetadata:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          example: "1"
+          type: string
+    get:
+      description: Download SAML IDP Account Metadata file
+      operationId: forward_proxy_download_metadata
+      responses:
+        "200":
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: fghdjhvhjd
+          description: File Downloaded
+        "400":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: Invalid IDP Account ID
+                    type: string
+          description: Bad request
+        "404":
+          content:
+            application/json:
+              schema:
+                properties:
+                  msg:
+                    example: IDP with Account ID does not exist
+                    type: string
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Download SAML IDP Account Metadata file
+    x-netskope-params:
+      apiGroup: forward_proxy_config
+      customerFacing: false
+      serviceConfig: reverse_proxy_mgmt
+      version: 2
